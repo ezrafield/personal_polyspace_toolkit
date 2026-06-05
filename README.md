@@ -9,6 +9,7 @@ The design uses short auto-loaded instruction files and richer on-demand documen
 - `.agents/skills/`: reusable project-local skill templates.
 - `.claude/agents/`: Claude Code subagent templates.
 - `.mcp/`: MCP setup notes and candidate server documentation.
+- `.understand-anything/`: Understand Anything setup notes for source-code knowledge graphs.
 - `docs/agent/`: on-demand agent context and navigation.
 - `.agent/tasks/`: task-local notes and audit trail.
 - `src/`: sample application modules.
@@ -24,3 +25,14 @@ make lint
 ```
 
 This is a template, so most commands are placeholders until you wire them to your actual stack.
+
+## Source Understanding
+
+Use Understand Anything to generate a knowledge graph for humans and agents:
+
+```bash
+make understand
+make understand-search QUERY="api route"
+```
+
+Generated graph files are ignored by default; setup notes and ignore rules are committed.

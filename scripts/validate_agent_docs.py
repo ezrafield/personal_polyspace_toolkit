@@ -11,8 +11,11 @@ REQUIRED_FILES = [
     "docs/agent/AGENTS_AND_SKILLS.md",
     "docs/agent/TOOLS.md",
     "docs/agent/MCPS.md",
+    "docs/agent/SOURCE_UNDERSTANDING.md",
     "docs/agent/TASK_LOG_TEMPLATE.md",
     ".mcp/README.md",
+    ".understand-anything/README.md",
+    ".understand-anything/.understandignore",
 ]
 
 REQUIRED_SKILLS = [
@@ -23,6 +26,9 @@ REQUIRED_SKILLS = [
     "docs-sync",
     "architecture-decision",
     "task-handoff",
+    "source-understanding",
+    "knowledge-graph-search",
+    "understand-refresh",
 ]
 
 

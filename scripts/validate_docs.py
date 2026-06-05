@@ -10,8 +10,10 @@ REQUIRED_FILES = [
     "docs/agent/AGENTS_AND_SKILLS.md",
     "docs/agent/TOOLS.md",
     "docs/agent/MCPS.md",
+    "docs/agent/SOURCE_UNDERSTANDING.md",
     "docs/agent/TASK_LOG_TEMPLATE.md",
     ".mcp/README.md",
+    ".understand-anything/README.md",
 ]
 
 

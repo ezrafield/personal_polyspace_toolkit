@@ -53,3 +53,10 @@ Read:
 2. `docs/agent/TOOLS.md`
 3. `docs/agent/MCPS.md`
 4. Relevant files under `.agents/skills/`, `.claude/agents/`, `.mcp/`, or `scripts/`
+
+## For Source Understanding Or Code Search
+Read:
+1. `docs/agent/SOURCE_UNDERSTANDING.md`
+2. `docs/agent/module-cards/source-understanding.md`
+3. `.understand-anything/README.md`
+4. `.understand-anything/knowledge-graph.json` only through targeted search when it exists

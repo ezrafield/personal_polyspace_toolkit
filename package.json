@@ -13,6 +13,9 @@
     "detect-large-context-docs": "python scripts/detect_large_context_docs.py",
     "check-architecture-boundaries": "python scripts/check_architecture_boundaries.py",
     "update-module-cards": "python scripts/update_module_cards.py",
-    "targeted-tests": "python scripts/run_targeted_tests.py"
+    "targeted-tests": "python scripts/run_targeted_tests.py",
+    "understand": "python scripts/understand_placeholder.py",
+    "understand-search": "python scripts/search_understand_graph.py",
+    "validate-understand-graph": "python scripts/validate_understand_graph.py"
   }
 }

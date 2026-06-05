@@ -14,6 +14,8 @@ Use deterministic scripts for repeatable, cheap, auditable work.
 | `scripts/detect_large_context_docs.py` | Warn when auto-loaded docs become too large. |
 | `scripts/check_architecture_boundaries.py` | Catch simple layer import violations. |
 | `scripts/collect_task_trace.py` | Create a task trace from current changed files. |
+| `scripts/search_understand_graph.py` | Search the Understand Anything graph without loading it all into context. |
+| `scripts/validate_understand_graph.py` | Validate the expected graph shape before graph-backed work. |
 
 ## Make Targets
 
@@ -25,6 +27,9 @@ make validate-agent-docs
 make detect-large-context-docs
 make check-architecture-boundaries
 make task-trace
+make understand
+make understand-search QUERY="service"
+make validate-understand-graph
 ```
 
 ## Tool Principles

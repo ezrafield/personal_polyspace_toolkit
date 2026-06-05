@@ -18,6 +18,8 @@ This repository supports a small reusable agent kit:
 | `docs-sync` | Update durable docs after behavior changes. |
 | `architecture-decision` | Compare options and record durable decisions. |
 | `task-handoff` | Capture task state for continuation or audit. |
+| `source-understanding` | Use Understand Anything for source discovery and onboarding. |
+| `knowledge-graph-search` | Answer code questions through targeted graph search. |
 
 ## General Subagents
 
@@ -28,6 +30,7 @@ This repository supports a small reusable agent kit:
 | `test-debugger` | Failing tests and runtime errors. |
 | `security-reviewer` | Auth, secrets, permissions, and sensitive data. |
 | `docs-maintainer` | Documentation synchronization. |
+| `understand-researcher` | Knowledge-graph backed source research. |
 
 ## When To Add Project-Specific Assets
 

@@ -1,0 +1,43 @@
+# Patterns for files and directories to exclude from Understand Anything analysis.
+# Syntax is similar to .gitignore.
+
+# Dependencies and virtual environments
+node_modules/
+.venv/
+venv/
+vendor/
+
+# Build outputs and generated files
+dist/
+build/
+out/
+coverage/
+__pycache__/
+*.pyc
+*.min.js
+*.min.css
+*.map
+
+# Git and local agent artifacts
+.git/
+.codex-log/
+.agent/traces/
+.agent/context-cache/
+.understand-anything/intermediate/
+.understand-anything/tmp/
+
+# Binary and media files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.pdf
+*.zip
+*.tar
+*.gz
+
+# Uncomment if docs or tests are too noisy for a specific graph.
+# docs/
+# tests/
+# eval/

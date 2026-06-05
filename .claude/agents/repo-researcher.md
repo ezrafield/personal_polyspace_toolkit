@@ -23,10 +23,11 @@ Read-only code discovery.
 ## Workflow
 1. Read `CLAUDE.md`.
 2. Read `docs/agent/INDEX.md`.
-3. Read `docs/agent/CODEMAP.md`.
-4. Inspect relevant module cards.
-5. Use targeted search.
-6. Return candidate files and confidence.
+3. If `.understand-anything/knowledge-graph.json` exists, search it for task terms.
+4. Read `docs/agent/CODEMAP.md`.
+5. Inspect relevant module cards.
+6. Use targeted search.
+7. Return candidate files and confidence.
 
 ## Output
 - Relevant files

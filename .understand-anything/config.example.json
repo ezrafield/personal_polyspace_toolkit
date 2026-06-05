@@ -1,0 +1,5 @@
+{
+  "autoUpdate": false,
+  "outputLanguage": "en",
+  "notes": "Copy to config.json for local runtime configuration. Do not store secrets here."
+}

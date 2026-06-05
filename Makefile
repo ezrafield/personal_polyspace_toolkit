@@ -1,4 +1,4 @@
-.PHONY: install dev test test-unit test-integration lint typecheck docs-map validate-docs validate-agent-docs detect-large-context-docs check-architecture-boundaries update-module-cards targeted-tests task-trace
+.PHONY: install dev test test-unit test-integration lint typecheck docs-map validate-docs validate-agent-docs detect-large-context-docs check-architecture-boundaries update-module-cards targeted-tests task-trace understand understand-dashboard understand-search validate-understand-graph
 
 install:
 	@echo "Install project dependencies here."
@@ -43,3 +43,15 @@ targeted-tests:
 
 task-trace:
 	python scripts/collect_task_trace.py
+
+understand:
+	python scripts/understand_placeholder.py
+
+understand-dashboard:
+	@echo "Open the Understand Anything dashboard with the installed runtime command, for example /understand-dashboard."
+
+understand-search:
+	python scripts/search_understand_graph.py "$(QUERY)"
+
+validate-understand-graph:
+	python scripts/validate_understand_graph.py

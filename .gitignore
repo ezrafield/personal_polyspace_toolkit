@@ -13,3 +13,9 @@ __pycache__/
 .codex-log/
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Understand Anything generated artifacts
+.understand-anything/*
+!.understand-anything/README.md
+!.understand-anything/.understandignore
+!.understand-anything/config.example.json
