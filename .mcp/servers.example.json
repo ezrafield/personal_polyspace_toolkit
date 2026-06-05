@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "description": "Structured local project access scoped to the repository.",
+      "command": "replace-with-runtime-command",
+      "args": ["replace-with-filesystem-server-args"]
+    },
+    "github": {
+      "description": "Issues, pull requests, review comments, and CI metadata.",
+      "command": "replace-with-runtime-command",
+      "args": ["replace-with-github-server-args"]
+    },
+    "browser": {
+      "description": "Local UI verification and browser automation.",
+      "command": "replace-with-runtime-command",
+      "args": ["replace-with-browser-server-args"]
+    },
+    "docs": {
+      "description": "Current official documentation lookup.",
+      "command": "replace-with-runtime-command",
+      "args": ["replace-with-docs-server-args"]
+    }
+  }
+}

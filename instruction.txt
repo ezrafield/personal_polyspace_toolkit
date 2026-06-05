@@ -1,0 +1,401 @@
+My recommendation: build an agent-native repository with thin auto-loaded instruction files and rich on-demand documentation. Do not put everything into CLAUDE.md / AGENTS.md. Claude’s own docs warn that context fills fast and quality degrades as the context window fills; Claude also recommends keeping CLAUDE.md concise, targeting under ~200 lines. (Claude Code) (Claude Code) Codex also loads AGENTS.md before work and has a default project-doc cap of 32 KiB, with nested overrides supported. (OpenAI Developers) A 2026 empirical paper even found that bloated repository context files can reduce task success and increase inference cost by over 20%, so the best architecture is progressive context loading, not “one big guide.” (arXiv)
+Best repo structure
+my-project/
+├── AGENTS.md                    # Codex entrypoint: short, strict, project-level rules
+├── CLAUDE.md                    # Claude Code entrypoint: short, strict, project-level rules
+├── README.md                    # Human onboarding, product overview
+├── pyproject.toml / package.json
+├── Makefile                     # Standard commands: test, lint, typecheck, docs-map
+├── .env.example
+├── .gitignore
+│
+├── src/ or app/
+│   ├── AGENTS.md                # Local rules for this module, only if needed
+│   ├── CLAUDE.md                # Local Claude rules, only if needed
+│   ├── core/
+│   ├── api/
+│   ├── services/
+│   ├── models/
+│   └── utils/
+│
+├── tests/
+│   ├── AGENTS.md                # Testing conventions
+│   ├── unit/
+│   ├── integration/
+│   └── fixtures/
+│
+├── docs/
+│   ├── agent/
+│   │   ├── INDEX.md             # Agent navigation map: what to read for each task
+│   │   ├── CODEMAP.md           # Generated/maintained codebase map
+│   │   ├── ARCHITECTURE.md      # System architecture, data flow, boundaries
+│   │   ├── WORKFLOWS.md         # Common workflows: add feature, fix bug, refactor
+│   │   ├── COMMANDS.md          # Build/test/lint/run/debug commands
+│   │   ├── CONVENTIONS.md       # Coding style, naming, API patterns
+│   │   ├── PITFALLS.md          # Known mistakes agents often make
+│   │   ├── TASK_LOG_TEMPLATE.md # Template for agent task tracking
+│   │   └── module-cards/
+│   │       ├── api.md
+│   │       ├── services.md
+│   │       ├── database.md
+│   │       └── frontend.md
+│   │
+│   ├── product/
+│   │   ├── PRD.md
+│   │   ├── USER_FLOWS.md
+│   │   └── REQUIREMENTS.md
+│   │
+│   ├── adr/
+│   │   ├── 0001-architecture-style.md
+│   │   └── 0002-database-choice.md
+│   │
+│   └── specs/
+│       ├── feature-x.md
+│       └── api-contracts.md
+│
+├── .agent/
+│   ├── tasks/
+│   │   ├── 2026-06-05-example-task.md
+│   │   └── ...
+│   ├── traces/                 # Usually gitignored; local session traces
+│   ├── summaries/              # Long-session summaries, optional
+│   └── context-cache/           # Generated summaries, optional
+│
+├── scripts/
+│   ├── generate_codemap.py
+│   ├── validate_docs.py
+│   ├── check_agent_rules.py
+│   └── summarize_changed_files.py
+│
+├── eval/
+│   ├── golden/
+│   ├── regression/
+│   └── run_eval.py
+│
+└── .github/
+    └── workflows/
+        ├── test.yml
+        ├── lint.yml
+        └── agent-doc-check.yml
+
+The key idea: 4-layer context architecture
+Layer 1: Auto-loaded, very small
+These are loaded automatically by the agent.
+AGENTS.md
+CLAUDE.md
+src/module/AGENTS.md
+src/module/CLAUDE.md
+
+Use them only for:
+- Project purpose
+- Tech stack
+- Critical commands
+- Must-follow rules
+- Where to find deeper docs
+- Safety constraints
+- Definition of done
+
+Do not put long architecture explanations, full API specs, old decisions, examples, or troubleshooting history here. Claude uses CLAUDE.md as persistent project instructions, while Codex uses AGENTS.md with global/project/nested precedence. (Claude Code) (OpenAI Developers)
+Layer 2: On-demand agent docs
+These are not auto-loaded unless the agent needs them.
+docs/agent/INDEX.md
+docs/agent/CODEMAP.md
+docs/agent/ARCHITECTURE.md
+docs/agent/WORKFLOWS.md
+docs/agent/module-cards/*.md
+
+This is where token saving happens. Instead of asking Claude/Codex to explore the whole repo, you tell it:
+Before editing, read docs/agent/INDEX.md.
+Then read only the module-card related to the task.
+Do not scan unrelated directories unless needed.
+
+This follows the production AI system principle that the model should not be the whole system; reliable systems need context building, retrieval/tools, validation, logs, metrics, and continuous improvement around the model.
+Layer 3: Task-local memory
+Each meaningful task gets one tracking file.
+.agent/tasks/2026-06-05-fix-auth-refresh.md
+
+Template:
+# Task: Fix auth refresh bug
+
+## Goal
+Fix token refresh failure when access token expires.
+
+## User request
+...
+
+## Relevant docs read
+- docs/agent/INDEX.md
+- docs/agent/module-cards/auth.md
+- docs/specs/auth-flow.md
+
+## Files inspected
+- src/auth/service.py
+- src/auth/routes.py
+- tests/integration/test_auth.py
+
+## Assumptions
+- Refresh token remains valid for 7 days.
+- We should not change database schema.
+
+## Plan
+1. Reproduce failing test.
+2. Inspect refresh flow.
+3. Patch service.
+4. Add regression test.
+5. Run targeted tests.
+
+## Changes made
+...
+
+## Commands run
+```bash
+pytest tests/integration/test_auth.py -q
+ruff check src/auth tests/integration/test_auth.py
+
+Verification
+...
+Follow-up
+...
+
+This solves the “easy to track document / agent interact” problem. You get an audit trail without stuffing the next session’s context.
+
+### Layer 4: Generated code intelligence
+
+This layer should be generated by scripts, not manually written every time.
+
+```txt
+docs/agent/CODEMAP.md
+docs/agent/module-cards/*.md
+.agent/context-cache/*.md
+
+A good CODEMAP.md looks like:
+# Code Map
+
+## app/api/
+Purpose: HTTP routes and request/response validation.
+Entry points:
+- app/api/routes.py
+- app/api/dependencies.py
+Tests:
+- tests/integration/test_api.py
+Common changes:
+- Add endpoint
+- Update response schema
+- Add auth dependency
+
+## app/services/
+Purpose: business logic layer.
+Entry points:
+- app/services/user_service.py
+- app/services/billing_service.py
+Rules:
+- No direct HTTP logic here.
+- No direct environment variable access here.
+
+The goal is to let the agent find the right files in 30 seconds instead of exploring the repo for 20k tokens.
+Minimal AGENTS.md
+# AGENTS.md
+
+## Project purpose
+This repository is [one-sentence product/system purpose].
+
+## Default workflow
+1. Understand the task.
+2. Read `docs/agent/INDEX.md`.
+3. Read only the relevant module card under `docs/agent/module-cards/`.
+4. Make the smallest safe change.
+5. Add or update tests.
+6. Run targeted tests before broad tests.
+7. Summarize changed files, commands run, and remaining risks.
+
+## Context rules
+- Do not scan the whole repository unless the task requires it.
+- Prefer `rg`, targeted file reads, and module cards.
+- Do not load large docs unless referenced by `docs/agent/INDEX.md`.
+- Keep changes scoped to the user request.
+
+## Commands
+- Install: `make install`
+- Run app: `make dev`
+- Unit tests: `make test-unit`
+- Integration tests: `make test-integration`
+- Lint: `make lint`
+- Typecheck: `make typecheck`
+
+## Code rules
+- Follow existing patterns before introducing new abstractions.
+- Do not add new dependencies without explicit justification.
+- Do not change public APIs without updating docs/specs.
+- Do not modify generated files manually.
+
+## Definition of done
+- Relevant tests pass.
+- Lint/typecheck pass when applicable.
+- Docs updated if behavior changes.
+- Final response includes files changed, tests run, and risks.
+
+Minimal CLAUDE.md
+# CLAUDE.md
+
+Use this project as an agent-native codebase.
+
+## Start here
+For every non-trivial task:
+1. Read `docs/agent/INDEX.md`.
+2. Read the relevant module card.
+3. Create or update a task note in `.agent/tasks/` if the task has more than one step.
+
+## Token-saving behavior
+- Do not explore unrelated directories.
+- Use `rg` before reading many files.
+- Prefer targeted reads over broad scans.
+- Summarize findings before expanding scope.
+
+## Safety
+- Never delete files, rewrite migrations, rotate secrets, or change production config without explicit approval.
+- Prefer small patches.
+- Run targeted tests first.
+
+## Final response format
+- Summary
+- Files changed
+- Tests/commands run
+- Risks or follow-up
+
+Claude docs also support hooks, skills, MCP, and auto memory; hooks can block unsafe tool calls, and Claude reads hook decisions to deny actions. (Claude Code) Claude’s overview also notes MCP, skills, hooks, and multi-agent/background-agent workflows, but I would only add those after the base repo structure is stable. (Claude Code)
+docs/agent/INDEX.md is the most important file
+# Agent Context Index
+
+## For bug fixes
+Read:
+1. `docs/agent/CODEMAP.md`
+2. Relevant module card in `docs/agent/module-cards/`
+3. Related tests
+
+Do not read:
+- Full PRD
+- Full architecture doc
+- Unrelated modules
+
+## For new API endpoint
+Read:
+1. `docs/agent/module-cards/api.md`
+2. `docs/specs/api-contracts.md`
+3. Existing similar endpoint
+4. Relevant service module card
+
+## For database change
+Read:
+1. `docs/agent/module-cards/database.md`
+2. `docs/adr/`
+3. Existing migrations
+4. Related model tests
+
+## For refactor
+Read:
+1. `docs/agent/ARCHITECTURE.md`
+2. Relevant module cards
+3. Current tests
+4. `docs/agent/PITFALLS.md`
+
+This file acts like a routing layer. It prevents the agent from reading everything.
+Best practice for module cards
+Each module card should be short.
+# Module: Auth
+
+## Responsibility
+Handles login, refresh token, logout, and current-user lookup.
+
+## Key files
+- `src/auth/routes.py`: HTTP endpoints
+- `src/auth/service.py`: auth business logic
+- `src/auth/security.py`: hashing/JWT utilities
+- `tests/integration/test_auth.py`: integration tests
+
+## Public interfaces
+- `AuthService.login(...)`
+- `AuthService.refresh(...)`
+- `get_current_user(...)`
+
+## Rules
+- Routes should not contain business logic.
+- Services should not import FastAPI request objects.
+- JWT secrets come from config only.
+
+## Common tasks
+- Add auth endpoint → inspect `routes.py`, `service.py`, tests
+- Change token behavior → inspect `security.py`, `service.py`
+
+## Known pitfalls
+- Do not change refresh token expiry without updating tests.
+- Do not log raw tokens.
+
+What to commit vs ignore
+Commit:
+AGENTS.md
+CLAUDE.md
+docs/agent/*
+docs/adr/*
+docs/specs/*
+.agent/tasks/*.md       # optional, useful for team audit
+scripts/generate_codemap.py
+
+Usually ignore:
+.agent/traces/
+.agent/context-cache/
+.codex-log/
+.claude/settings.local.json
+CLAUDE.local.md
+.env
+
+Codex docs explicitly mention logs such as ./.codex-log/codex-tui.log and session-*.jsonl for auditing loaded instruction files, but those should usually be local/debug artifacts, not committed. (OpenAI Developers)
+The structure I would avoid
+BAD:
+├── CLAUDE.md       # 2,000 lines
+├── AGENTS.md       # 2,000 lines
+├── docs/
+│   └── everything.md
+
+Why bad:
+wastes tokens every session
+mixes stable rules with temporary task notes
+makes agents over-read
+increases conflicting instructions
+makes debugging harder
+empirical evidence suggests excessive context files can hurt success and cost (arXiv)
+Best workflow for Claude Code / Codex
+For every task, use this protocol:
+1. Ask agent to restate the goal.
+2. Ask agent to read docs/agent/INDEX.md.
+3. Ask agent to identify relevant module cards.
+4. Ask agent to produce a short plan.
+5. Let it inspect targeted files only.
+6. Let it patch.
+7. Run targeted tests.
+8. Run broader tests only if needed.
+9. Update task log.
+10. Final answer: summary, files changed, tests, risks.
+
+For bigger tasks, use this prompt:
+Before editing code:
+- Read AGENTS.md / CLAUDE.md.
+- Read docs/agent/INDEX.md.
+- Select the minimal relevant docs and files.
+- Create a task note under .agent/tasks/.
+- Explain your plan.
+- Do not scan unrelated directories.
+- After implementation, update the task note with files changed, commands run, and remaining risks.
+
+Final recommendation
+Use this architecture:
+Thin instruction files
++ Agent context index
++ Module cards
++ Generated code map
++ Task logs
++ ADR/spec docs
++ Test/eval layer
++ Local traces ignored by git
+
+This is the best balance for Claude Code and Codex today because it gives agents enough structure to act like senior engineers, but avoids the trap of auto-loading too much context. It also fits a product-level AI system mindset: context building, workflow control, validation, logging, and cost control are part of the system, not afterthoughts.
+

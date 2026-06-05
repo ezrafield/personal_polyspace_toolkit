@@ -1,0 +1,15 @@
+.env
+.venv/
+venv/
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# Agent-local artifacts
+.agent/traces/
+.agent/context-cache/
+.codex-log/
+.claude/settings.local.json
+CLAUDE.local.md
