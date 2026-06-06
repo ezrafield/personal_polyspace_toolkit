@@ -20,6 +20,7 @@ This repository supports a small reusable agent kit:
 | `task-handoff` | Capture task state for continuation or audit. |
 | `source-understanding` | Use Understand Anything for source discovery and onboarding. |
 | `knowledge-graph-search` | Answer code questions through targeted graph search. |
+| `agent-setup` | Bootstrap project-specific stack, command, codemap, module-card, and validation context. |
 
 ## General Subagents
 

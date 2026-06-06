@@ -1,0 +1,51 @@
+{
+  "name": "agent-native-template",
+  "version": "0.2.0",
+  "description": "Progressive-context agent kit files for installation into existing projects.",
+  "included_harness_files": [
+    ".agents/skills/",
+    ".claude/agents/",
+    ".claude/hooks/",
+    ".mcp/README.md",
+    ".mcp/servers.example.json",
+    ".understand-anything/README.md",
+    ".understand-anything/.understandignore",
+    "docs/agent/",
+    "scripts/"
+  ],
+  "merge_files": [
+    "AGENTS.md",
+    "CLAUDE.md"
+  ],
+  "copy_if_missing_files": [
+    ".agent/tasks/README.md",
+    ".agent/plans/template.md",
+    ".agent/plans/active/.gitkeep",
+    ".agent/plans/completed/.gitkeep",
+    ".agent/plans/backlog/.gitkeep",
+    ".agent/plans/reports/.gitkeep"
+  ],
+  "project_local_files": [
+    "src/",
+    "tests/",
+    "docs/product/",
+    "docs/specs/",
+    "docs/adr/",
+    ".env",
+    ".env.example",
+    "package.json",
+    "pyproject.toml",
+    "Makefile"
+  ],
+  "excluded_files": [
+    ".agent/tasks/*.md",
+    ".agent/summaries/",
+    ".agent/traces/",
+    ".agent/context-cache/",
+    ".git/",
+    ".venv/",
+    "node_modules/",
+    "__pycache__/"
+  ],
+  "symlinks": []
+}

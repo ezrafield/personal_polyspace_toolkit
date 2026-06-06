@@ -13,6 +13,8 @@ REQUIRED_FILES = [
     "docs/agent/MCPS.md",
     "docs/agent/SOURCE_UNDERSTANDING.md",
     "docs/agent/TASK_LOG_TEMPLATE.md",
+    ".agent/tasks/README.md",
+    ".agent/plans/template.md",
     ".mcp/README.md",
     ".understand-anything/README.md",
     ".understand-anything/.understandignore",
@@ -29,6 +31,7 @@ REQUIRED_SKILLS = [
     "source-understanding",
     "knowledge-graph-search",
     "understand-refresh",
+    "agent-setup",
 ]
 
 

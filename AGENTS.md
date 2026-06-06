@@ -26,6 +26,8 @@ This repository is a sample agent-native project template that demonstrates prog
 - Lint: `make lint`
 - Typecheck: `make typecheck`
 - Docs map: `make docs-map`
+- Agent setup: `make agent-setup`
+- Agent audits: `make validate-agent-docs`, `make check-context-staleness`, `make audit-module-cards`
 
 ## Code Rules
 - Follow existing patterns before introducing new abstractions.

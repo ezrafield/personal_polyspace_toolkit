@@ -7,6 +7,7 @@ For every non-trivial task:
 1. Read `docs/agent/INDEX.md`.
 2. Read the relevant module card.
 3. Create or update a task note in `.agent/tasks/` if the task has more than one step.
+4. Use `.agent/plans/template.md` for complex or multi-phase work.
 
 ## Token-Saving Behavior
 - Do not explore unrelated directories.

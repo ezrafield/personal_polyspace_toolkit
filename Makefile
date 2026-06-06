@@ -1,4 +1,4 @@
-.PHONY: install dev test test-unit test-integration lint typecheck docs-map validate-docs validate-agent-docs detect-large-context-docs check-architecture-boundaries update-module-cards targeted-tests task-trace understand understand-dashboard understand-search validate-understand-graph
+.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs check-architecture-boundaries update-module-cards targeted-tests task-trace understand understand-dashboard understand-search validate-understand-graph
 
 install:
 	@echo "Install project dependencies here."
@@ -23,6 +23,9 @@ typecheck:
 docs-map:
 	python scripts/generate_codemap.py
 
+agent-setup:
+	python scripts/agent_setup.py
+
 validate-docs:
 	python scripts/validate_docs.py
 
@@ -31,6 +34,18 @@ validate-agent-docs:
 
 detect-large-context-docs:
 	python scripts/detect_large_context_docs.py
+
+detect-large-agent-files:
+	python scripts/detect_large_agent_files.py
+
+check-context-staleness:
+	python scripts/check_context_staleness.py
+
+audit-module-cards:
+	python scripts/audit_module_cards.py
+
+audit-task-logs:
+	python scripts/audit_task_logs.py
 
 check-architecture-boundaries:
 	python scripts/check_architecture_boundaries.py
