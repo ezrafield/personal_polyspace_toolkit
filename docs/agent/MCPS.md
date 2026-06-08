@@ -6,6 +6,8 @@ Model Context Protocol servers should be added only when they provide useful ext
 
 | MCP Category | Use |
 | --- | --- |
+| Semble | Natural-language project search before broad file reads. |
+| Serena | Optional language-server semantics for references, declarations, diagnostics, and refactors. |
 | Filesystem | Structured file reads, writes, and project resources. |
 | GitHub | Issues, pull requests, review comments, CI state, and repository metadata. |
 | Browser | Local app inspection, screenshots, and interactive UI verification. |
@@ -17,6 +19,8 @@ Model Context Protocol servers should be added only when they provide useful ext
 ## MCP Selection Rules
 
 - Use local scripts first for deterministic repo checks.
+- Use Semble as the default low-cost code retrieval profile when available.
+- Use Serena only when symbol-level accuracy or refactoring support is needed.
 - Use MCPs when external state matters.
 - Keep write-capable MCPs scoped and documented.
 - Prefer read-only modes for research and review agents.

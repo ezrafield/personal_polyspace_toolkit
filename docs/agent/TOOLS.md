@@ -22,6 +22,7 @@ Use deterministic scripts for repeatable, cheap, auditable work.
 | `scripts/collect_task_trace.py` | Create a task trace from current changed files. |
 | `scripts/search_understand_graph.py` | Search the Understand Anything graph without loading it all into context. |
 | `scripts/validate_understand_graph.py` | Validate the expected graph shape before graph-backed work. |
+| `eval/retrieval/run_retrieval_eval.py` | Check whether Semble searches return expected context paths. |
 
 ## Make Targets
 
@@ -41,11 +42,15 @@ make task-trace
 make understand
 make understand-search QUERY="service"
 make validate-understand-graph
+make retrieval-eval
 ```
 
 ## Tool Principles
 
 - Prefer scripts for deterministic checks.
+- Prefer Semble + `rg` + CODEMAP/module cards for normal retrieval.
+- Keep Serena optional for language-server backed symbol work.
+- Use Repomix as an export tool, not as the normal daily retrieval workflow.
 - Prefer targeted checks before broad suites.
 - Keep scripts safe by default.
 - Make script output easy for humans and agents to inspect.

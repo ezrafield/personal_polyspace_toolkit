@@ -18,6 +18,24 @@ This repository is a sample agent-native project template that demonstrates prog
 - Do not load large docs unless referenced by `docs/agent/INDEX.md`.
 - Keep changes scoped to the user request.
 
+## Context Retrieval Policy
+For non-trivial code tasks, do not scan the whole repository.
+
+Use this order:
+1. Read `docs/agent/INDEX.md`.
+2. Read the relevant module card or `docs/agent/CODEMAP.md`.
+3. Use Semble for natural-language code search:
+   - `semble search "<task>" . --content code`
+   - `semble search "<task>" . --content all` when docs/config may matter
+4. Use `rg` for exact symbol/string confirmation.
+5. Use Serena when symbol references, declarations, implementations, diagnostics, or safe refactors are needed.
+6. Read full files only after retrieval identifies likely relevant targets.
+7. Before editing, summarize:
+   - selected files
+   - why they are relevant
+   - uncertainty/risk
+8. After editing, run targeted tests first.
+
 ## Commands
 - Install: `make install`
 - Run app: `make dev`

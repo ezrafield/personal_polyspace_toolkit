@@ -1,0 +1,17 @@
+[
+  {
+    "id": "api-route-behavior",
+    "query": "Where are HTTP routes and request validation handled?",
+    "content": "code"
+  },
+  {
+    "id": "service-business-logic",
+    "query": "Where is the example business workflow implemented?",
+    "content": "code"
+  },
+  {
+    "id": "agent-context-policy",
+    "query": "What instructions control progressive context loading and code search?",
+    "content": "all"
+  }
+]

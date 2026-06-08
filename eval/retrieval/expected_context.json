@@ -1,0 +1,18 @@
+{
+  "api-route-behavior": [
+    "docs/agent/module-cards/api.md",
+    "src/api/routes.py",
+    "tests/integration/test_api.py"
+  ],
+  "service-business-logic": [
+    "docs/agent/module-cards/services.md",
+    "src/services/example_service.py",
+    "tests/unit/test_services.py"
+  ],
+  "agent-context-policy": [
+    "AGENTS.md",
+    "docs/agent/INDEX.md",
+    "docs/agent/CODE_SEARCH.md",
+    "docs/agent/CONTEXT_ROUTER.md"
+  ]
+}

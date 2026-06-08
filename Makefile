@@ -1,4 +1,4 @@
-.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs check-architecture-boundaries update-module-cards targeted-tests task-trace understand understand-dashboard understand-search validate-understand-graph
+.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs check-architecture-boundaries update-module-cards targeted-tests task-trace understand understand-dashboard understand-search validate-understand-graph retrieval-eval
 
 install:
 	@echo "Install project dependencies here."
@@ -70,3 +70,6 @@ understand-search:
 
 validate-understand-graph:
 	python scripts/validate_understand_graph.py
+
+retrieval-eval:
+	python eval/retrieval/run_retrieval_eval.py

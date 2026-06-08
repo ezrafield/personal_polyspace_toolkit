@@ -11,7 +11,9 @@ For every non-trivial task:
 
 ## Token-Saving Behavior
 - Do not explore unrelated directories.
-- Use `rg` before reading many files.
+- Use Semble for natural-language code search before reading many files.
+- Use `rg` for exact symbol and string confirmation.
+- Use Serena only when symbol references, declarations, implementations, diagnostics, or safe refactors require language-server semantics.
 - Prefer targeted reads over broad scans.
 - Summarize findings before expanding scope.
 

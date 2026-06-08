@@ -1,0 +1,25 @@
+.git/
+.venv/
+venv/
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# Agent-local artifacts
+.agent/traces/
+.agent/context-cache/
+.codex-log/
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Generated source-understanding artifacts
+.understand-anything/knowledge-graph.json
+.understand-anything/meta.json
+.understand-anything/intermediate/
+.understand-anything/tmp/
+
+# Generated exports and bundles
+repomix-output.*
+*.bundle.md

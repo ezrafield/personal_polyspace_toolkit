@@ -8,10 +8,14 @@
     ".claude/hooks/",
     ".mcp/README.md",
     ".mcp/servers.example.json",
+    ".mcp/semble.md",
+    ".mcp/serena.md",
+    ".sembleignore",
     ".understand-anything/README.md",
     ".understand-anything/.understandignore",
     "docs/agent/",
-    "scripts/"
+    "scripts/",
+    "eval/retrieval/"
   ],
   "merge_files": [
     "AGENTS.md",

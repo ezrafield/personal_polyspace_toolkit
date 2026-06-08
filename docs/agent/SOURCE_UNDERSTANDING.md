@@ -1,8 +1,16 @@
 # Source Understanding
 
-Use Understand Anything as the shared source-code understanding and search layer for humans and agents.
+Use CODEMAP/module cards, Semble, `rg`, optional Serena, and Understand Anything as layered source-understanding tools for humans and agents.
 
 ## Purpose
+
+Start with the low-cost default stack:
+- `docs/agent/CODEMAP.md`
+- Module cards
+- Semble natural-language search
+- `rg` exact confirmation
+
+Use Serena for symbol references, declarations, diagnostics, and safe refactors when language-server semantics matter.
 
 Understand Anything generates a code knowledge graph at:
 
@@ -38,11 +46,13 @@ make understand-search QUERY="auth service"
 Before broad source exploration:
 
 1. Read `docs/agent/INDEX.md`.
-2. Read this file.
-3. Check whether `.understand-anything/knowledge-graph.json` exists.
-4. If it exists, search the graph before reading many files.
-5. If it does not exist or is stale, recommend `make understand`.
-6. Use targeted file reads for final verification.
+2. Read `docs/agent/CODE_SEARCH.md` and this file.
+3. Read `docs/agent/CODEMAP.md` or the relevant module card.
+4. Use Semble and `rg` to identify likely files.
+5. Check whether `.understand-anything/knowledge-graph.json` exists when architecture or dependency impact matters.
+6. If it exists, search the graph before reading many files.
+7. If it does not exist or is stale, recommend `make understand`.
+8. Use targeted file reads for final verification.
 
 ## What To Commit
 

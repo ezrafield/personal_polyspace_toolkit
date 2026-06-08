@@ -8,6 +8,8 @@ REQUIRED_FILES = [
     "CLAUDE.md",
     "docs/agent/INDEX.md",
     "docs/agent/CODEMAP.md",
+    "docs/agent/CODE_SEARCH.md",
+    "docs/agent/CONTEXT_ROUTER.md",
     "docs/agent/AGENTS_AND_SKILLS.md",
     "docs/agent/TOOLS.md",
     "docs/agent/MCPS.md",
@@ -16,6 +18,9 @@ REQUIRED_FILES = [
     ".agent/tasks/README.md",
     ".agent/plans/template.md",
     ".mcp/README.md",
+    ".mcp/semble.md",
+    ".mcp/serena.md",
+    ".sembleignore",
     ".understand-anything/README.md",
     ".understand-anything/.understandignore",
 ]
@@ -32,6 +37,7 @@ REQUIRED_SKILLS = [
     "knowledge-graph-search",
     "understand-refresh",
     "agent-setup",
+    "code-search",
 ]
 
 

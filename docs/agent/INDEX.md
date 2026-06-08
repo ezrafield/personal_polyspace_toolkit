@@ -4,9 +4,10 @@ Use this file to choose the smallest useful context for the task.
 
 ## For Bug Fixes
 Read:
-1. `docs/agent/CODEMAP.md`
-2. Relevant module card in `docs/agent/module-cards/`
-3. Related tests
+1. `docs/agent/CONTEXT_ROUTER.md`
+2. `docs/agent/CODEMAP.md`
+3. Relevant module card in `docs/agent/module-cards/`
+4. Related tests
 
 Do not read:
 - Full product docs
@@ -63,7 +64,10 @@ Read:
 
 ## For Source Understanding Or Code Search
 Read:
-1. `docs/agent/SOURCE_UNDERSTANDING.md`
-2. `docs/agent/module-cards/source-understanding.md`
-3. `.understand-anything/README.md`
-4. `.understand-anything/knowledge-graph.json` only through targeted search when it exists
+1. `docs/agent/CONTEXT_ROUTER.md`
+2. `docs/agent/CODE_SEARCH.md`
+3. `docs/agent/CODEMAP.md`
+4. `docs/agent/SOURCE_UNDERSTANDING.md`
+5. `docs/agent/module-cards/source-understanding.md`
+6. `.understand-anything/README.md`
+7. `.understand-anything/knowledge-graph.json` only through targeted search when it exists

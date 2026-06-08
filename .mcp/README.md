@@ -8,6 +8,8 @@ Do not commit secrets here.
 
 | Name | Purpose | Scope |
 | --- | --- | --- |
+| Semble | Natural-language code and repo search | Default retrieval profile |
+| Serena | Language-server backed symbols, references, diagnostics, and refactors | Optional advanced coding profile |
 | filesystem | Structured local project access | Read/write by project root |
 | github | Issues, PRs, CI, review threads | Repository metadata and selected actions |
 | browser | Local UI verification | Browser automation |
@@ -20,3 +22,5 @@ Do not commit secrets here.
 - Prefer read-only permissions until write access is required.
 - Record required setup steps in `docs/agent/COMMANDS.md`.
 - Use `servers.example.json` as a placeholder, not as a working secret-bearing config.
+- Keep Semble as the default project search profile.
+- Keep Serena optional; enable it only for projects that benefit from language-server semantics.
