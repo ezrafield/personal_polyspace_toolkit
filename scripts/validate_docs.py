@@ -8,11 +8,13 @@ REQUIRED_FILES = [
     "docs/agent/INDEX.md",
     "docs/agent/CODEMAP.md",
     "docs/agent/AGENTS_AND_SKILLS.md",
+    "docs/agent/COMMAND_OUTPUT_POLICY.md",
     "docs/agent/TOOLS.md",
     "docs/agent/MCPS.md",
     "docs/agent/SOURCE_UNDERSTANDING.md",
     "docs/agent/TASK_LOG_TEMPLATE.md",
     ".mcp/README.md",
+    ".mcp/rtk.md",
     ".understand-anything/README.md",
 ]
 

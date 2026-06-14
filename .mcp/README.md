@@ -15,6 +15,7 @@ Do not commit secrets here.
 | browser | Local UI verification | Browser automation |
 | docs | Current official documentation | Read-only |
 | database | Schema and safe queries | Prefer read-only |
+| RTK | Optional compressed terminal output for agent sessions | Agent runtime integration, not CI correctness |
 
 ## Configuration Notes
 
@@ -24,3 +25,4 @@ Do not commit secrets here.
 - Use `servers.example.json` as a placeholder, not as a working secret-bearing config.
 - Keep Semble as the default project search profile.
 - Keep Serena optional; enable it only for projects that benefit from language-server semantics.
+- Keep RTK optional; fall back to raw commands whenever it is unavailable or compressed output is unclear.

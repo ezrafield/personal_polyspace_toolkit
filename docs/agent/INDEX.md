@@ -53,14 +53,16 @@ Read:
 1. `docs/agent/AGENTS_AND_SKILLS.md`
 2. `docs/agent/TOOLS.md`
 3. `docs/agent/MCPS.md`
-4. Relevant files under `.agents/skills/`, `.claude/agents/`, `.mcp/`, or `scripts/`
+4. `docs/agent/COMMAND_OUTPUT_POLICY.md` when command execution or output volume is affected
+5. Relevant files under `.agents/skills/`, `.claude/agents/`, `.mcp/`, or `scripts/`
 
 ## For Agent Kit Setup, Install, Or Audit
 Read:
 1. `agentkit-manifest.json`
 2. `docs/agent/TOOLS.md`
-3. `.agents/skills/agent-setup/SKILL.md`
-4. Relevant installer, setup, audit, or hook files under `scripts/`, `.agent/`, or `.claude/hooks/`
+3. `docs/agent/COMMAND_OUTPUT_POLICY.md`
+4. `.agents/skills/agent-setup/SKILL.md`
+5. Relevant installer, setup, audit, or hook files under `scripts/`, `.agent/`, or `.claude/hooks/`
 
 ## For Source Understanding Or Code Search
 Read:

@@ -24,6 +24,10 @@ Use deterministic scripts for repeatable, cheap, auditable work.
 | `scripts/validate_understand_graph.py` | Validate the expected graph shape before graph-backed work. |
 | `eval/retrieval/run_retrieval_eval.py` | Check whether Semble searches return expected context paths. |
 
+## Command Output
+
+RTK is an optional output-compression layer for noisy local commands. Use the compact make targets when available, and fall back to the original command when RTK is missing or compressed output is insufficient.
+
 ## Make Targets
 
 ```bash
@@ -39,6 +43,12 @@ make audit-module-cards
 make audit-task-logs
 make check-architecture-boundaries
 make task-trace
+make rtk-gain
+make git-status
+make git-diff
+make test-unit-compact
+make lint-compact
+make typecheck-compact
 make understand
 make understand-search QUERY="service"
 make validate-understand-graph
@@ -54,4 +64,5 @@ make retrieval-eval
 - Prefer targeted checks before broad suites.
 - Keep scripts safe by default.
 - Make script output easy for humans and agents to inspect.
+- Compress noisy terminal output when possible, but keep raw reruns available for unclear failures.
 - Avoid hiding policy decisions inside scripts; document decisions in ADRs.

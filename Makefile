@@ -1,4 +1,10 @@
-.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs check-architecture-boundaries update-module-cards targeted-tests task-trace understand understand-dashboard understand-search validate-understand-graph retrieval-eval
+RTK := $(shell command -v rtk 2>/dev/null)
+
+define maybe_rtk
+$(if $(RTK),rtk $(1),$(1))
+endef
+
+.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs check-architecture-boundaries update-module-cards targeted-tests task-trace rtk-gain git-status git-diff test-unit-compact lint-compact typecheck-compact understand understand-dashboard understand-search validate-understand-graph retrieval-eval
 
 install:
 	@echo "Install project dependencies here."
@@ -58,6 +64,24 @@ targeted-tests:
 
 task-trace:
 	python scripts/collect_task_trace.py
+
+rtk-gain:
+	@if command -v rtk >/dev/null 2>&1; then rtk gain; else echo "rtk not installed"; fi
+
+git-status:
+	$(call maybe_rtk,git status)
+
+git-diff:
+	$(call maybe_rtk,git diff)
+
+test-unit-compact:
+	$(call maybe_rtk,make test-unit)
+
+lint-compact:
+	$(call maybe_rtk,make lint)
+
+typecheck-compact:
+	$(call maybe_rtk,make typecheck)
 
 understand:
 	python scripts/understand_placeholder.py

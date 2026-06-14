@@ -24,9 +24,14 @@ Paste or summarize the request.
 - Summarize code and doc changes.
 
 ## Commands Run
-```bash
-# Add commands here
-```
+| Command | RTK Used | Raw Rerun | Reason |
+| --- | --- | --- | --- |
+| TODO | no | no | TODO |
+
+## Token / Context Notes
+- Large command outputs compressed where possible.
+- Raw output used only for failure verification.
+- Remaining context risk: TODO
 
 ## Verification
 Describe what passed and what was not run.

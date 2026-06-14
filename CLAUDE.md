@@ -14,8 +14,14 @@ For every non-trivial task:
 - Use Semble for natural-language code search before reading many files.
 - Use `rg` for exact symbol and string confirmation.
 - Use Serena only when symbol references, declarations, implementations, diagnostics, or safe refactors require language-server semantics.
+- Use compressed command output for noisy commands when RTK is available.
 - Prefer targeted reads over broad scans.
 - Summarize findings before expanding scope.
+
+## Command Output
+- Prefer RTK for noisy commands such as `git status`, `git diff`, tests, lint, typecheck, search, and logs.
+- If compressed output is unclear, rerun the smallest relevant command in raw mode.
+- Do not hide failures; preserve exit codes, stack traces, failed assertions, and actionable errors.
 
 ## Safety
 - Never delete files, rewrite migrations, rotate secrets, or change production config without explicit approval.

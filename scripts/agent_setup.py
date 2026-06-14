@@ -57,6 +57,18 @@ def write_commands(commands: dict[str, str]) -> None:
         lines.append(f"- {name}: `{command}`")
     if not commands:
         lines.append("- TODO: add install, test, lint, typecheck, and dev commands.")
+    lines.extend(
+        [
+            "",
+            "Optional compact-output helpers:",
+            "- rtk-gain: `make rtk-gain`",
+            "- git-status: `make git-status`",
+            "- git-diff: `make git-diff`",
+            "- test-unit-compact: `make test-unit-compact`",
+            "- lint-compact: `make lint-compact`",
+            "- typecheck-compact: `make typecheck-compact`",
+        ]
+    )
     (ROOT / "docs" / "agent" / "COMMANDS.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -68,7 +80,7 @@ def ensure_task_readme() -> None:
     path.write_text(
         "# Task Logs\n\n"
         "Use one markdown file per multi-step task. Include the goal, docs read, files inspected, "
-        "commands run, verification, and follow-up risk.\n",
+        "commands run, compressed-output usage, raw reruns, verification, and follow-up risk.\n",
         encoding="utf-8",
     )
 
@@ -87,6 +99,8 @@ def ensure_agent_entrypoints(stack: list[str], commands: dict[str, str]) -> None
             f"# {filename}\n\n"
             f"Project stack: {summary}.\n\n"
             "Start by reading `docs/agent/INDEX.md`, then only the relevant module card.\n\n"
+            "Prefer compressed output for noisy commands when RTK is available, and rerun raw output only "
+            "when failures are unclear.\n\n"
             "## Commands\n"
             f"{command_lines}\n",
             encoding="utf-8",

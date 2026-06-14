@@ -46,6 +46,28 @@ Use this order:
 - Docs map: `make docs-map`
 - Agent setup: `make agent-setup`
 - Agent audits: `make validate-agent-docs`, `make check-context-staleness`, `make audit-module-cards`
+- Compact output helpers: `make git-status`, `make git-diff`, `make test-unit-compact`, `make lint-compact`, `make typecheck-compact`
+
+## Command Output Rules
+For noisy terminal commands, prefer compressed output.
+
+Use RTK when available:
+- `rtk git status`
+- `rtk git diff`
+- `rtk grep`
+- `rtk find`
+- `rtk pytest`
+- `rtk cargo test`
+- `rtk npm test`
+- `rtk tsc`
+- `rtk eslint`
+
+If compressed output is incomplete or suspicious:
+1. Rerun the specific command in raw mode.
+2. Inspect only the relevant failing section.
+3. Mention the rerun in the final command summary.
+
+Do not hide failures. Test failures, stack traces, exit codes, and actionable errors must remain visible.
 
 ## Code Rules
 - Follow existing patterns before introducing new abstractions.

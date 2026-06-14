@@ -3,7 +3,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TASKS = ROOT / ".agent" / "tasks"
-REQUIRED_HEADINGS = ["## Goal", "## Commands Run", "## Verification", "## Follow-Up"]
+REQUIRED_HEADINGS = [
+    "## Goal",
+    "## Commands Run",
+    "## Token / Context Notes",
+    "## Verification",
+    "## Follow-Up",
+]
 
 
 def main() -> None:

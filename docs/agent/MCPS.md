@@ -29,3 +29,5 @@ Model Context Protocol servers should be added only when they provide useful ext
 ## Project Template
 
 Use `.mcp/README.md` to document candidate MCPs for a project. Use `.mcp/servers.example.json` as a non-secret placeholder. Add real MCP configuration only when the team knows which runtime will consume it.
+
+RTK is documented under `.mcp/rtk.md` because it is an agent-runtime integration point, but it is not required to be an MCP server. Keep it optional and fail open to raw commands.

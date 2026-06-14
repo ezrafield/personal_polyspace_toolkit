@@ -29,12 +29,16 @@ Create a sample agent-native project structure.
 - Added deterministic helper scripts and command wiring.
 
 ## Commands Run
-```bash
-python scripts/validate_docs.py
-python scripts/check_agent_rules.py
-py --version
-git status --short
-```
+| Command | RTK Used | Raw Rerun | Reason |
+| --- | --- | --- | --- |
+| `python scripts/validate_docs.py` | no | no | docs validation |
+| `python scripts/check_agent_rules.py` | no | no | agent rule validation |
+| `py --version` | no | no | environment check |
+| `git status --short` | no | no | repository state check |
+
+## Token / Context Notes
+- No compressed output layer was available for the original example task.
+- Raw output remained small enough to inspect directly.
 
 ## Verification
 - Structure was verified with a recursive file listing.
