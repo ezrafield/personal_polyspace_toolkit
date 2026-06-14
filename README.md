@@ -20,6 +20,16 @@ The design uses short auto-loaded instruction files and richer on-demand documen
 - `scripts/`: helper scripts for generated agent context.
 - `eval/`: golden and regression evaluation placeholders.
 
+| Tool                | Solves                                           | Best place in template     |
+| ------------------- | ------------------------------------------------ | -------------------------- |
+| Semble              | Find relevant code snippets before reading files | Context discovery          |
+| RTK                 | Compress noisy terminal output                   | Command execution          |
+| rg                  | Exact string/symbol search                       | Verification               |
+| Serena              | Symbol-aware navigation/refactor                 | Advanced coding setup      |
+| Understand Anything | Graph/dependency reasoning                       | Architecture understanding |
+| Module cards        | Human-maintained intent                          | Stable context anchor      |
+
+
 ## Getting Started
 ```bash
 make install
