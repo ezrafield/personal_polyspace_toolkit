@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "memories": [
+    {
+      "id": "project-facts",
+      "type": "semantic",
+      "scope": "project",
+      "path": ".agent/memory/semantic/project-facts.md",
+      "summary": "Stable facts about this agent-native template and its context-loading workflow.",
+      "keywords": ["template", "project", "context", "workflow"],
+      "confidence": "high",
+      "last_verified": "2026-06-19",
+      "source_task": ".agent/tasks/README.md"
+    },
+    {
+      "id": "conventions",
+      "type": "semantic",
+      "scope": "project",
+      "path": ".agent/memory/semantic/conventions.md",
+      "summary": "Durable conventions for small safe changes, targeted context loading, and verification.",
+      "keywords": ["conventions", "scope", "tests", "docs"],
+      "confidence": "high",
+      "last_verified": "2026-06-19",
+      "source_task": ".agent/tasks/README.md"
+    },
+    {
+      "id": "decisions",
+      "type": "semantic",
+      "scope": "project",
+      "path": ".agent/memory/semantic/decisions.md",
+      "summary": "Durable decisions about keeping the template lightweight and dependency-free.",
+      "keywords": ["decisions", "dependencies", "memory", "template"],
+      "confidence": "high",
+      "last_verified": "2026-06-19",
+      "source_task": ".agent/tasks/README.md"
+    },
+    {
+      "id": "debugging-playbooks",
+      "type": "procedural",
+      "scope": "debugging",
+      "path": ".agent/memory/procedural/debugging-playbooks.md",
+      "summary": "Reusable debugging workflow for reproducing, isolating, patching, and re-testing failures.",
+      "keywords": ["debugging", "tests", "failure", "workflow"],
+      "confidence": "medium",
+      "last_verified": "2026-06-19",
+      "source_task": ".agent/tasks/README.md"
+    },
+    {
+      "id": "testing-playbooks",
+      "type": "procedural",
+      "scope": "testing",
+      "path": ".agent/memory/procedural/testing-playbooks.md",
+      "summary": "Reusable testing workflow that prefers targeted checks before broad suites.",
+      "keywords": ["testing", "targeted", "lint", "typecheck"],
+      "confidence": "medium",
+      "last_verified": "2026-06-19",
+      "source_task": ".agent/tasks/README.md"
+    },
+    {
+      "id": "refactor-playbooks",
+      "type": "procedural",
+      "scope": "refactor",
+      "path": ".agent/memory/procedural/refactor-playbooks.md",
+      "summary": "Reusable refactor workflow for reading architecture context and checking references.",
+      "keywords": ["refactor", "architecture", "references", "serena"],
+      "confidence": "medium",
+      "last_verified": "2026-06-19",
+      "source_task": ".agent/tasks/README.md"
+    }
+  ]
+}

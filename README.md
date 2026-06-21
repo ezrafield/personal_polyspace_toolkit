@@ -1,43 +1,72 @@
 # Agent-Native Project Template
 
-This repository is a sample structure for projects that collaborate well with coding agents such as Codex and Claude Code.
+This repository is a practical template for projects that collaborate well with
+coding agents such as Codex, Claude Code, and similar tools.
 
-The design uses short auto-loaded instruction files and richer on-demand documentation. Agents start with `AGENTS.md` or `CLAUDE.md`, route through `docs/agent/INDEX.md`, then read only the module cards and specs relevant to the current task.
+The core idea is progressive context loading: keep auto-loaded instructions
+short, route agents through a small index, and load richer docs only when the
+task needs them. The template now also includes lightweight long-term memory so
+future agents can reuse vetted lessons without reading old task logs.
+
+The memory layer is inspired by PlugMem's semantic, procedural, and episodic
+taxonomy, but stays dependency-free: Markdown cards, a JSON index, and small
+deterministic Python scripts. It does not require embeddings, a graph database,
+an API key, or a model server.
+
+## How Agents Use It
+
+For non-trivial work, agents should:
+
+1. Read `AGENTS.md` or `CLAUDE.md`.
+2. Route through `docs/agent/INDEX.md`.
+3. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+4. Verify memory against current code, tests, and docs.
+5. Read the relevant module card or `docs/agent/CODEMAP.md`.
+6. Use Semble, `rg`, Serena, or Understand Anything only as the task requires.
+7. Make the smallest safe change and run targeted checks before broad checks.
+8. Capture task state and reusable lessons when useful.
+
+Memory is a decision aid, not source of truth. Current repository files win when
+they conflict with memory.
 
 ## Structure
+
 - `AGENTS.md` and `CLAUDE.md`: short agent entrypoints.
-- `agentkit-manifest.json`, `install.sh`, and `update.sh`: installer metadata and wrappers for adding the kit to real projects.
-- `.agents/skills/`: reusable project-local skill templates.
+- `docs/agent/`: on-demand routing docs, module cards, policies, and tool notes.
+- `.agent/memory/`: semantic and procedural long-term memory.
+- `.agent/tasks/`: episodic task logs and audit trails.
+- `.agent/plans/`: lightweight plan lifecycle folders and template.
+- `.agents/skills/`: reusable Codex-style skill templates.
 - `.claude/agents/`: Claude Code subagent templates.
 - `.claude/hooks/`: optional lightweight hook examples.
 - `.mcp/`: MCP setup notes and candidate server documentation.
-- `.understand-anything/`: Understand Anything setup notes for source-code knowledge graphs.
-- `docs/agent/`: on-demand agent context and navigation.
-- `.agent/tasks/`: task-local notes and audit trail.
-- `.agent/plans/`: lightweight plan lifecycle folders and template.
-- `src/`: sample application modules.
-- `tests/`: sample test structure and local testing rules.
-- `scripts/`: helper scripts for generated agent context.
-- `eval/`: golden and regression evaluation placeholders.
+- `.understand-anything/`: Understand Anything setup notes.
+- `scripts/`: deterministic helpers for setup, audits, context generation, and memory.
+- `eval/`: retrieval and regression evaluation placeholders.
+- `src/` and `tests/`: sample project modules and tests.
 
-| Tool                | Solves                                           | Best place in template     |
-| ------------------- | ------------------------------------------------ | -------------------------- |
-| Semble              | Find relevant code snippets before reading files | Context discovery          |
-| RTK                 | Compress noisy terminal output                   | Command execution          |
-| rg                  | Exact string/symbol search                       | Verification               |
-| Serena              | Symbol-aware navigation/refactor                 | Advanced coding setup      |
-| Understand Anything | Graph/dependency reasoning                       | Architecture understanding |
-| Module cards        | Human-maintained intent                          | Stable context anchor      |
+## Tool Roles
 
+| Tool | Solves | Best place in template |
+| --- | --- | --- |
+| Module cards | Human-maintained ownership, interfaces, tests, and pitfalls | Stable context anchor |
+| Memory | Durable lessons from previous tasks | Decision aid before search |
+| Semble | Natural-language code and docs retrieval | Context discovery |
+| `rg` | Exact string, symbol, and path confirmation | Verification |
+| Serena | References, declarations, diagnostics, and safe refactors | Advanced coding setup |
+| RTK | Compressed noisy terminal output | Command execution |
+| Understand Anything | Graph and dependency reasoning | Architecture understanding |
 
 ## Getting Started
+
 ```bash
 make install
 make test-unit
 make lint
 ```
 
-This is a template, so most commands are placeholders until you wire them to your actual stack.
+This is a template, so most project commands are placeholders until you wire
+them to your actual stack.
 
 ## Installing Into Another Project
 
@@ -47,7 +76,12 @@ From a checkout of this template:
 ./install.sh /path/to/project
 ```
 
-The installer reads `agentkit-manifest.json`, backs up existing agent config under `.agentkit/backups/`, merges `AGENTS.md` and `CLAUDE.md`, copies harness files, and records installed paths in `.agentkit-installed-files`. Use `./update.sh /path/to/project` to refresh the harness later.
+The installer reads `agentkit-manifest.json`, backs up existing agent config
+under `.agentkit/backups/`, merges `AGENTS.md` and `CLAUDE.md`, copies harness
+files, copies starter `.agent/` files only when missing, and records installed
+paths in `.agentkit-installed-files`.
+
+Use `./update.sh /path/to/project` to refresh the harness later.
 
 After install, run:
 
@@ -55,19 +89,54 @@ After install, run:
 python scripts/agent_setup.py
 ```
 
-The setup script detects the stack and common commands, refreshes `docs/agent/CODEMAP.md`, creates missing module cards, ensures task-log scaffolding exists, and runs validation.
+The setup script detects the stack and common commands, refreshes
+`docs/agent/CODEMAP.md`, creates missing module cards, ensures task and memory
+scaffolding exists, and runs validation.
 
-## Audits
+## Agent Memory Workflow
+
+Use `.agent/tasks/` for raw episodic notes. Promote only compact, reusable,
+non-sensitive lessons into `.agent/memory/`.
+
+| Memory type | Purpose | Location |
+| --- | --- | --- |
+| Semantic | Stable facts, conventions, and decisions | `.agent/memory/semantic/` |
+| Procedural | Reusable workflows and playbooks | `.agent/memory/procedural/` |
+| Episodic | Raw task context and audit history | `.agent/tasks/` |
+
+```bash
+make extract-task-memory TASK=.agent/tasks/<task>.md
+make audit-memory
+```
+
+The extraction script creates a candidate under `.agent/memory/candidates/`.
+Review it manually, remove unsafe or low-value details, move durable facts into
+`semantic/` or workflows into `procedural/`, update `.agent/memory/index.json`,
+then run the audit again.
+
+`make audit-memory` validates index metadata, card structure, source-task and
+related-file links, verification dates, and a 180-day staleness threshold.
+Candidates are drafts and are excluded from installation; only reviewed,
+indexed memory is intended for reuse.
+
+Never promote secrets, credentials, customer data, sensitive stack traces, or
+unverified one-off conclusions. Memory narrows the search; current code, tests,
+specifications, and agent docs remain authoritative.
+
+## Audits And Verification
 
 ```bash
 make validate-agent-docs
 make check-context-staleness
 make audit-module-cards
 make audit-task-logs
+make audit-memory
 make detect-large-agent-files
+make detect-large-context-docs
 ```
 
-Use audits as warnings during setup and stricter gates before sharing the kit with a team.
+Use audits as warnings during setup and stricter gates before sharing the kit
+with a team.
 
 ## Source Understanding
 
@@ -78,4 +147,5 @@ make understand
 make understand-search QUERY="api route"
 ```
 
-Generated graph files are ignored by default; setup notes and ignore rules are committed.
+Generated graph files are ignored by default; setup notes and ignore rules are
+committed.

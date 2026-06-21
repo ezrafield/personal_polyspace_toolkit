@@ -14,9 +14,21 @@ REQUIRED_FILES = [
     "docs/agent/AGENTS_AND_SKILLS.md",
     "docs/agent/TOOLS.md",
     "docs/agent/MCPS.md",
+    "docs/agent/MEMORY_POLICY.md",
+    "docs/agent/MEMORY_RETRIEVAL.md",
+    "docs/agent/MEMORY_PROMOTION_RULES.md",
     "docs/agent/SOURCE_UNDERSTANDING.md",
     "docs/agent/TASK_LOG_TEMPLATE.md",
     ".agent/tasks/README.md",
+    ".agent/memory/README.md",
+    ".agent/memory/index.json",
+    ".agent/memory/semantic/project-facts.md",
+    ".agent/memory/semantic/conventions.md",
+    ".agent/memory/semantic/decisions.md",
+    ".agent/memory/procedural/debugging-playbooks.md",
+    ".agent/memory/procedural/testing-playbooks.md",
+    ".agent/memory/procedural/refactor-playbooks.md",
+    ".agent/memory/candidates/README.md",
     ".agent/plans/template.md",
     ".mcp/README.md",
     ".mcp/rtk.md",
@@ -25,6 +37,9 @@ REQUIRED_FILES = [
     ".sembleignore",
     ".understand-anything/README.md",
     ".understand-anything/.understandignore",
+    "scripts/extract_task_memory.py",
+    "scripts/validate_memory_links.py",
+    "scripts/audit_memory_staleness.py",
 ]
 
 REQUIRED_SKILLS = [
@@ -56,7 +71,7 @@ def main() -> None:
             print(f"Missing: {path}")
         raise SystemExit(1)
 
-    print("Agent docs, skills, and MCP notes look complete.")
+    print("Agent docs, memory scaffold, skills, and MCP notes look complete.")
 
 
 if __name__ == "__main__":

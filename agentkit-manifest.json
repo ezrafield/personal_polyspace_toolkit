@@ -24,6 +24,15 @@
   ],
   "copy_if_missing_files": [
     ".agent/tasks/README.md",
+    ".agent/memory/README.md",
+    ".agent/memory/index.json",
+    ".agent/memory/semantic/project-facts.md",
+    ".agent/memory/semantic/conventions.md",
+    ".agent/memory/semantic/decisions.md",
+    ".agent/memory/procedural/debugging-playbooks.md",
+    ".agent/memory/procedural/testing-playbooks.md",
+    ".agent/memory/procedural/refactor-playbooks.md",
+    ".agent/memory/candidates/README.md",
     ".agent/plans/template.md",
     ".agent/plans/active/.gitkeep",
     ".agent/plans/completed/.gitkeep",
@@ -44,6 +53,7 @@
   ],
   "excluded_files": [
     ".agent/tasks/*.md",
+    ".agent/memory/candidates/*.md",
     ".agent/summaries/",
     ".agent/traces/",
     ".agent/context-cache/",

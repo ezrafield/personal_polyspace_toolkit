@@ -6,6 +6,7 @@ This repository supports a small reusable agent kit:
 - `.claude/agents/`: Claude Code subagent templates.
 - `scripts/`: deterministic tools that are cheaper and more auditable than agent reasoning.
 - `docs/agent/`: routing docs and durable project context.
+- `.agent/memory/`: lightweight semantic and procedural memory.
 
 ## General Skills
 
@@ -21,6 +22,20 @@ This repository supports a small reusable agent kit:
 | `source-understanding` | Use Understand Anything for source discovery and onboarding. |
 | `knowledge-graph-search` | Answer code questions through targeted graph search. |
 | `agent-setup` | Bootstrap project-specific stack, command, codemap, module-card, and validation context. |
+
+## Long-Term Memory
+
+Use `.agent/memory/` after `docs/agent/INDEX.md` and before broad code search.
+Memory should suggest likely files, workflows, and risks, but current source,
+tests, and docs remain authoritative.
+
+Promote task lessons manually:
+
+1. Keep raw task state in `.agent/tasks/`.
+2. Generate a candidate with `make extract-task-memory TASK=.agent/tasks/<task>.md`.
+3. Review it for usefulness, safety, and staleness.
+4. Move durable lessons into semantic or procedural memory.
+5. Update `.agent/memory/index.json` and run `make audit-memory`.
 
 ## General Subagents
 

@@ -6,11 +6,12 @@ This repository is a sample agent-native project template that demonstrates prog
 ## Default Workflow
 1. Understand the task.
 2. Read `docs/agent/INDEX.md`.
-3. Read only the relevant module card under `docs/agent/module-cards/`.
-4. Make the smallest safe change.
-5. Add or update tests when behavior changes.
-6. Run targeted tests before broad tests.
-7. Summarize changed files, commands run, and remaining risks.
+3. Check `.agent/memory/index.json` for relevant long-term memory, then verify it against current files.
+4. Read only the relevant module card under `docs/agent/module-cards/`.
+5. Make the smallest safe change.
+6. Add or update tests when behavior changes.
+7. Run targeted tests before broad tests.
+8. Summarize changed files, commands run, and remaining risks.
 
 ## Context Rules
 - Do not scan the whole repository unless the task requires it.
@@ -24,17 +25,19 @@ For non-trivial code tasks, do not scan the whole repository.
 Use this order:
 1. Read `docs/agent/INDEX.md`.
 2. Read the relevant module card or `docs/agent/CODEMAP.md`.
-3. Use Semble for natural-language code search:
+3. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+4. Verify memory against current code, tests, and docs before relying on it.
+5. Use Semble for natural-language code search:
    - `semble search "<task>" . --content code`
    - `semble search "<task>" . --content all` when docs/config may matter
-4. Use `rg` for exact symbol/string confirmation.
-5. Use Serena when symbol references, declarations, implementations, diagnostics, or safe refactors are needed.
-6. Read full files only after retrieval identifies likely relevant targets.
-7. Before editing, summarize:
+6. Use `rg` for exact symbol/string confirmation.
+7. Use Serena when symbol references, declarations, implementations, diagnostics, or safe refactors are needed.
+8. Read full files only after retrieval identifies likely relevant targets.
+9. Before editing, summarize:
    - selected files
    - why they are relevant
    - uncertainty/risk
-8. After editing, run targeted tests first.
+10. After editing, run targeted tests first.
 
 ## Commands
 - Install: `make install`
@@ -45,8 +48,16 @@ Use this order:
 - Typecheck: `make typecheck`
 - Docs map: `make docs-map`
 - Agent setup: `make agent-setup`
-- Agent audits: `make validate-agent-docs`, `make check-context-staleness`, `make audit-module-cards`
+- Agent audits: `make validate-agent-docs`, `make check-context-staleness`, `make audit-module-cards`, `make audit-memory`
 - Compact output helpers: `make git-status`, `make git-diff`, `make test-unit-compact`, `make lint-compact`, `make typecheck-compact`
+
+## Long-Term Memory
+Use `.agent/memory/` as guidance, not truth.
+
+- Semantic memory stores project facts, conventions, and decisions.
+- Procedural memory stores reusable workflows.
+- Episodic memory stays in `.agent/tasks/`.
+- Promote memory manually only after reviewing candidates for quality, staleness, and sensitive data.
 
 ## Command Output Rules
 For noisy terminal commands, prefer compressed output.

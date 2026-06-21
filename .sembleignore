@@ -10,6 +10,8 @@ __pycache__/
 # Agent-local artifacts
 .agent/traces/
 .agent/context-cache/
+.agent/memory/candidates/*.md
+!.agent/memory/candidates/README.md
 .codex-log/
 .claude/settings.local.json
 CLAUDE.local.md

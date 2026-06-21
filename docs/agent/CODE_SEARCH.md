@@ -19,8 +19,10 @@ Use optionally:
 ## Search Order
 
 1. Read `docs/agent/INDEX.md`.
-2. Read `docs/agent/CODEMAP.md` or the relevant module card.
-3. Search natural language with Semble:
+2. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+3. Verify useful memory against current code, tests, and docs.
+4. Read `docs/agent/CODEMAP.md` or the relevant module card.
+5. Search natural language with Semble:
 
 ```bash
 semble search "<task>" . --content code
@@ -29,20 +31,20 @@ semble search "<task>" . --content all
 
 Use `--content code` for implementation tasks. Use `--content all` when docs, tests, config, prompts, or generated context may affect the answer.
 
-4. Confirm exact names with `rg`:
+6. Confirm exact names with `rg`:
 
 ```bash
 rg "ExactSymbolOrString"
 rg --files | rg "module-name|test-name"
 ```
 
-5. Use Serena when symbol-level behavior matters:
+7. Use Serena when symbol-level behavior matters:
 - Find declarations and implementations.
 - Find all references.
 - Inspect diagnostics.
 - Plan safe renames or refactors.
 
-6. Read full files only after retrieval identifies likely targets.
+8. Read full files only after retrieval identifies likely targets.
 
 ## Decision Matrix
 

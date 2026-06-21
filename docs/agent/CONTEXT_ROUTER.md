@@ -9,12 +9,14 @@ Do not scan the whole repository for non-trivial code tasks. Start with the chea
 ## Standard Route
 
 1. Read `docs/agent/INDEX.md`.
-2. Read the relevant module card or `docs/agent/CODEMAP.md`.
-3. Use Semble for natural-language retrieval.
-4. Use `rg` for exact confirmation.
-5. Use Serena when language-server semantics are valuable.
-6. Read full files only after retrieval identifies likely targets.
-7. Run targeted tests before broad suites.
+2. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+3. Verify useful memory against current files before relying on it.
+4. Read the relevant module card or `docs/agent/CODEMAP.md`.
+5. Use Semble for natural-language retrieval.
+6. Use `rg` for exact confirmation.
+7. Use Serena when language-server semantics are valuable.
+8. Read full files only after retrieval identifies likely targets.
+9. Run targeted tests before broad suites.
 
 ## Tool Profiles
 

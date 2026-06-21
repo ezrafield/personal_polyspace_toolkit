@@ -4,7 +4,7 @@ define maybe_rtk
 $(if $(RTK),rtk $(1),$(1))
 endef
 
-.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs check-architecture-boundaries update-module-cards targeted-tests task-trace rtk-gain git-status git-diff test-unit-compact lint-compact typecheck-compact understand understand-dashboard understand-search validate-understand-graph retrieval-eval
+.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs validate-memory-links audit-memory-staleness audit-memory check-architecture-boundaries update-module-cards targeted-tests task-trace extract-task-memory rtk-gain git-status git-diff test-unit-compact lint-compact typecheck-compact understand understand-dashboard understand-search validate-understand-graph retrieval-eval
 
 install:
 	@echo "Install project dependencies here."
@@ -53,6 +53,14 @@ audit-module-cards:
 audit-task-logs:
 	python scripts/audit_task_logs.py
 
+validate-memory-links:
+	python scripts/validate_memory_links.py
+
+audit-memory-staleness:
+	python scripts/audit_memory_staleness.py
+
+audit-memory: validate-memory-links audit-memory-staleness
+
 check-architecture-boundaries:
 	python scripts/check_architecture_boundaries.py
 
@@ -64,6 +72,9 @@ targeted-tests:
 
 task-trace:
 	python scripts/collect_task_trace.py
+
+extract-task-memory:
+	python scripts/extract_task_memory.py $(TASK)
 
 rtk-gain:
 	@if command -v rtk >/dev/null 2>&1; then rtk gain; else echo "rtk not installed"; fi

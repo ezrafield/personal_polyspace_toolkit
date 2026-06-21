@@ -67,6 +67,12 @@ def write_commands(commands: dict[str, str]) -> None:
             "- test-unit-compact: `make test-unit-compact`",
             "- lint-compact: `make lint-compact`",
             "- typecheck-compact: `make typecheck-compact`",
+            "",
+            "Memory helpers:",
+            "- extract-task-memory: `make extract-task-memory TASK=.agent/tasks/<task>.md`",
+            "- validate-memory-links: `make validate-memory-links`",
+            "- audit-memory-staleness: `make audit-memory-staleness`",
+            "- audit-memory: `make audit-memory`",
         ]
     )
     (ROOT / "docs" / "agent" / "COMMANDS.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -80,9 +86,38 @@ def ensure_task_readme() -> None:
     path.write_text(
         "# Task Logs\n\n"
         "Use one markdown file per multi-step task. Include the goal, docs read, files inspected, "
-        "commands run, compressed-output usage, raw reruns, verification, and follow-up risk.\n",
+        "commands run, compressed-output usage, raw reruns, verification, memory extraction notes, "
+        "and follow-up risk.\n",
         encoding="utf-8",
     )
+
+
+def ensure_memory_scaffold() -> None:
+    memory_root = ROOT / ".agent" / "memory"
+    files = {
+        "README.md": (
+            "# Agent Memory\n\n"
+            "Use this folder for semantic and procedural memory. Memory is guidance, not truth; "
+            "verify it against current files before editing.\n"
+        ),
+        "index.json": '{\n  "version": 1,\n  "memories": []\n}\n',
+        "semantic/project-facts.md": "# Memory: Project Facts\n\nTODO: add promoted semantic memory.\n",
+        "semantic/conventions.md": "# Memory: Project Conventions\n\nTODO: add promoted semantic memory.\n",
+        "semantic/decisions.md": "# Memory: Template Decisions\n\nTODO: add promoted semantic memory.\n",
+        "procedural/debugging-playbooks.md": "# Memory: Debugging Playbooks\n\nTODO: add promoted procedural memory.\n",
+        "procedural/testing-playbooks.md": "# Memory: Testing Playbooks\n\nTODO: add promoted procedural memory.\n",
+        "procedural/refactor-playbooks.md": "# Memory: Refactor Playbooks\n\nTODO: add promoted procedural memory.\n",
+        "candidates/README.md": (
+            "# Candidate Memory\n\n"
+            "Generated candidates require manual review before promotion.\n"
+        ),
+    }
+    for relative, text in files.items():
+        path = memory_root / relative
+        if path.exists():
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
 
 
 def ensure_agent_entrypoints(stack: list[str], commands: dict[str, str]) -> None:
@@ -117,6 +152,7 @@ def main() -> None:
     commands = detect_commands()
     write_commands(commands)
     ensure_task_readme()
+    ensure_memory_scaffold()
     ensure_agent_entrypoints(stack, commands)
 
     failures = []

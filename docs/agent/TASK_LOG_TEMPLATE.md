@@ -36,5 +36,10 @@ Paste or summarize the request.
 ## Verification
 Describe what passed and what was not run.
 
+## Memory Extraction
+- Candidate generated: no
+- Promotion needed: no
+- Notes: TODO
+
 ## Follow-Up
 List remaining risks or future tasks.

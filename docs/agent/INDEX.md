@@ -56,6 +56,14 @@ Read:
 4. `docs/agent/COMMAND_OUTPUT_POLICY.md` when command execution or output volume is affected
 5. Relevant files under `.agents/skills/`, `.claude/agents/`, `.mcp/`, or `scripts/`
 
+## For Long-Term Memory Changes
+Read:
+1. `docs/agent/MEMORY_POLICY.md`
+2. `docs/agent/MEMORY_RETRIEVAL.md`
+3. `docs/agent/MEMORY_PROMOTION_RULES.md`
+4. `.agent/memory/index.json`
+5. Relevant memory cards under `.agent/memory/semantic/` or `.agent/memory/procedural/`
+
 ## For Agent Kit Setup, Install, Or Audit
 Read:
 1. `agentkit-manifest.json`

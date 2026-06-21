@@ -45,5 +45,10 @@ Create a sample agent-native project structure.
 - Python validation scripts could not run because `python` and `py` are not available on PATH in this environment.
 - Git status could not run because this directory is not initialized as a Git repository.
 
+## Memory Extraction
+- Candidate generated: no
+- Promotion needed: no
+- Notes: Example task predates the memory workflow.
+
 ## Follow-Up
 Replace placeholder commands and sample modules with real project behavior.

@@ -18,6 +18,9 @@ Use deterministic scripts for repeatable, cheap, auditable work.
 | `scripts/check_context_staleness.py` | Warn when generated agent context may be older than source files. |
 | `scripts/audit_module_cards.py` | Check module-card coverage, headings, and unresolved TODOs. |
 | `scripts/audit_task_logs.py` | Check task logs for required audit headings. |
+| `scripts/extract_task_memory.py` | Create a manually reviewed memory candidate from a task log. |
+| `scripts/validate_memory_links.py` | Validate promoted memory cards, metadata, index entries, and linked files. |
+| `scripts/audit_memory_staleness.py` | Warn when promoted memory is old or references missing files. |
 | `scripts/check_architecture_boundaries.py` | Catch simple layer import violations. |
 | `scripts/collect_task_trace.py` | Create a task trace from current changed files. |
 | `scripts/search_understand_graph.py` | Search the Understand Anything graph without loading it all into context. |
@@ -41,6 +44,10 @@ make detect-large-agent-files
 make check-context-staleness
 make audit-module-cards
 make audit-task-logs
+make extract-task-memory TASK=.agent/tasks/<task>.md
+make validate-memory-links
+make audit-memory-staleness
+make audit-memory
 make check-architecture-boundaries
 make task-trace
 make rtk-gain
@@ -62,6 +69,7 @@ make retrieval-eval
 - Keep Serena optional for language-server backed symbol work.
 - Use Repomix as an export tool, not as the normal daily retrieval workflow.
 - Prefer targeted checks before broad suites.
+- Use memory as guidance only; verify it before editing.
 - Keep scripts safe by default.
 - Make script output easy for humans and agents to inspect.
 - Compress noisy terminal output when possible, but keep raw reruns available for unclear failures.

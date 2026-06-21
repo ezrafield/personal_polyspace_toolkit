@@ -1,26 +1,49 @@
-# Estimated Benefits With Progressive Context And RTK
+# Estimated Benefits With Progressive Context, Memory, And RTK
 
-This estimate models how much time, token usage, and rework this template can save when it combines two context controls:
+This estimate models how much time, token usage, and rework this template can save when it combines three context controls:
 
 1. Progressive source retrieval:
    `AGENTS.md` / `CLAUDE.md` -> `docs/agent/INDEX.md` -> module cards / `CODEMAP.md` -> Semble -> `rg` -> optional Serena -> targeted files.
-2. RTK-aware command output:
+2. Lightweight long-term memory:
+   inspect `.agent/memory/index.json` -> load only relevant semantic or procedural cards -> verify them against current files before use.
+3. RTK-aware command output:
    compact `git`, search, test, lint, typecheck, and log output by default, with raw reruns only when exact details matter.
 
 These are directional estimates, not benchmark guarantees. Use `make retrieval-eval`, `make rtk-gain`, task traces, and provider usage logs to measure your own project.
+
+## What Changed With Long-Term Memory Joining
+
+The new memory layer targets repeated orientation work that source retrieval and
+output compression do not preserve across tasks. It separates semantic facts
+and conventions, procedural playbooks, and episodic task logs. Only compact,
+reviewed lessons are promoted; current code, tests, and docs remain the source
+of truth.
+
+| Memory stage | Template control | Expected effect |
+| --- | --- | --- |
+| Capture | Structured `.agent/tasks/` logs | Retains task evidence without auto-loading it |
+| Extraction | `make extract-task-memory` | Converts verbose task history into a reviewable candidate |
+| Promotion | Manual review plus `.agent/memory/index.json` | Keeps reusable knowledge discoverable and limits low-quality memory |
+| Retrieval | Scope and keyword lookup after `INDEX.md` | Reduces repeated searches for known conventions and workflows |
+| Verification | Related files, source task, confidence, and staleness triggers | Prevents memory from silently overriding current repository state |
+| Audit | Link validation and a 180-day staleness check | Surfaces missing evidence and aging cards |
+
+This is intentionally a lightweight, PlugMem-inspired design rather than a
+PlugMem dependency. It adds no embedding service, graph database, model server,
+or API-key requirement.
 
 ## What Changed With RTK Joining
 
 Before RTK, this template mostly reduced tokens spent reading the wrong files. RTK adds a second savings layer: reducing tokens spent reading noisy terminal output.
 
-| Context source | Template control | RTK control | Expected effect |
-| --- | --- | --- | --- |
-| Broad source reads | Index, module cards, CODEMAP, Semble, `rg` | None | Fewer irrelevant files loaded |
-| Git status / diff | Compact make targets | RTK filters | Shorter patch review loops |
-| Search output | Targeted `rg` / Semble | `rtk grep`, `rtk find` | Less repeated scan noise |
-| Test output | Targeted tests first | `rtk pytest`, `rtk npm test`, `rtk cargo test` | Failures stay visible without full logs |
-| Lint / typecheck output | Compact make targets | `rtk eslint`, `rtk tsc` | Faster diagnosis of actionable errors |
-| Large runtime logs | Manual narrowing | RTK log filtering when available | Lower context-window pressure |
+| Context source | Template control | Memory control | RTK control | Expected effect |
+| --- | --- | --- | --- | --- |
+| Broad source reads | Index, module cards, CODEMAP, Semble, `rg` | Recalled file and workflow hints | None | Fewer irrelevant files loaded |
+| Git status / diff | Compact make targets | None | RTK filters | Shorter patch review loops |
+| Search output | Targeted `rg` / Semble | Fewer repeated discovery searches | `rtk grep`, `rtk find` | Less repeated scan noise |
+| Test output | Targeted tests first | Recalled test-selection playbooks | `rtk pytest`, `rtk npm test`, `rtk cargo test` | Failures stay visible without full logs |
+| Lint / typecheck output | Compact make targets | None | `rtk eslint`, `rtk tsc` | Faster diagnosis of actionable errors |
+| Large runtime logs | Manual narrowing | Recalled debugging procedures | RTK log filtering when available | Lower context-window pressure |
 
 RTK is part of the context layer, not the correctness layer. It should preserve failures, degrade gracefully when missing, and allow raw output reruns whenever compressed output is incomplete or suspicious.
 
@@ -48,6 +71,25 @@ RTK is part of the context layer, not the correctness layer. It should preserve 
 | External whole-repo review | 250k+ tokens | No major savings if a full Repomix export is required | 0%-20% |
 
 Expected average across normal coding tasks: **50%-75% fewer source-context input tokens**.
+
+### Incremental Memory Impact
+
+Memory overlaps with progressive retrieval, so its benefit should not be added
+directly to the source-context savings above. The clearest gains occur when a
+repository has recurring task types and reviewed memory cards that still match
+the current codebase.
+
+| Scenario | Expected incremental effect beyond routed retrieval |
+| --- | ---: |
+| First task in a new area or no relevant memory | 0%-5% fewer routine input tokens |
+| Repeated task with a relevant verified card | 5%-20% fewer routine input tokens |
+| Recurring debugging or test-selection workflow | 10%-30% fewer discovery and diagnosis loops |
+| Stale, broad, or low-quality memory | No expected gain; may increase rework |
+
+Across a mixed workload, a conservative planning assumption is **0%-10%
+additional routine input-token savings** beyond progressive retrieval and RTK,
+with larger task-level gains only when relevant memory is reused. Treat this as
+a hypothesis until task traces compare work with and without memory retrieval.
 
 ### Command Output
 
@@ -145,6 +187,9 @@ This excludes secondary savings from fewer retries, fewer wrong-file edits, shor
 - `INDEX.md` routes the task to the smallest relevant context.
 - `CODEMAP.md` gives a quick generated map of files, symbols, APIs, dependencies, tests, and risk notes.
 - Module cards preserve ownership and pitfalls without reading full architecture docs.
+- Reviewed memory cards recall durable facts and successful workflows without loading raw task logs.
+- The JSON memory index supports small scope and keyword lookups before broader search.
+- Manual promotion, source links, confidence, and staleness audits limit memory pollution.
 - Semble finds behavior-level matches without knowing exact symbol names.
 - `rg` confirms exact strings and paths cheaply.
 - Serena is optional, so projects only pay the setup cost when language-server semantics are valuable.
@@ -169,6 +214,10 @@ Track these metrics for 20-50 real tasks before and after installing the templat
 | RTK used vs raw reruns | Command summary or task log |
 | Wrong-file or reverted edits | Review notes |
 | Missing-context review comments | PR comments |
+| Relevant memory cards retrieved | Task trace or agent transcript |
+| Memory hits verified or rejected | Task log memory-extraction notes |
+| Time/tokens with and without memory | Paired recurring-task samples |
+| Stale or broken memory cards | `make audit-memory` output |
 
 Run retrieval checks with:
 
@@ -184,11 +233,21 @@ make rtk-gain
 
 Use the results to tune `docs/agent/CODEMAP.md`, module cards, `.sembleignore`, retrieval fixtures, compact make targets, and RTK command-output rules.
 
+Audit the memory layer with:
+
+```bash
+make audit-memory
+```
+
+Review memory candidates and promoted cards separately; candidate count is not
+a success metric. Useful reuse with successful verification is.
+
 ## Conservative Summary
 
 For day-to-day agent-assisted coding, this template should reasonably save:
 
 - **45%-75% routine input tokens overall**
+- **0%-10% additional routine input tokens from verified memory reuse**
 - **50%-75% source/docs input tokens**
 - **25%-60% command-output tokens on command-heavy tasks**
 - **10-50 minutes per normal coding task**

@@ -8,6 +8,7 @@ REQUIRED_HEADINGS = [
     "## Commands Run",
     "## Token / Context Notes",
     "## Verification",
+    "## Memory Extraction",
     "## Follow-Up",
 ]
 
