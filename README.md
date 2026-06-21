@@ -149,3 +149,8 @@ make understand-search QUERY="api route"
 
 Generated graph files are ignored by default; setup notes and ignore rules are
 committed.
+
+## Credits
+
+See [`CREDITS.md`](CREDITS.md) for the open-source projects that influenced this
+template and the optional tools it is designed to work with.
