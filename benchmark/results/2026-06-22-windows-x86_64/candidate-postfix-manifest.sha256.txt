@@ -1,0 +1,308 @@
+HEAD 85f45bbbc3383e071e3c31d730f3f25ffc7143ab
+STATUS
+ M .agent/memory/index.json
+ M .agent/memory/semantic/conventions.md
+ M .agent/memory/semantic/decisions.md
+ M .agent/memory/semantic/project-facts.md
+ D .agent/tasks/2026-06-05-example-task.md
+ D .agentkit-installed-files
+ D .agentkit-version
+ M .agents/skills/agent-setup/SKILL.md
+ M .env.example
+ M .github/workflows/agent-doc-check.yml
+ M .github/workflows/lint.yml
+ M .github/workflows/test.yml
+ M .gitignore
+ M .mcp/README.md
+ M .mcp/servers.example.json
+ M AGENTS.md
+ M CLAUDE.md
+ M CREDITS.md
+ M Makefile
+ M README.md
+ D agentkit-manifest.json
+ D agents_analysis.md
+ D docs/adr/0001-architecture-style.md
+ D docs/adr/0002-database-choice.md
+ M docs/agent/AGENTS_AND_SKILLS.md
+ M docs/agent/ARCHITECTURE.md
+ M docs/agent/CODEMAP.md
+ M docs/agent/CODE_SEARCH.md
+ M docs/agent/COMMANDS.md
+ M docs/agent/CONTEXT_ROUTER.md
+ M docs/agent/INDEX.md
+ M docs/agent/MCPS.md
+ M docs/agent/PITFALLS.md
+ M docs/agent/TOOLS.md
+ M docs/agent/WORKFLOWS.md
+ D docs/agent/module-cards/api.md
+ D docs/agent/module-cards/core.md
+ D docs/agent/module-cards/database.md
+ D docs/agent/module-cards/frontend.md
+ D docs/agent/module-cards/models.md
+ D docs/agent/module-cards/services.md
+ D docs/agent/module-cards/utils.md
+ M docs/product/PRD.md
+ M docs/product/REQUIREMENTS.md
+ M docs/product/USER_FLOWS.md
+ D docs/specs/api-contracts.md
+ D docs/specs/feature-x.md
+ D estimate.md
+ M eval/retrieval/expected_context.json
+ M eval/retrieval/queries.json
+ D eval/run_eval.py
+ D install.sh
+ D instruction.txt
+ D package.json
+ M pyproject.toml
+ D scripts/agent_setup.py
+ D scripts/agentkit_installer.py
+ M scripts/audit_memory_staleness.py
+ M scripts/audit_module_cards.py
+ M scripts/audit_task_logs.py
+ M scripts/check_agent_rules.py
+ D scripts/check_architecture_boundaries.py
+ M scripts/check_context_staleness.py
+ M scripts/collect_task_trace.py
+ M scripts/detect_large_agent_files.py
+ M scripts/detect_large_context_docs.py
+ M scripts/extract_task_memory.py
+ M scripts/generate_codemap.py
+ M scripts/run_targeted_tests.py
+ M scripts/search_understand_graph.py
+ M scripts/understand_placeholder.py
+ D scripts/update_module_cards.py
+ M scripts/validate_agent_docs.py
+ M scripts/validate_docs.py
+ M scripts/validate_memory_links.py
+ M scripts/validate_understand_graph.py
+ D src/AGENTS.md
+ D src/CLAUDE.md
+ D src/__init__.py
+ D src/api/__init__.py
+ D src/api/dependencies.py
+ D src/api/routes.py
+ D src/core/__init__.py
+ D src/core/config.py
+ D src/models/__init__.py
+ D src/models/example.py
+ D src/services/__init__.py
+ D src/services/example_service.py
+ D src/utils/__init__.py
+ D src/utils/strings.py
+ D tests/integration/test_api.py
+ D tests/unit/test_models.py
+ D tests/unit/test_services.py
+ D update.sh
+ D update/learn_plugmem_19062026.md
+ D update/learn_rtk_14062026.md
+?? .agents/plugins/
+?? .claude-plugin/
+?? .polyspace-toolkit.schema.json
+?? BENCHMARK.md
+?? CONTRIBUTING.md
+?? LICENSE.md
+?? NOTICE.md
+?? QWEN.md
+?? "Third Party Licenses/"
+?? UPSTREAM.md
+?? docs/agent/module-cards/clients.md
+?? docs/agent/module-cards/installer.md
+?? docs/agent/module-cards/personal_polyspace_toolkit.md
+?? docs/agent/module-cards/skills.md
+?? docs/setup/
+?? examples/
+?? plugins/
+?? scripts/sync_codex_plugin.py
+?? scripts/validate_product_surfaces.py
+?? skills/
+?? src/personal_polyspace_toolkit/
+?? tests/integration/test_cli.py
+?? tests/integration/test_installer.py
+?? tests/smoke/
+?? tests/unit/test_c_sources.py
+?? tests/unit/test_clients.py
+?? tests/unit/test_discovery.py
+?? tests/unit/test_project_config.py
+?? tests/unit/test_releases.py
+?? tests/unit/test_skill_policies.py
+FILES
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  .agent/plans/active/.gitkeep
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  .agent/plans/backlog/.gitkeep
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  .agent/plans/completed/.gitkeep
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  .agent/plans/reports/.gitkeep
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  .agent/summaries/.gitkeep
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  eval/golden/.gitkeep
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  eval/regression/.gitkeep
+01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b  tests/fixtures/.gitkeep
+04b156d153504baf86e1ef9ace1162cd15131e70a501b610a8c2ac51df51684e  scripts/audit_task_logs.py
+05203a8da0143c5e2d25e78a3ab93a9add973549acb4c4a6079e7f98956687fa  plugins/personal-polyspace-toolkit/.codex-plugin/plugin.json
+059e355ce080b01e07cc93bbd0795da16968905dfb899018b5ba54699da64b4d  eval/retrieval/expected_context.json
+068ad0a05fdc18e527d2c93ec150fece3ae0ec0b592ada30f7d461bfcb24c21e  src/personal_polyspace_toolkit/cli.py
+0a31b077956f54dcdf259e2d0a71293577346c3b7cca272a855c1cb930105d2f  src/personal_polyspace_toolkit/project_config.py
+0acee1674d8218730b747f3e5f88f8e828f11cb79bd0bf557713b1bf9f6c737b  .agent/memory/candidates/README.md
+0b1cd5defdae4e833f06acd44b853144198ec42121ed86fe22e62e9a3a1ae356  eval/retrieval/run_retrieval_eval.py
+0c74cc4d4b04760be1d6a3d68a568c9ec51664a8789f504a70cef8c095b078c9  scripts/check_agent_rules.py
+0cd2e8e3a1b6f1fd222f9db60a46509cd2af8b7a9a51c89ee99b5257971b8b23  .agents/skills/test-debug-loop/SKILL.md
+0ea92e723fe72c2b2c830162dad81c3ea2f782a75cfefc2f3ac9c768b24b966d  docs/agent/CODE_SEARCH.md
+13aa76afbf02bd940b664dd216f4dfa59fb6ba33ffa742b83c4f814827f350ae  docs/agent/WORKFLOWS.md
+16338564b82a9196d9879b8475311c05af3a8ed94d891635b3df56b9e6e49103  docs/agent/COMMAND_OUTPUT_POLICY.md
+16ed0eeca0cfd2d131ec1eaf93d36ab9ffa94229773a5bc91dc52b2d1a3d6727  .github/workflows/test.yml
+181463710d06b44855757fd136a2efbabf19d6e7f6b0806b94e04d977175acba  docs/agent/MEMORY_RETRIEVAL.md
+18aa7548fc13987b0a90c2acc792a6f329fcc3152a23e17d425806e7ff5a6823  docs/product/USER_FLOWS.md
+1935fe339432a09bf846ca689b5e10663b3ef431ae6ffa7aa1c45839d2da1c48  src/personal_polyspace_toolkit/c_sources.py
+1c52921858a07657a9b847880de6a068d75d683432b5f8269decb3a088854705  scripts/summarize_changed_files.py
+2335f7558a1b1b12661851d44401ea1fbd624db268db93eb3ebf480f85509d31  pyproject.toml
+2577d963c3cff13d0beca219cbe3f35b643a08dccf4e2fd870f0ec2f3978aacf  plugins/personal-polyspace-toolkit/skills/justify-findings/SKILL.md
+2577d963c3cff13d0beca219cbe3f35b643a08dccf4e2fd870f0ec2f3978aacf  skills/justify-findings/SKILL.md
+271f7f2d905cc154c4dca969ed7b3e00047d28389618547618097ff6c210453c  docs/agent/CONVENTIONS.md
+2829404a9f70d67e67b18f0759d432c8369229fc65daba02032d0c54ddc7f645  docs/agent/CONTEXT_ROUTER.md
+2953d404b2a2890999a3e9bfb676665414b45ad3f55d562e994218516b79fd2b  .understand-anything/config.example.json
+299470c6fd34fce7bf1d91683a10349f289a3685d3b21606ef51ce0f8300e732  plugins/personal-polyspace-toolkit/skills/find-checker-documentation/SKILL.md
+299470c6fd34fce7bf1d91683a10349f289a3685d3b21606ef51ce0f8300e732  skills/find-checker-documentation/SKILL.md
+2ab43d21ac5105c4d11382fb9e2d574a1bb7fa4f0e382f0aa15edd283247b55e  scripts/audit_memory_staleness.py
+2b527bc2f20fc1b57ce372165301bac185782b9bd2cf160bdbdd4fe3626f31d0  .agent/memory/procedural/refactor-playbooks.md
+2b902908a3ce9d528c1f554166245c0f71025cd87bf64ed78d1865c49fc6f75f  UPSTREAM.md
+30c03e76b87f7c1d518725dd32cf5de5b6848c0d4ae675ecc713e71b83b552ee  .claude/agents/security-reviewer.md
+3108f8eeba45a4c6595eb7987da489a6127eaa4f4e06e7be5208904f19f6bde0  src/personal_polyspace_toolkit/discovery.py
+31d6cf7cfd2555c6d1cb9cb2528e3f192b5214662c59f9aa250a58e8eda579b3  tests/unit/test_discovery.py
+3406181a44077b52b159d099a69b45550e7633d4aad74e90fdc36fadb803ad29  plugins/personal-polyspace-toolkit/skills/fix-findings/SKILL.md
+3406181a44077b52b159d099a69b45550e7633d4aad74e90fdc36fadb803ad29  skills/fix-findings/SKILL.md
+3cc7f66028f5cc7f433c9f575f05194d7246e87f8d10d1a41f11aae6e5818e18  .mcp/semble.md
+3cf270666e8de2325973fcc8a4a1a284b26f52d90388e501dca71500a2497136  .agent/memory/procedural/testing-playbooks.md
+3cfaa59ce83a61e540006fabc71363114cfdc0efa6c63cc8cc5a86705c032a46  src/personal_polyspace_toolkit/state.py
+41389a26a21e41cf7ebc9b0d988a5e44dc67ed3d085d666e09184303f8b56c59  scripts/detect_large_context_docs.py
+4187283ef8d59200ed8be5303e18aca57307a8dd9a2c8662205842bbb1727255  .claude/agents/docs-maintainer.md
+4475c82a66bc9dc0e540e294e329eabcedd4e7337b1fdef25229b8db3fb780dc  .claude/agents/code-reviewer.md
+4609e75b2748a43aa2909e15508a0e623274e33dd0c155b9353f3f21434ab33c  NOTICE.md
+4773f54f57afae4af3ea4b9d348f76bb08a8f6f83eb720f82af6fc7476fb7f2b  CREDITS.md
+48cf686de519d8c64d4b85126557b44dd67ebeac5a449e6b566ac09fb3edf691  .agent/memory/procedural/debugging-playbooks.md
+4af759245df9b6d5fc4d11af8d228f55569e3ee5bb274ec1ab4d5e297228a824  scripts/validate_docs.py
+4ba840b17fe35f02e2db88de95d6113986fd9b42960f56362a8c6c632e889cd0  tests/unit/test_c_sources.py
+4c6e9dd616c1305e8788f5b69b23041a87fae7daf1c00da141a6d0ff84e557b4  plugins/personal-polyspace-toolkit/skills/query-justification-catalog/SKILL.md
+4c6e9dd616c1305e8788f5b69b23041a87fae7daf1c00da141a6d0ff84e557b4  skills/query-justification-catalog/SKILL.md
+4d84ea1ace2b70b43cdb009187478fa12e18ba62d026bf2c71fca448361f1333  tests/unit/test_releases.py
+4da89fa7f8e92a28ec40d7a5216f8f50dcd5ce4d70b62e2a1429c68a80dd1b69  examples/polyspace-toolkit.json
+4f1753684f38cec4ea10334aedc009be135bd60d58339b963c7257de3b639375  scripts/check_context_staleness.py
+5066e335fbf730551b54b289ddb53b02451b929d7aebc0a7c2730bb8dfc6bdc2  plugins/personal-polyspace-toolkit/skills/configure-build-options/SKILL.md
+5066e335fbf730551b54b289ddb53b02451b929d7aebc0a7c2730bb8dfc6bdc2  skills/configure-build-options/SKILL.md
+50bdec80309c7fb095da3a2044e87a54d32cabeb9999aeffe109fad6e776e00b  scripts/collect_task_trace.py
+51de7b3c086fe014c9ff9a5bd947b25bcf5cfe9f8dfadacb2cfa846c5ad337c4  scripts/detect_large_agent_files.py
+532815e383429aee7a7d85cccbabc3336e2ebec8eb8a6175b45df9a0430010f1  .agents/plugins/marketplace.json
+57d7e214da3a5ef43d104eb4a4e50f5d23e16dcd9127c79a5aa02f7be46ee69e  docs/agent/MEMORY_PROMOTION_RULES.md
+5af6456750199ad925a5eb181a2051a3e8e67107d26890d34cb06eac337242bb  .agents/skills/code-search/SKILL.md
+5dabd9a37aba8da278e2a3642a347223c9806959aa78d61ea88c6cdb45bc7cb0  .agent/tasks/README.md
+5dead0509f07f9b13b4c7d6a3f5624bf2b8675992f0975f5262671211f6a2808  CONTRIBUTING.md
+5df26d519542cfc0b78d387d4b9761ce6cfb42556e743fda12ba5972a2bd3da4  plugins/personal-polyspace-toolkit/skills/query-justification-catalog/catalog-schema.md
+5df26d519542cfc0b78d387d4b9761ce6cfb42556e743fda12ba5972a2bd3da4  skills/query-justification-catalog/catalog-schema.md
+5f7971c2546425f6ae148a0b3a81e1fbb9005551ec26cb1331c61a607cd4bf7c  docs/agent/TASK_LOG_TEMPLATE.md
+60282002db03a2f6d904c5ec1ead8443f3764b6545edcb8250f7c0d9cdaad532  plugins/personal-polyspace-toolkit/skills/configure-checkers/cli-usage.md
+60282002db03a2f6d904c5ec1ead8443f3764b6545edcb8250f7c0d9cdaad532  skills/configure-checkers/cli-usage.md
+622774acd15cf884005423443d5d8be35a0455ef412951127a43a5404770b983  src/personal_polyspace_toolkit/clients.py
+6256efdad124795a0973908bc4b3495adc866218165b6281c7f83b29a5f035d7  .agents/skills/knowledge-graph-search/SKILL.md
+65010f89dbb98b537bea0825b73a88ea1232044bfe3e8309020f98bef79d884b  README.md
+709b2b54fd109bef60c37fdb801950122bcb319deaae06f80140bdfade2b8481  src/personal_polyspace_toolkit/constants.py
+71136f96f8a3f907d7ae0f0c175cef6ced48f373412f29fb11bffe6890c981e4  .gitignore
+73469627f8adfcfa9fa3940ceada86be4f1d5eb8063855b57f2ec115a2367169  .claude/agents/test-debugger.md
+7389c633739492c47c9bbdf1d98179a734fd6b7baa31a44911fa149eb1d0be4f  docs/agent/AGENTS_AND_SKILLS.md
+79e2d21555e23886e82a67d335001944cb35802fdb7bb478168dd80bbd6079c1  tests/unit/test_skill_policies.py
+7a133c66644e1460a9836dedd0bad5eb29782f274c7008d59fb3cfc8e72bb1e1  .agents/skills/docs-sync/SKILL.md
+7a718f82b1bb98d16fc415efe05740c988275c9050d8d6805fbd65b30303e7c8  plugins/personal-polyspace-toolkit/skills/configure-checkers/SKILL.md
+7a718f82b1bb98d16fc415efe05740c988275c9050d8d6805fbd65b30303e7c8  skills/configure-checkers/SKILL.md
+7b6eda7822003f8ecdbe2ebee644e893e198e51fe85f9a14ca32b5e61bace0ec  scripts/search_understand_graph.py
+7e9af23c4d8769e855436c950c52874ef9d5ac0c36f24531913b3ca965d6860f  tests/__init__.py
+809f741c6c9f38145cc29d23886c96d7bc6d9b480c9fe6dc6dd3e624c97282c9  Third Party Licenses/matlab-mcp-core-server/component.json
+8101470bff72c1efa735d00d1c2090837edd8bd925b3443bfe53c3cab6084770  docs/agent/MCPS.md
+82e9e423c25bc852583f67ca844b1224a3c37fe3b29d8de6b2de8d4664b975cd  docs/agent/module-cards/source-understanding.md
+82fa641bd20ec68043cf053c7b9d16a39d8f17e403cfee6d7fd819abea3c8852  plugins/personal-polyspace-toolkit/skills/toolkit-setup/SKILL.md
+82fa641bd20ec68043cf053c7b9d16a39d8f17e403cfee6d7fd819abea3c8852  skills/toolkit-setup/SKILL.md
+845e7091dd83e81160757b8200e58ccb3dc4743dc814d3d4a935bdeb93a00e92  .agents/skills/repo-navigator/SKILL.md
+855ba174ca1ff984547580868bdbe98197971ba18d80a0f665b43fff4a0ad9ae  scripts/run_targeted_tests.py
+866ab0b0c3a4537e5966071f294587f93eabf55ae28350601f3dcbaf025ca491  .claude/agents/understand-researcher.md
+86b219f5158c7eabd323b1947e81e92d9fd28cdbd8ee78b04538f7974216a03b  .understand-anything/README.md
+8742a7497a7c1c923e5493c44460c1a7e0f765d3538f8f41118509844421b867  plugins/personal-polyspace-toolkit/skills/run-analysis/SKILL.md
+8742a7497a7c1c923e5493c44460c1a7e0f765d3538f8f41118509844421b867  skills/run-analysis/SKILL.md
+877b226c36228515811d62d3f42a6413dfca28a0c716678fdf8d94ea7fc4b1ee  tests/integration/test_cli.py
+88f1108a2ff3203d7c44ecfd2a7f986e48cf42d32642bfae64465655414fb523  AGENTS.md
+89bc61f0bb23ae6c37b763e24cadae9bff2eaca681cdbd0493892c159fdff210  docs/agent/module-cards/personal_polyspace_toolkit.md
+8adfee1086977e7f0ae39df9373128a1dd0124e891e2859b17f9d12c8237b8d5  .understand-anything/.understandignore
+8d10c4a209c9a8f7acc949407e27f177001b9fd85585fd162f89791eecde0316  .polyspace-toolkit.schema.json
+8f7399980441fea78aab74f564c99b26e4a31fed1b279fbb83afe9f73fd465b1  .agents/skills/safe-implementation/SKILL.md
+905ab2e1dfb588d26555df299f0d740f561eb13a5615ae7b938a00be2146447f  tests/AGENTS.md
+90c1535609f3441db42726d4ced07efe425e81b5ba899b7dd9c19e74997f3e22  .agents/skills/task-handoff/SKILL.md
+913ed51a9ce7381adf823987f659751202512e90ab3a0032b988083ee77e6d9c  plugins/personal-polyspace-toolkit/skills/find-option-documentation/SKILL.md
+913ed51a9ce7381adf823987f659751202512e90ab3a0032b988083ee77e6d9c  skills/find-option-documentation/SKILL.md
+91f281f6d8aece3f23e43ad6b24794c7a23f3a2ad9a17f7ebd5a0cef69ac1faa  eval/retrieval/queries.json
+92119524bf25e683f123dc6e99862d02705f5df87011130b41fbedccdc884769  .mcp/serena.md
+93791a36d02f27e8c889af136847cc9460f2c692f2d1fe1031a04da758f4ce6f  docs/agent/SOURCE_UNDERSTANDING.md
+95da0196d51c2fd677a8b726ca23c470f9111bcc80fb9aab6d9e8e58cca87766  docs/product/REQUIREMENTS.md
+9be99a902d3e5064a7d25f3bdacf76390c8a00a434652b35ccd34b4f9dbc9230  scripts/validate_product_surfaces.py
+9c6eaeeda7d6d75eb3976836e740ef9760ed6eb56304cc770b8a2cb0b197f3ae  scripts/validate_memory_links.py
+9eed9109526262d7489a6aeedef664189b5020bcaf97e0f22a3d52f27752dc59  scripts/generate_codemap.py
+a0fba0fe91c3a4f4e8192c47917fda9651c3244602249cc9f73ab9ea2edb497c  .github/workflows/agent-doc-check.yml
+a2e1390083ec1cb915e8457f43ec80fc6efcd24296f41429c4fcca7729ac4182  docs/agent/module-cards/clients.md
+a31621dde3dac8c7047b8b0dcca3a1d449369a7fa5785610b1b8c345c86755a7  tests/unit/test_project_config.py
+a4ab46b9ac2a25b103e80bd23ee68f1c8da0691fe5450ea98f2b451f75636841  scripts/sync_codex_plugin.py
+a4f0cbaa8f24987e935d9f56d246539d4ad55fb05e65f1d6a3b3b3bc5a336f56  .claude-plugin/marketplace.json
+a5bddd234d036a266c4421d81af00aa339438852f21d39fcb48e8df606a760ad  .agent/plans/template.md
+a72a810f4d95e2935c04bb52255f60d17e10c77bdbd2c1207c97b65b2509f98b  .agents/skills/architecture-decision/SKILL.md
+a95ac12d48aed44182f6167737ea96b529588d511d95d48653f9b7c742407372  src/personal_polyspace_toolkit/installer.py
+aa11a0f86306fe40dd3f57c4d1178d3f30df4e81242294a1ff0d5f555626e412  .sembleignore
+aa41c551c53b47af3dba8bf5296d29fb26ede11a3387d6712cd167d38d6a3cf1  plugins/personal-polyspace-toolkit/skills/generate-c-pstunit-tests/SKILL.md
+aa41c551c53b47af3dba8bf5296d29fb26ede11a3387d6712cd167d38d6a3cf1  skills/generate-c-pstunit-tests/SKILL.md
+ae079d693da06d118c2b01df0bea7b3aa5b310d99c1ca13538001514663e98ba  .agents/skills/agent-setup/SKILL.md
+aec61984967c135eac2a215a5bc1d61b3196888feacc01530b2eab74ac7aab05  .agent/memory/semantic/conventions.md
+af2cb27c41be0b00517abb806be94471757fe95fce2c00752a8b9d991f9986c5  .agent/memory/semantic/project-facts.md
+b07f0558552eece8a06ce32292e62a4413de6f0e33205364ef784121367b5faa  docs/agent/PITFALLS.md
+b0b2fbaa7a4ab8d5fd33de06c6005a39a67f331a618b2f4a95d0a87a8139e82b  QWEN.md
+b1164480bf722952f81397ddc1b4eed361e7585925c5a381cb2d7ce74578d3ab  docs/agent/COMMANDS.md
+b32b429524db291562c4c9f3aa978cbe76e5984768eeafb044279fd4b9fea8a3  scripts/validate_agent_docs.py
+b37466c50ddd0cd8e7ef88dd3e0ebfb2f406abc3d5b372bdf52183b57fd73c55  docs/agent/module-cards/installer.md
+b500045c38d0f3d2a2e0122de84a542da966a82891f557825fa930565565bba7  .claude/hooks/warn-large-agent-files.sh
+b642505aaeae753a594a5d9c1fd1ea66b1ad380981b7107cc9addfdd9622fc2b  plugins/personal-polyspace-toolkit/skills/configure-build-options/cli-usage.md
+b642505aaeae753a594a5d9c1fd1ea66b1ad380981b7107cc9addfdd9622fc2b  skills/configure-build-options/cli-usage.md
+b6a48639a46eac859a3379b6fc2c1e1059f59958cab20ca3bf9a0e895db5d315  plugins/personal-polyspace-toolkit/skills/c-compliance-loop/SKILL.md
+b6a48639a46eac859a3379b6fc2c1e1059f59958cab20ca3bf9a0e895db5d315  skills/c-compliance-loop/SKILL.md
+b6fbbfe13efc2dbe902bfa288870514f55d2c958dc3bd0a6614a4114cd7d9137  LICENSE.md
+b92ec2a4ea0d01a74dc92a6ba764feae124de07227c6e74ba30e007beebf20a2  docs/agent/ARCHITECTURE.md
+ba9a55385aa6943d1a2e547a5c6d0286b02a25ed5073f8231dcc1687dd155ed2  .env.example
+bc7753e4442a0647665d959f5ba331061a048062d8dbc6899bcb5cc1bd8f5088  .agents/skills/understand-refresh/SKILL.md
+bd2ad1f0a2428822cb9c2b61090294223356c07ba06941da8c195fa88a45bc3c  docs/agent/TOOLS.md
+bf2adbb2ae203061e134ebc4ccb7706ceced949041cec8606d2080a714e05f89  scripts/understand_placeholder.py
+bf79c370da87d97cb52cda66ec93bcb9f976397ed515b811c13d1ca6be2be0a6  .mcp/servers.example.json
+c076d6e5d4c89cc81c0f1e29b976e0f258dddbd93ddc57a265dda7d3291f3872  tests/smoke/test_real_polyspace.py
+c21b0cd0589bf950fba42fc17ccc1098b28e43f792cb56a98482ca0c459ae34b  src/personal_polyspace_toolkit/errors.py
+c251ef96657b02534ed311f6576d2663a548461d28624166cb7cd823b182b2d8  docs/product/PRD.md
+c30a61af400bae7d360e9dc531e4316de54437c47eef0baded70674c1ee26782  CLAUDE.md
+c3882da680a95e8b70f0bbe4c1dbe553c31063c311eb567e045103bc7b133ded  BENCHMARK.md
+c4713929870267210af320b83fb85190f9c6dd025ff9918abfa19ac1d5826478  .claude/hooks/block-secret-output.sh
+cab407d3868b02e907a42aff04be0f5b6c3747063dd4ebc320a4413e126b83b4  docs/agent/INDEX.md
+cbb0193df8d9c6d03e44561819cf433f923b85799fa737ebc1b12b97b418937e  src/personal_polyspace_toolkit/releases.py
+ce0f43800600b25f85f3f892af09379cff422233a26ec0db213676101b042fa5  docs/agent/MEMORY_POLICY.md
+cf506342288794e0c071c9830ea9d658b0110081fd28e4f045a393a0b7df65e9  src/personal_polyspace_toolkit/__init__.py
+cf9a6fde53ab45e4cb9b47b066743547a6afea124b1429762256bce5a6986b4f  scripts/extract_task_memory.py
+d123267899350fd2e89391bb1734b532bb5dddd5dea9bd87c4dc05437fb5073a  .agent/memory/semantic/decisions.md
+d1c8de2c96625645f93b81d15d5b89d960d723a9755aa91af1229cf0963d2741  .mcp/rtk.md
+d236b2de3cec063a711c3cf35740544c7832e61f4709f17a550deb5dd9e7a705  plugins/personal-polyspace-toolkit/skills/generate-c-pstunit-tests/reference/xunit_api_c.md
+d236b2de3cec063a711c3cf35740544c7832e61f4709f17a550deb5dd9e7a705  skills/generate-c-pstunit-tests/reference/xunit_api_c.md
+d5230171269d7fa45e26c202d0d7caac1167e81dc42ed18c1e7a8e82f8d5d343  .claude/hooks/README.md
+d5610ac85eae2de5909a4555cd1799e1c3e147161cbc952c2b8bac4ac5e0384c  docs/agent/CODEMAP.md
+d5cb47a252f5ea02c624bff2876298e6e1859584bbce5b9910f6547053c23c4b  Makefile
+d8045215d8719e3675106b4c75a54e30e8301e6b284a38d661c6f28d505e8658  .mcp/README.md
+da80298b755a044374f74c8c9ead9106f9051fdcc506ee1d8b657b4e732a41c2  Third Party Licenses/matlab-mcp-core-server/LICENSE.md
+df23f054b362f2e082f429f87285fea0043fb19c39748e9775b6a11ece85731e  scripts/audit_module_cards.py
+e1b3d994fe4e4398047070c8132a07187587c1de288907431b5e1d3438d09911  scripts/validate_understand_graph.py
+e4cbc9580c5b06fb15b6945c6ad8c6e3102410e0ad2bf2893d571ba678701875  .agents/skills/code-review/SKILL.md
+e4f8dcb8c46e7fceaf3ecce49adcab495b8c9d37083d648d814ebc1412349d43  .agent/memory/index.json
+e6733b81e1b0c90da4fe768dc62b43aa3db74c48790d115ef13d762e81e79e1e  tests/unit/test_clients.py
+e7d6d350a04fd7d60f12df53279b6e29bf105c80b934262c7495c1ed781ad166  docs/agent/module-cards/skills.md
+e8d3c3db5f0880c427d736cb0450d7e8e0fb4949b5b04e2ac13405caadfd1d5b  .gitignore.sample
+ed1099eef4fa15190b76a1490f0dee498d6d457a9765bbeb7b1ab242f5cc696e  tests/integration/test_installer.py
+eff320092f189720c1d7cfe0bd59847c287461120c6b333697bd02c6a8734dfc  examples/qwen-settings.local.example.json
+f28088f5abfd79e0c9b597b610117ed8d91fddd47ab495e49a7a5afdd21893fb  docs/setup/qwen-local.md
+f37df5d05449ee92a19af85122449103c9fe03ec54553fbb81e654efbac9551a  .claude/agents/repo-researcher.md
+f5d55a22ef83bd4909f5e9c55487baf3056d814aad00ef688a831a6b643c2388  .github/workflows/lint.yml
+fbf54a3df81170c13b0aba6b4085851356ff2b05cba263f55fde7b8f689957ee  plugins/personal-polyspace-toolkit/skills/run-analysis/cli-usage.md
+fbf54a3df81170c13b0aba6b4085851356ff2b05cba263f55fde7b8f689957ee  skills/run-analysis/cli-usage.md
+fcb4f7bb60758731140616cf37ea418a87dfb5d070eaf1d066152f3c676be49a  .agent/memory/README.md
+ff43905082c24daaa99bbd24c098d7b894fc05f1280605156888a73cc5024178  .agents/skills/source-understanding/SKILL.md

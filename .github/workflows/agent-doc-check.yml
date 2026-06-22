@@ -1,4 +1,4 @@
-name: agent-doc-check
+name: agent-context
 
 on:
   pull_request:
@@ -14,3 +14,6 @@ jobs:
         with:
           python-version: "3.11"
       - run: python scripts/validate_docs.py
+      - run: python scripts/validate_agent_docs.py
+      - run: python scripts/audit_module_cards.py
+      - run: python scripts/validate_memory_links.py

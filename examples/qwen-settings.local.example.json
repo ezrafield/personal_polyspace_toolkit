@@ -1,0 +1,35 @@
+{
+  "security": {
+    "auth": {
+      "selectedType": "openai"
+    }
+  },
+  "model": {
+    "name": "REPLACE_WITH_LOCAL_MODEL_ID"
+  },
+  "modelProviders": {
+    "openai": [
+      {
+        "id": "REPLACE_WITH_LOCAL_MODEL_ID",
+        "name": "Local Qwen",
+        "envKey": "LOCAL_QWEN_API_KEY",
+        "baseUrl": "REPLACE_WITH_OPENAI_COMPATIBLE_BASE_URL",
+        "generationConfig": {
+          "timeout": 300000,
+          "maxRetries": 1
+        }
+      }
+    ]
+  },
+  "mcpServers": {
+    "polyspace": {
+      "command": "REPLACE_WITH_ABSOLUTE_MCP_SERVER_PATH",
+      "args": [
+        "--polyspace-root=REPLACE_WITH_ABSOLUTE_POLYSPACE_ROOT",
+        "--disable-telemetry=true"
+      ],
+      "timeout": 600000,
+      "trust": false
+    }
+  }
+}

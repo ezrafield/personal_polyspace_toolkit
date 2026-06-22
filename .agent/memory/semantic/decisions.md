@@ -1,30 +1,26 @@
-# Memory: Template Decisions
+# Memory: Decisions
 
 Type: semantic
 Scope: project
 Confidence: high
-Last verified: 2026-06-19
+Last verified: 2026-06-22
 Source task: .agent/tasks/README.md
 
 ## When to use
-
-Use this memory when deciding whether to add dependencies or expand the agent kit.
+Use when proposed work changes dependencies, client support, release selection, or model integration.
 
 ## Content
-
-- The memory layer is PlugMem-inspired but does not depend on PlugMem.
-- The template favors lightweight Markdown, JSON indexes, and deterministic Python scripts over embeddings, graph databases, or model-hosting requirements.
-- Memory promotion is manual: scripts can generate candidates, but promoted memory must be reviewed and intentionally indexed.
-- Current source code, tests, and docs override memory when they conflict.
+- `tomlkit` is the sole runtime dependency because format-preserving Codex TOML edits should not use
+  ad hoc string manipulation.
+- MCP server setup defaults to the release tested with the toolkit, not the latest network release.
+- Client registration is user-scoped.
+- Qwen Code uses manually merged settings and a later-provided local endpoint; no extension or writer.
+- The public derivative retains the MathWorks-product-only license condition and clear attribution.
 
 ## Related files
-
-- `docs/agent/MEMORY_POLICY.md`
-- `docs/agent/MEMORY_PROMOTION_RULES.md`
-- `.agent/memory/index.json`
+- `pyproject.toml`
+- `UPSTREAM.md`
+- `docs/setup/qwen-local.md`
 
 ## Staleness triggers
-
-- A real memory engine, embedding index, or graph database is adopted.
-- Promotion policy changes from manual to automatic or rule-assisted.
-- Template dependency policy changes.
+Runtime dependencies, licensing, Qwen integration, or release policy changes.

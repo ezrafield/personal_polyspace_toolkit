@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 CARDS = ROOT / "docs" / "agent" / "module-cards"
@@ -10,10 +9,17 @@ REQUIRED_HEADINGS = ["## Responsibility", "## Key Files", "## Public Interfaces"
 def main() -> None:
     problems = []
     if SRC.exists():
-        for directory in sorted(path for path in SRC.iterdir() if path.is_dir()):
+        source_directories = (
+            path
+            for path in SRC.iterdir()
+            if path.is_dir() and not path.name.endswith(".egg-info") and any(path.rglob("*.py"))
+        )
+        for directory in sorted(source_directories):
             card = CARDS / f"{directory.name}.md"
             if not card.exists():
-                problems.append(f"Missing module card for {directory.relative_to(ROOT).as_posix()}/")
+                problems.append(
+                    f"Missing module card for {directory.relative_to(ROOT).as_posix()}/"
+                )
                 continue
             text = card.read_text(encoding="utf-8")
             for heading in REQUIRED_HEADINGS:

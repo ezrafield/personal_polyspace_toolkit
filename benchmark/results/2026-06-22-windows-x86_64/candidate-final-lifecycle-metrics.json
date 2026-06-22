@@ -1,0 +1,33 @@
+﻿{
+    "candidateState":  "post-fix",
+    "S02":  {
+                "exitCode":  0,
+                "beforeEntries":  0,
+                "afterEntries":  0,
+                "passed":  true
+            },
+    "S01":  {
+                "exitCode":  0,
+                "binarySha256":  "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+                "expectedSha256":  "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+                "wallTimeSeconds":  9.9,
+                "passed":  true
+            },
+    "S03":  {
+                "exitCode":  0,
+                "beforeTreeSha256":  "543c2e28375ddf838ef32fb0cedd2bd186810b66bc2ef847615acf6e07924366",
+                "afterTreeSha256":  "543c2e28375ddf838ef32fb0cedd2bd186810b66bc2ef847615acf6e07924366",
+                "passed":  true
+            },
+    "verify":  {
+                   "exitCode":  2,
+                   "expectedNotReadyWithoutPolyspace":  true
+               },
+    "S08":  {
+                "exitCode":  0,
+                "binaryExists":  false,
+                "skillCount":  0,
+                "registrationExists":  false,
+                "passed":  true
+            }
+}

@@ -1,0 +1,10 @@
+{
+  "$schema": "../.polyspace-toolkit.schema.json",
+  "schemaVersion": 1,
+  "language": "c",
+  "profiles": ["misra-c-2012", "polyspace-defects"],
+  "checkersFile": ".polyspace/checkers.xml",
+  "buildOptionsFile": ".polyspace/build-options.txt",
+  "include": ["src/**/*.c"],
+  "exclude": ["vendor/**"]
+}

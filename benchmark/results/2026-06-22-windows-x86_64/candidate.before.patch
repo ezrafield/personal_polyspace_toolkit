@@ -1,0 +1,4985 @@
+﻿diff --git a/.agent/memory/index.json b/.agent/memory/index.json
+index 0fd8403..b214089 100644
+--- a/.agent/memory/index.json
++++ b/.agent/memory/index.json
+@@ -6,10 +6,10 @@
+       "type": "semantic",
+       "scope": "project",
+       "path": ".agent/memory/semantic/project-facts.md",
+-      "summary": "Stable facts about this agent-native template and its context-loading workflow.",
+-      "keywords": ["template", "project", "context", "workflow"],
++      "summary": "Stable facts about the C-only Personal Polyspace Toolkit.",
++      "keywords": ["polyspace", "c", "clients", "workflow"],
+       "confidence": "high",
+-      "last_verified": "2026-06-19",
++      "last_verified": "2026-06-22",
+       "source_task": ".agent/tasks/README.md"
+     },
+     {
+@@ -20,7 +20,7 @@
+       "summary": "Durable conventions for small safe changes, targeted context loading, and verification.",
+       "keywords": ["conventions", "scope", "tests", "docs"],
+       "confidence": "high",
+-      "last_verified": "2026-06-19",
++      "last_verified": "2026-06-22",
+       "source_task": ".agent/tasks/README.md"
+     },
+     {
+@@ -28,10 +28,10 @@
+       "type": "semantic",
+       "scope": "project",
+       "path": ".agent/memory/semantic/decisions.md",
+-      "summary": "Durable decisions about keeping the template lightweight and dependency-free.",
+-      "keywords": ["decisions", "dependencies", "memory", "template"],
++      "summary": "Durable decisions about dependencies, releases, clients, Qwen, and licensing.",
++      "keywords": ["decisions", "dependencies", "qwen", "license"],
+       "confidence": "high",
+-      "last_verified": "2026-06-19",
++      "last_verified": "2026-06-22",
+       "source_task": ".agent/tasks/README.md"
+     },
+     {
+diff --git a/.agent/memory/semantic/conventions.md b/.agent/memory/semantic/conventions.md
+index 46c307a..9b935dc 100644
+--- a/.agent/memory/semantic/conventions.md
++++ b/.agent/memory/semantic/conventions.md
+@@ -1,32 +1,26 @@
+-# Memory: Project Conventions
++# Memory: Conventions
+ 
+ Type: semantic
+ Scope: project
+ Confidence: high
+-Last verified: 2026-06-19
++Last verified: 2026-06-22
+ Source task: .agent/tasks/README.md
+ 
+ ## When to use
+-
+-Use this memory before implementing non-trivial template or code changes.
++Use before changing setup, configuration, or Polyspace workflow behavior.
+ 
+ ## Content
+-
+-- Prefer targeted reads, `rg`, Semble when available, module cards, and deterministic scripts over broad repository scans.
+-- Make the smallest safe change and update tests or docs when behavior changes.
+-- Run targeted tests before broad checks.
+-- Use compressed command output for noisy commands when RTK is available, and rerun raw output only when compressed output is unclear.
+-- Keep long-term memory concise, reusable, and free of secrets or private data.
++- Treat unknown client entries and skill directories as user-owned.
++- Keep telemetry opt-in and state secret-free.
++- Require explicit profiles, C translation units, and human approval for justifications and generated
++  executable runs.
++- Use targeted tests before the three-OS integration suite.
++- Current source, schemas, tests, and installed-release documentation override memory.
+ 
+ ## Related files
+-
+ - `AGENTS.md`
+-- `docs/agent/CODE_SEARCH.md`
+-- `docs/agent/COMMAND_OUTPUT_POLICY.md`
+-- `docs/agent/MEMORY_POLICY.md`
++- `docs/agent/PITFALLS.md`
++- `tests/`
+ 
+ ## Staleness triggers
+-
+-- Context retrieval policy changes.
+-- Command output policy changes.
+-- New required tools replace the existing default workflow.
++Safety policy, supported clients, or test strategy changes.
+diff --git a/.agent/memory/semantic/decisions.md b/.agent/memory/semantic/decisions.md
+index 9c1095c..6e89cf3 100644
+--- a/.agent/memory/semantic/decisions.md
++++ b/.agent/memory/semantic/decisions.md
+@@ -1,30 +1,26 @@
+-# Memory: Template Decisions
++# Memory: Decisions
+ 
+ Type: semantic
+ Scope: project
+ Confidence: high
+-Last verified: 2026-06-19
++Last verified: 2026-06-22
+ Source task: .agent/tasks/README.md
+ 
+ ## When to use
+-
+-Use this memory when deciding whether to add dependencies or expand the agent kit.
++Use when proposed work changes dependencies, client support, release selection, or model integration.
+ 
+ ## Content
+-
+-- The memory layer is PlugMem-inspired but does not depend on PlugMem.
+-- The template favors lightweight Markdown, JSON indexes, and deterministic Python scripts over embeddings, graph databases, or model-hosting requirements.
+-- Memory promotion is manual: scripts can generate candidates, but promoted memory must be reviewed and intentionally indexed.
+-- Current source code, tests, and docs override memory when they conflict.
++- `tomlkit` is the sole runtime dependency because format-preserving Codex TOML edits should not use
++  ad hoc string manipulation.
++- MCP server setup defaults to the release tested with the toolkit, not the latest network release.
++- Client registration is user-scoped.
++- Qwen Code uses manually merged settings and a later-provided local endpoint; no extension or writer.
++- The public derivative retains the MathWorks-product-only license condition and clear attribution.
+ 
+ ## Related files
+-
+-- `docs/agent/MEMORY_POLICY.md`
+-- `docs/agent/MEMORY_PROMOTION_RULES.md`
+-- `.agent/memory/index.json`
++- `pyproject.toml`
++- `UPSTREAM.md`
++- `docs/setup/qwen-local.md`
+ 
+ ## Staleness triggers
+-
+-- A real memory engine, embedding index, or graph database is adopted.
+-- Promotion policy changes from manual to automatic or rule-assisted.
+-- Template dependency policy changes.
++Runtime dependencies, licensing, Qwen integration, or release policy changes.
+diff --git a/.agent/memory/semantic/project-facts.md b/.agent/memory/semantic/project-facts.md
+index a8e8cc2..65f4993 100644
+--- a/.agent/memory/semantic/project-facts.md
++++ b/.agent/memory/semantic/project-facts.md
+@@ -3,29 +3,23 @@
+ Type: semantic
+ Scope: project
+ Confidence: high
+-Last verified: 2026-06-19
++Last verified: 2026-06-22
+ Source task: .agent/tasks/README.md
+ 
+ ## When to use
+-
+-Use this memory when orienting on the template's purpose and baseline workflow.
++Use for initial orientation before verifying facts against current source and tests.
+ 
+ ## Content
+-
+-- This repository is an agent-native project template for Codex, Claude Code, and similar coding agents.
+-- Agents should start with `AGENTS.md` or `CLAUDE.md`, route through `docs/agent/INDEX.md`, and load only relevant module cards or docs.
+-- `.agent/tasks/` is episodic memory: task-local notes and audit trails.
+-- `.agent/memory/` is long-term semantic and procedural memory that must be verified before use.
++- The repository is an unofficial C-only derivative for Polyspace as You Code.
++- Product code is a Python 3.11 package; product workflows live in canonical `skills/` directories.
++- Automated clients are Codex and Claude; Qwen Code configuration is manual.
++- Polyspace R2024b+ is supported and MCP server releases are pinned with SHA-256 digests.
++- Project checker profiles are explicit in `.polyspace-toolkit.json`.
+ 
+ ## Related files
+-
+-- `AGENTS.md`
+-- `CLAUDE.md`
+-- `docs/agent/INDEX.md`
+-- `.agent/tasks/README.md`
++- `README.md`
++- `docs/agent/ARCHITECTURE.md`
++- `.polyspace-toolkit.schema.json`
+ 
+ ## Staleness triggers
+-
+-- Root agent entrypoints change.
+-- The context routing workflow changes.
+-- The task-log or memory folder layout changes.
++Client support, language scope, package layout, config schema, or release policy changes.
+diff --git a/.agent/tasks/2026-06-05-example-task.md b/.agent/tasks/2026-06-05-example-task.md
+deleted file mode 100644
+index 3a1e543..0000000
+--- a/.agent/tasks/2026-06-05-example-task.md
++++ /dev/null
+@@ -1,54 +0,0 @@
+-# Task: Example Task
+-
+-## Goal
+-Show how a task-local note captures useful context without bloating root agent instructions.
+-
+-## User Request
+-Create a sample agent-native project structure.
+-
+-## Relevant Docs Read
+-- `instruction.txt`
+-
+-## Files Inspected
+-- `instruction.txt`
+-
+-## Assumptions
+-- The repository is a template, not a finished application.
+-
+-## Plan
+-1. Create thin root agent entrypoints.
+-2. Add on-demand agent documentation.
+-3. Add task-log, scripts, test, and eval placeholders.
+-4. Verify the resulting tree.
+-
+-## Changes Made
+-- Added template structure and sample files.
+-- Added reusable general skills under `.agents/skills/`.
+-- Added Claude subagent templates under `.claude/agents/`.
+-- Added general tool, MCP, and agent docs under `docs/agent/`.
+-- Added deterministic helper scripts and command wiring.
+-
+-## Commands Run
+-| Command | RTK Used | Raw Rerun | Reason |
+-| --- | --- | --- | --- |
+-| `python scripts/validate_docs.py` | no | no | docs validation |
+-| `python scripts/check_agent_rules.py` | no | no | agent rule validation |
+-| `py --version` | no | no | environment check |
+-| `git status --short` | no | no | repository state check |
+-
+-## Token / Context Notes
+-- No compressed output layer was available for the original example task.
+-- Raw output remained small enough to inspect directly.
+-
+-## Verification
+-- Structure was verified with a recursive file listing.
+-- Python validation scripts could not run because `python` and `py` are not available on PATH in this environment.
+-- Git status could not run because this directory is not initialized as a Git repository.
+-
+-## Memory Extraction
+-- Candidate generated: no
+-- Promotion needed: no
+-- Notes: Example task predates the memory workflow.
+-
+-## Follow-Up
+-Replace placeholder commands and sample modules with real project behavior.
+diff --git a/.agentkit-installed-files b/.agentkit-installed-files
+deleted file mode 100644
+index 2640683..0000000
+--- a/.agentkit-installed-files
++++ /dev/null
+@@ -1 +0,0 @@
+-# Populated by install.sh or update.sh when this kit is installed into another project.
+diff --git a/.agentkit-version b/.agentkit-version
+deleted file mode 100644
+index 0ea3a94..0000000
+--- a/.agentkit-version
++++ /dev/null
+@@ -1 +0,0 @@
+-0.2.0
+diff --git a/.agents/skills/agent-setup/SKILL.md b/.agents/skills/agent-setup/SKILL.md
+index 49af210..c1c7552 100644
+--- a/.agents/skills/agent-setup/SKILL.md
++++ b/.agents/skills/agent-setup/SKILL.md
+@@ -1,31 +1,17 @@
+ # Agent Setup
+ 
+ ## Purpose
+-Bootstrap this agent kit inside a real project without replacing project-specific context.
+-
+-## Trigger
+-Use after installing the kit in a project, when project stack context is missing, or when `docs/agent/CODEMAP.md` and module cards need to be initialized.
++Diagnose and configure the Personal Polyspace Toolkit through its deterministic CLI.
+ 
+ ## Workflow
+-1. Run `python scripts/agent_setup.py`.
+-2. Review detected stack and commands in `docs/agent/COMMANDS.md`.
+-3. Fill TODOs in generated `docs/agent/CODEMAP.md` and module cards with real architecture notes.
+-4. Create or update project-specific `AGENTS.md` and `CLAUDE.md` only when needed.
+-5. Run validation:
+-   - `python scripts/validate_agent_docs.py`
+-   - `python scripts/check_context_staleness.py`
+-   - `python scripts/audit_module_cards.py`
+-   - `python scripts/detect_large_agent_files.py`
+-
+-## Output
+-- Detected stack
+-- Detected test, lint, typecheck, and dev commands
+-- Generated or updated agent docs
+-- Validation results
+-- Remaining TODOs
++1. Run `python -m personal_polyspace_toolkit.cli doctor --json`.
++2. Read `skills/toolkit-setup/SKILL.md`.
++3. Preview the exact clients and paths with `setup --dry-run`.
++4. Obtain confirmation, perform setup, restart the client, and run `verify`.
++5. For Qwen Code, follow `docs/setup/qwen-local.md` without modifying settings automatically.
+ 
+ ## Constraints
+-- Preserve existing project instructions.
+-- Do not overwrite user-owned `AGENTS.md` or `CLAUDE.md` content.
+-- Keep generated context concise.
+-- Prefer deterministic scripts over broad manual repository scans.
++- Never bypass digest verification or ownership conflicts.
++- Never enable telemetry implicitly.
++- Do not remove operating-system download protections.
++- Report missing Polyspace separately from MCP binary or client configuration state.
+diff --git a/.env.example b/.env.example
+index e9ba99c..5962438 100644
+--- a/.env.example
++++ b/.env.example
+@@ -1,3 +1,5 @@
+-# Copy to .env for local development.
+-APP_ENV=development
+-LOG_LEVEL=info
++# Optional local discovery override. Do not commit secrets.
++POLYSPACE_ROOT=
++
++# Used only by the manual Qwen Code configuration example.
++LOCAL_QWEN_API_KEY=
+diff --git a/.github/workflows/agent-doc-check.yml b/.github/workflows/agent-doc-check.yml
+index 1d0a3cb..6cb65f6 100644
+--- a/.github/workflows/agent-doc-check.yml
++++ b/.github/workflows/agent-doc-check.yml
+@@ -1,4 +1,4 @@
+-name: agent-doc-check
++name: agent-context
+ 
+ on:
+   pull_request:
+@@ -14,3 +14,6 @@ jobs:
+         with:
+           python-version: "3.11"
+       - run: python scripts/validate_docs.py
++      - run: python scripts/validate_agent_docs.py
++      - run: python scripts/audit_module_cards.py
++      - run: python scripts/validate_memory_links.py
+diff --git a/.github/workflows/lint.yml b/.github/workflows/lint.yml
+index d3bb44f..9848d98 100644
+--- a/.github/workflows/lint.yml
++++ b/.github/workflows/lint.yml
+@@ -1,4 +1,4 @@
+-name: lint
++name: quality
+ 
+ on:
+   pull_request:
+@@ -6,12 +6,16 @@ on:
+     branches: [main]
+ 
+ jobs:
+-  lint:
++  quality:
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+       - uses: actions/setup-python@v5
+         with:
+           python-version: "3.11"
+-      - run: python scripts/check_agent_rules.py
+-      - run: python scripts/validate_docs.py
++          cache: pip
++      - run: python -m pip install -e ".[dev]"
++      - run: python -m ruff check src tests scripts
++      - run: python -m mypy
++      - run: python scripts/validate_product_surfaces.py
++      - run: python scripts/sync_codex_plugin.py --check
+diff --git a/.github/workflows/test.yml b/.github/workflows/test.yml
+index af04c76..02917bf 100644
+--- a/.github/workflows/test.yml
++++ b/.github/workflows/test.yml
+@@ -1,4 +1,4 @@
+-name: test
++name: cross-platform-tests
+ 
+ on:
+   pull_request:
+@@ -7,11 +7,17 @@ on:
+ 
+ jobs:
+   test:
+-    runs-on: ubuntu-latest
++    strategy:
++      fail-fast: false
++      matrix:
++        os: [ubuntu-latest, windows-latest, macos-latest]
++        python-version: ["3.11"]
++    runs-on: ${{ matrix.os }}
+     steps:
+       - uses: actions/checkout@v4
+       - uses: actions/setup-python@v5
+         with:
+-          python-version: "3.11"
+-      - run: python -m pip install -e .
+-      - run: python -m pytest
++          python-version: ${{ matrix.python-version }}
++          cache: pip
++      - run: python -m pip install -e ".[dev]"
++      - run: python -m pytest tests/unit tests/integration -q
+diff --git a/.gitignore b/.gitignore
+index d16fde1..b6ae4a4 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -6,6 +6,14 @@ dist/
+ build/
+ __pycache__/
+ *.pyc
++*.egg-info/
++.pytest_cache/
++.mypy_cache/
++.ruff_cache/
++
++# Local Polyspace output and configuration secrets
++.polyspace/results/
++.polyspace/*.log
+ 
+ # Agent-local artifacts
+ .agent/traces/
+diff --git a/.mcp/README.md b/.mcp/README.md
+index 9216641..3c959b1 100644
+--- a/.mcp/README.md
++++ b/.mcp/README.md
+@@ -1,28 +1,10 @@
+-# MCP Setup
++# MCP Notes
+ 
+-This directory documents candidate Model Context Protocol servers for the project.
++The only product-required MCP server is the official per-user Polyspace server installed by
++`polyspace-toolkit setup`. Its five compatible tools are documented in `docs/agent/MCPS.md`.
+ 
+-Do not commit secrets here.
++Do not commit real client configuration or secrets here. Codex and Claude registrations are managed
++at user scope. Qwen Code uses the manual non-secret example under `examples/`.
+ 
+-## Candidate MCPs
+-
+-| Name | Purpose | Scope |
+-| --- | --- | --- |
+-| Semble | Natural-language code and repo search | Default retrieval profile |
+-| Serena | Language-server backed symbols, references, diagnostics, and refactors | Optional advanced coding profile |
+-| filesystem | Structured local project access | Read/write by project root |
+-| github | Issues, PRs, CI, review threads | Repository metadata and selected actions |
+-| browser | Local UI verification | Browser automation |
+-| docs | Current official documentation | Read-only |
+-| database | Schema and safe queries | Prefer read-only |
+-| RTK | Optional compressed terminal output for agent sessions | Agent runtime integration, not CI correctness |
+-
+-## Configuration Notes
+-
+-- Keep project-specific MCP config separate from user-local secrets.
+-- Prefer read-only permissions until write access is required.
+-- Record required setup steps in `docs/agent/COMMANDS.md`.
+-- Use `servers.example.json` as a placeholder, not as a working secret-bearing config.
+-- Keep Semble as the default project search profile.
+-- Keep Serena optional; enable it only for projects that benefit from language-server semantics.
+-- Keep RTK optional; fall back to raw commands whenever it is unavailable or compressed output is unclear.
++Semble, Serena, RTK, documentation, and repository connectors are optional development aids. They do
++not participate in product correctness and must fail open to local scripts and exact `rg` searches.
+diff --git a/.mcp/servers.example.json b/.mcp/servers.example.json
+index 87b2ad7..514f71d 100644
+--- a/.mcp/servers.example.json
++++ b/.mcp/servers.example.json
+@@ -1,24 +1,12 @@
+ {
+   "mcpServers": {
+-    "filesystem": {
+-      "description": "Structured local project access scoped to the repository.",
+-      "command": "replace-with-runtime-command",
+-      "args": ["replace-with-filesystem-server-args"]
+-    },
+-    "github": {
+-      "description": "Issues, pull requests, review comments, and CI metadata.",
+-      "command": "replace-with-runtime-command",
+-      "args": ["replace-with-github-server-args"]
+-    },
+-    "browser": {
+-      "description": "Local UI verification and browser automation.",
+-      "command": "replace-with-runtime-command",
+-      "args": ["replace-with-browser-server-args"]
+-    },
+-    "docs": {
+-      "description": "Current official documentation lookup.",
+-      "command": "replace-with-runtime-command",
+-      "args": ["replace-with-docs-server-args"]
++    "polyspace": {
++      "description": "Unofficial example only; use polyspace-toolkit setup or the Qwen guide.",
++      "command": "REPLACE_WITH_ABSOLUTE_MCP_SERVER_PATH",
++      "args": [
++        "--polyspace-root=REPLACE_WITH_ABSOLUTE_POLYSPACE_ROOT",
++        "--disable-telemetry=true"
++      ]
+     }
+   }
+ }
+diff --git a/AGENTS.md b/AGENTS.md
+index e58ae3e..a96461f 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -1,93 +1,32 @@
+-# AGENTS.md
++# Personal Polyspace Toolkit Agent Guide
+ 
+-## Project Purpose
+-This repository is a sample agent-native project template that demonstrates progressive context loading for Codex, Claude Code, and similar coding agents.
++## Purpose
++This is an unofficial C-only derivative used with Polyspace as You Code. It owns deterministic
++setup, supported-client registration, project configuration validation, and guarded Polyspace skills.
+ 
+-## Default Workflow
+-1. Understand the task.
+-2. Read `docs/agent/INDEX.md`.
+-3. Check `.agent/memory/index.json` for relevant long-term memory, then verify it against current files.
+-4. Read only the relevant module card under `docs/agent/module-cards/`.
+-5. Make the smallest safe change.
+-6. Add or update tests when behavior changes.
+-7. Run targeted tests before broad tests.
+-8. Summarize changed files, commands run, and remaining risks.
+-
+-## Context Rules
+-- Do not scan the whole repository unless the task requires it.
+-- Prefer `rg`, targeted file reads, and module cards.
+-- Do not load large docs unless referenced by `docs/agent/INDEX.md`.
+-- Keep changes scoped to the user request.
+-
+-## Context Retrieval Policy
+-For non-trivial code tasks, do not scan the whole repository.
+-
+-Use this order:
++## Required Workflow
+ 1. Read `docs/agent/INDEX.md`.
+-2. Read the relevant module card or `docs/agent/CODEMAP.md`.
+-3. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+-4. Verify memory against current code, tests, and docs before relying on it.
+-5. Use Semble for natural-language code search:
+-   - `semble search "<task>" . --content code`
+-   - `semble search "<task>" . --content all` when docs/config may matter
+-6. Use `rg` for exact symbol/string confirmation.
+-7. Use Serena when symbol references, declarations, implementations, diagnostics, or safe refactors are needed.
+-8. Read full files only after retrieval identifies likely relevant targets.
+-9. Before editing, summarize:
+-   - selected files
+-   - why they are relevant
+-   - uncertainty/risk
+-10. After editing, run targeted tests first.
++2. Check `.agent/memory/index.json`, then verify relevant memory against current files.
++3. Read only the relevant module card and skill.
++4. Use `rg` for exact confirmation; do not scan the whole repository without need.
++5. Make the smallest safe change and add tests for behavior changes.
++6. Run targeted tests before broad tests.
++7. Summarize files, commands, and remaining risks.
++
++## Product Invariants
++- C translation units only; headers are analyzed through a containing `.c` file.
++- Never select a checker profile implicitly.
++- Never auto-justify a finding or run generated test code without explicit approval.
++- Keep the five MCP tool names in `src/personal_polyspace_toolkit/constants.py` compatible.
++- Qwen setup is documentation-only; do not create a Qwen extension or edit Qwen settings.
++- Telemetry remains disabled unless the user explicitly enables it.
++- Do not bypass digest checks, ownership conflicts, or operating-system download protections.
++- Current source, tests, schemas, and official installed-release documentation override memory.
+ 
+ ## Commands
+-- Install: `make install`
+-- Run app: `make dev`
+-- Unit tests: `make test-unit`
+-- Integration tests: `make test-integration`
+-- Lint: `make lint`
+-- Typecheck: `make typecheck`
+-- Docs map: `make docs-map`
+-- Agent setup: `make agent-setup`
+-- Agent audits: `make validate-agent-docs`, `make check-context-staleness`, `make audit-module-cards`, `make audit-memory`
+-- Compact output helpers: `make git-status`, `make git-diff`, `make test-unit-compact`, `make lint-compact`, `make typecheck-compact`
+-
+-## Long-Term Memory
+-Use `.agent/memory/` as guidance, not truth.
+-
+-- Semantic memory stores project facts, conventions, and decisions.
+-- Procedural memory stores reusable workflows.
+-- Episodic memory stays in `.agent/tasks/`.
+-- Promote memory manually only after reviewing candidates for quality, staleness, and sensitive data.
+-
+-## Command Output Rules
+-For noisy terminal commands, prefer compressed output.
+-
+-Use RTK when available:
+-- `rtk git status`
+-- `rtk git diff`
+-- `rtk grep`
+-- `rtk find`
+-- `rtk pytest`
+-- `rtk cargo test`
+-- `rtk npm test`
+-- `rtk tsc`
+-- `rtk eslint`
+-
+-If compressed output is incomplete or suspicious:
+-1. Rerun the specific command in raw mode.
+-2. Inspect only the relevant failing section.
+-3. Mention the rerun in the final command summary.
+-
+-Do not hide failures. Test failures, stack traces, exit codes, and actionable errors must remain visible.
+-
+-## Code Rules
+-- Follow existing patterns before introducing new abstractions.
+-- Do not add new dependencies without explicit justification.
+-- Do not change public APIs without updating docs or specs.
+-- Do not modify generated files manually.
+-
+-## Definition Of Done
+-- Relevant tests pass.
+-- Lint and typecheck pass when applicable.
+-- Docs are updated if behavior changes.
+-- Final response includes files changed, commands run, and risks.
++- Install: `python -m pip install -e ".[dev]"`
++- Unit tests: `python -m pytest tests/unit -q`
++- Integration tests: `python -m pytest tests/integration -q`
++- Lint: `python -m ruff check src tests scripts`
++- Typecheck: `python -m mypy`
++- Agent audits: `make validate-agent-docs`, `make audit-module-cards`, `make audit-memory`
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 3bfa0b3..60e85a7 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -1,44 +1,6 @@
+-# CLAUDE.md
++# Claude Code Guidance
+ 
+-Use this project as an agent-native codebase.
+-
+-## Start Here
+-For every non-trivial task:
+-1. Read `docs/agent/INDEX.md`.
+-2. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+-3. Verify memory against current code, tests, and docs before relying on it.
+-4. Read the relevant module card.
+-5. Create or update a task note in `.agent/tasks/` if the task has more than one step.
+-6. Use `.agent/plans/template.md` for complex or multi-phase work.
+-
+-## Token-Saving Behavior
+-- Do not explore unrelated directories.
+-- Use Semble for natural-language code search before reading many files.
+-- Use `rg` for exact symbol and string confirmation.
+-- Use Serena only when symbol references, declarations, implementations, diagnostics, or safe refactors require language-server semantics.
+-- Use compressed command output for noisy commands when RTK is available.
+-- Prefer targeted reads over broad scans.
+-- Summarize findings before expanding scope.
+-
+-## Long-Term Memory
+-- `.agent/memory/semantic/` stores stable facts, conventions, and decisions.
+-- `.agent/memory/procedural/` stores reusable workflows.
+-- `.agent/tasks/` stores episodic task logs.
+-- Memory is a decision aid; current repository files are authoritative.
+-- Generated memory candidates require manual promotion.
+-
+-## Command Output
+-- Prefer RTK for noisy commands such as `git status`, `git diff`, tests, lint, typecheck, search, and logs.
+-- If compressed output is unclear, rerun the smallest relevant command in raw mode.
+-- Do not hide failures; preserve exit codes, stack traces, failed assertions, and actionable errors.
+-
+-## Safety
+-- Never delete files, rewrite migrations, rotate secrets, or change production config without explicit approval.
+-- Prefer small patches.
+-- Run targeted tests first.
+-
+-## Final Response Format
+-- Summary
+-- Files changed
+-- Tests or commands run
+-- Risks or follow-up
++Read and follow `AGENTS.md`, then route through `docs/agent/INDEX.md`. Polyspace work is C-only.
++Use the canonical skill under `skills/` for every Polyspace workflow. Never auto-justify a finding,
++run generated test code without approval, enable telemetry implicitly, or overwrite unknown client
++configuration.
+diff --git a/CREDITS.md b/CREDITS.md
+index 42d198b..d4412ff 100644
+--- a/CREDITS.md
++++ b/CREDITS.md
+@@ -1,35 +1,21 @@
+ # Credits And Open-Source Influences
+ 
+-This template grows by studying open-source projects that solve specific parts
+-of agent-assisted software development. The projects below shaped its design or
+-are recommended as optional tools.
++## Derived Product Workflows
+ 
+-## Design Influences
++The Polyspace workflows derive from the
++[MathWorks Polyspace Agentic Toolkit](https://github.com/mathworks/polyspace-agentic-toolkit).
++Required attribution, use restrictions, and the exact source baseline are recorded in `NOTICE.md`,
++`LICENSE.md`, and `UPSTREAM.md`.
+ 
+-| Project | What this template learned or adopted | License |
+-| --- | --- | --- |
+-| [PlugMem](https://github.com/TIMAN-group/PlugMem) | The semantic, procedural, and episodic memory taxonomy; extracting compact reusable knowledge from verbose task history; and treating retrieval as input to reasoning rather than truth. This template implements a smaller Markdown-and-JSON workflow and does not depend on PlugMem. | Apache-2.0 |
+-| [RTK](https://github.com/rtk-ai/rtk) | Command output is part of the context budget. The template therefore prefers compact output for noisy commands, preserves failures, supports raw reruns, and keeps compression optional. | Apache-2.0 |
+-| [Semble](https://github.com/MinishLab/semble) | Natural-language retrieval can narrow likely source files before exact search and full-file reads. The template uses Semble as an optional retrieval layer and keeps `rg` as the exact confirmation step. | MIT |
+-| [Understand Anything](https://github.com/Egonex-AI/Understand-Anything) | Code knowledge graphs can support architecture discovery, dependency reasoning, onboarding, and targeted graph search without making generated graph data part of normal repository context. | MIT |
+-
+-## Optional Ecosystem Tools
++## Agent-Native Infrastructure Influences
+ 
+-| Project | Role in this template | License |
++| Project | Influence | License |
+ | --- | --- | --- |
+-| [Serena](https://github.com/oraios/serena) | Optional language-server-backed symbol navigation, references, diagnostics, and refactoring support. | MIT |
+-| [Repomix](https://github.com/yamadashy/repomix) | Optional repository bundling for external review; intentionally not the default daily retrieval workflow. | MIT |
+-| [ripgrep](https://github.com/BurntSushi/ripgrep) | Fast exact text, symbol, and path confirmation through `rg`. | Unlicense / MIT |
+-
+-## Attribution Scope
+-
+-This repository does not vendor source code from the projects above. References
+-to their names, commands, and workflows describe interoperability, optional
+-usage, or design influence. Each upstream project remains governed by its own
+-license, copyright notices, contribution rules, and trademarks.
+-
+-License labels and repository links were verified on 2026-06-21. Consult the
+-upstream repositories for their current terms.
+-
+-Thank you to the maintainers and contributors who make these ideas available
+-for others to study, test, and improve.
++| [PlugMem](https://github.com/TIMAN-group/PlugMem) | Semantic, procedural, and episodic memory taxonomy | Apache-2.0 |
++| [RTK](https://github.com/rtk-ai/rtk) | Optional command-output compression | Apache-2.0 |
++| [Semble](https://github.com/MinishLab/semble) | Natural-language retrieval before exact search | MIT |
++| [Understand Anything](https://github.com/Egonex-AI/Understand-Anything) | Optional architecture knowledge graphs | MIT |
++| [Serena](https://github.com/oraios/serena) | Optional symbol navigation and refactoring | MIT |
++| [ripgrep](https://github.com/BurntSushi/ripgrep) | Exact text, symbol, and path confirmation | Unlicense / MIT |
++
++These optional tools are not vendored. Each remains governed by its upstream terms.
+diff --git a/Makefile b/Makefile
+index fa48115..b249952 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,110 +1,57 @@
+-RTK := $(shell command -v rtk 2>/dev/null)
++PYTHON ?= python
+ 
+-define maybe_rtk
+-$(if $(RTK),rtk $(1),$(1))
+-endef
+-
+-.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs validate-memory-links audit-memory-staleness audit-memory check-architecture-boundaries update-module-cards targeted-tests task-trace extract-task-memory rtk-gain git-status git-diff test-unit-compact lint-compact typecheck-compact understand understand-dashboard understand-search validate-understand-graph retrieval-eval
++.PHONY: install dev test test-unit test-integration test-polyspace-smoke lint typecheck validate-product sync-plugin \
++	docs-map validate-agent-docs check-context-staleness audit-module-cards audit-memory \
++	git-status git-diff
+ 
+ install:
+-	@echo "Install project dependencies here."
++	$(PYTHON) -m pip install -e ".[dev]"
+ 
+ dev:
+-	@echo "Start the development server here."
++	$(PYTHON) -m personal_polyspace_toolkit.cli doctor --json
+ 
+ test: test-unit test-integration
+ 
+ test-unit:
+-	@echo "Run unit tests here."
++	$(PYTHON) -m pytest tests/unit -q
+ 
+ test-integration:
+-	@echo "Run integration tests here."
++	$(PYTHON) -m pytest tests/integration -q
++
++test-polyspace-smoke:
++	$(PYTHON) -m pytest tests/smoke -q -m polyspace
+ 
+ lint:
+-	@echo "Run lint checks here."
++	$(PYTHON) -m ruff check src tests scripts
+ 
+ typecheck:
+-	@echo "Run type checks here."
++	$(PYTHON) -m mypy
+ 
+-docs-map:
+-	python scripts/generate_codemap.py
++validate-product:
++	$(PYTHON) scripts/validate_product_surfaces.py
++	$(PYTHON) scripts/sync_codex_plugin.py --check
+ 
+-agent-setup:
+-	python scripts/agent_setup.py
++sync-plugin:
++	$(PYTHON) scripts/sync_codex_plugin.py
+ 
+-validate-docs:
+-	python scripts/validate_docs.py
++docs-map:
++	$(PYTHON) scripts/generate_codemap.py
+ 
+ validate-agent-docs:
+-	python scripts/validate_agent_docs.py
+-
+-detect-large-context-docs:
+-	python scripts/detect_large_context_docs.py
+-
+-detect-large-agent-files:
+-	python scripts/detect_large_agent_files.py
++	$(PYTHON) scripts/validate_agent_docs.py
+ 
+ check-context-staleness:
+-	python scripts/check_context_staleness.py
++	$(PYTHON) scripts/check_context_staleness.py
+ 
+ audit-module-cards:
+-	python scripts/audit_module_cards.py
+-
+-audit-task-logs:
+-	python scripts/audit_task_logs.py
+-
+-validate-memory-links:
+-	python scripts/validate_memory_links.py
+-
+-audit-memory-staleness:
+-	python scripts/audit_memory_staleness.py
+-
+-audit-memory: validate-memory-links audit-memory-staleness
+-
+-check-architecture-boundaries:
+-	python scripts/check_architecture_boundaries.py
+-
+-update-module-cards:
+-	python scripts/update_module_cards.py
++	$(PYTHON) scripts/audit_module_cards.py
+ 
+-targeted-tests:
+-	python scripts/run_targeted_tests.py
+-
+-task-trace:
+-	python scripts/collect_task_trace.py
+-
+-extract-task-memory:
+-	python scripts/extract_task_memory.py $(TASK)
+-
+-rtk-gain:
+-	@if command -v rtk >/dev/null 2>&1; then rtk gain; else echo "rtk not installed"; fi
++audit-memory:
++	$(PYTHON) scripts/validate_memory_links.py
++	$(PYTHON) scripts/audit_memory_staleness.py
+ 
+ git-status:
+-	$(call maybe_rtk,git status)
++	git status --short --branch
+ 
+ git-diff:
+-	$(call maybe_rtk,git diff)
+-
+-test-unit-compact:
+-	$(call maybe_rtk,make test-unit)
+-
+-lint-compact:
+-	$(call maybe_rtk,make lint)
+-
+-typecheck-compact:
+-	$(call maybe_rtk,make typecheck)
+-
+-understand:
+-	python scripts/understand_placeholder.py
+-
+-understand-dashboard:
+-	@echo "Open the Understand Anything dashboard with the installed runtime command, for example /understand-dashboard."
+-
+-understand-search:
+-	python scripts/search_understand_graph.py "$(QUERY)"
+-
+-validate-understand-graph:
+-	python scripts/validate_understand_graph.py
+-
+-retrieval-eval:
+-	python eval/retrieval/run_retrieval_eval.py
++	git diff --stat
+diff --git a/README.md b/README.md
+index b205764..f7408e0 100644
+--- a/README.md
++++ b/README.md
+@@ -1,156 +1,130 @@
+-# Agent-Native Project Template
+-
+-This repository is a practical template for projects that collaborate well with
+-coding agents such as Codex, Claude Code, and similar tools.
+-
+-The core idea is progressive context loading: keep auto-loaded instructions
+-short, route agents through a small index, and load richer docs only when the
+-task needs them. The template now also includes lightweight long-term memory so
+-future agents can reuse vetted lessons without reading old task logs.
+-
+-The memory layer is inspired by PlugMem's semantic, procedural, and episodic
+-taxonomy, but stays dependency-free: Markdown cards, a JSON index, and small
+-deterministic Python scripts. It does not require embeddings, a graph database,
+-an API key, or a model server.
+-
+-## How Agents Use It
+-
+-For non-trivial work, agents should:
+-
+-1. Read `AGENTS.md` or `CLAUDE.md`.
+-2. Route through `docs/agent/INDEX.md`.
+-3. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+-4. Verify memory against current code, tests, and docs.
+-5. Read the relevant module card or `docs/agent/CODEMAP.md`.
+-6. Use Semble, `rg`, Serena, or Understand Anything only as the task requires.
+-7. Make the smallest safe change and run targeted checks before broad checks.
+-8. Capture task state and reusable lessons when useful.
+-
+-Memory is a decision aid, not source of truth. Current repository files win when
+-they conflict with memory.
+-
+-## Structure
+-
+-- `AGENTS.md` and `CLAUDE.md`: short agent entrypoints.
+-- `docs/agent/`: on-demand routing docs, module cards, policies, and tool notes.
+-- `.agent/memory/`: semantic and procedural long-term memory.
+-- `.agent/tasks/`: episodic task logs and audit trails.
+-- `.agent/plans/`: lightweight plan lifecycle folders and template.
+-- `.agents/skills/`: reusable Codex-style skill templates.
+-- `.claude/agents/`: Claude Code subagent templates.
+-- `.claude/hooks/`: optional lightweight hook examples.
+-- `.mcp/`: MCP setup notes and candidate server documentation.
+-- `.understand-anything/`: Understand Anything setup notes.
+-- `scripts/`: deterministic helpers for setup, audits, context generation, and memory.
+-- `eval/`: retrieval and regression evaluation placeholders.
+-- `src/` and `tests/`: sample project modules and tests.
+-
+-## Tool Roles
+-
+-| Tool | Solves | Best place in template |
++# Personal Polyspace Toolkit
++
++An unofficial, independently maintained, C-only agent toolkit for
++Polyspace&reg; as You Code&trade;. It provides deterministic setup, reusable agent skills,
++and guarded workflows for analysis, remediation, justifications, checker configuration, and
++PSTUnit tests.
++
++This derivative is not an official MathWorks product. It is licensed solely for use with MathWorks
++products and services; see [LICENSE.md](LICENSE.md) and [NOTICE.md](NOTICE.md).
++
++## Why This Exists
++
++The upstream toolkit contains valuable Polyspace domain guidance, but its setup is performed by an
++agent interpreting Markdown. This project turns setup into tested Python code, pins and verifies the
++MCP server release, tracks ownership for safe uninstall, narrows every workflow to C translation
++units, and keeps checker selection explicit.
++
++## Supported Clients
++
++| Client | MCP setup | Skills |
+ | --- | --- | --- |
+-| Module cards | Human-maintained ownership, interfaces, tests, and pitfalls | Stable context anchor |
+-| Memory | Durable lessons from previous tasks | Decision aid before search |
+-| Semble | Natural-language code and docs retrieval | Context discovery |
+-| `rg` | Exact string, symbol, and path confirmation | Verification |
+-| Serena | References, declarations, diagnostics, and safe refactors | Advanced coding setup |
+-| RTK | Compressed noisy terminal output | Command execution |
+-| Understand Anything | Graph and dependency reasoning | Architecture understanding |
+-
+-## Getting Started
+-
+-```bash
+-make install
+-make test-unit
+-make lint
+-```
++| OpenAI Codex | Automated, user scope | Automated and plugin metadata |
++| Claude Code | Automated, user scope | Automated and marketplace metadata |
++| Qwen Code | Manual | Manual; no extension is shipped |
+ 
+-This is a template, so most project commands are placeholders until you wire
+-them to your actual stack.
++Qwen Code can use a local OpenAI-compatible model endpoint. The base URL and model ID remain
++placeholders until you provide them; see [docs/setup/qwen-local.md](docs/setup/qwen-local.md).
+ 
+-## Installing Into Another Project
++## Requirements
+ 
+-From a checkout of this template:
++- Python 3.11 or later
++- Polyspace as You Code R2024b or later
++- At least one supported coding client
++- A licensed, per-user MathWorks installation
+ 
+-```bash
+-./install.sh /path/to/project
+-```
++## Development Install
+ 
+-The installer reads `agentkit-manifest.json`, backs up existing agent config
+-under `.agentkit/backups/`, merges `AGENTS.md` and `CLAUDE.md`, copies harness
+-files, copies starter `.agent/` files only when missing, and records installed
+-paths in `.agentkit-installed-files`.
++Clone the repository to a permanent location. Automated skill and Claude marketplace setup resolves
++assets from that checkout; the alpha release is not distributed as a standalone wheel.
+ 
+-Use `./update.sh /path/to/project` to refresh the harness later.
++```sh
++python -m pip install -e ".[dev]"
++polyspace-toolkit doctor --json
++```
+ 
+-After install, run:
++Preview setup before changing user configuration:
+ 
+-```bash
+-python scripts/agent_setup.py
++```sh
++polyspace-toolkit setup --client codex --dry-run
++polyspace-toolkit setup --client codex --yes
++polyspace-toolkit verify --client codex
+ ```
+ 
+-The setup script detects the stack and common commands, refreshes
+-`docs/agent/CODEMAP.md`, creates missing module cards, ensures task and memory
+-scaffolding exists, and runs validation.
++Add `--client claude` to configure both automated clients. Telemetry is disabled unless
++`--enable-telemetry` is explicitly passed. Existing conflicting registrations are never replaced
++without `--replace-existing`.
+ 
+-## Agent Memory Workflow
++## Project Configuration
+ 
+-Use `.agent/tasks/` for raw episodic notes. Promote only compact, reusable,
+-non-sensitive lessons into `.agent/memory/`.
++Every analyzed project should commit `.polyspace-toolkit.json`:
+ 
+-| Memory type | Purpose | Location |
+-| --- | --- | --- |
+-| Semantic | Stable facts, conventions, and decisions | `.agent/memory/semantic/` |
+-| Procedural | Reusable workflows and playbooks | `.agent/memory/procedural/` |
+-| Episodic | Raw task context and audit history | `.agent/tasks/` |
++```json
++{
++  "schemaVersion": 1,
++  "language": "c",
++  "profiles": ["misra-c-2012", "polyspace-defects"],
++  "checkersFile": ".polyspace/checkers.xml",
++  "buildOptionsFile": ".polyspace/build-options.txt",
++  "include": ["src/**/*.c"],
++  "exclude": ["vendor/**"]
++}
++```
++
++No checker profile is assumed. Validate the file with:
+ 
+-```bash
+-make extract-task-memory TASK=.agent/tasks/<task>.md
+-make audit-memory
++```sh
++polyspace-toolkit config validate .polyspace-toolkit.json
+ ```
+ 
+-The extraction script creates a candidate under `.agent/memory/candidates/`.
+-Review it manually, remove unsafe or low-value details, move durable facts into
+-`semantic/` or workflows into `procedural/`, update `.agent/memory/index.json`,
+-then run the audit again.
++## Happy Path
++
++Ask a supported agent:
++
++> Analyze the changed C translation units with the configured Polyspace profiles. Explain each new
++> finding, apply real fixes first, run targeted tests, and re-analyze until the changed scope is clean.
+ 
+-`make audit-memory` validates index metadata, card structure, source-task and
+-related-file links, verification dates, and a 180-day staleness threshold.
+-Candidates are drafts and are excluded from installation; only reviewed,
+-indexed memory is intended for reuse.
++The `c-compliance-loop` skill resolves project configuration, calls the five compatible Polyspace
++MCP tools, prefers behavior-preserving fixes, and requires explicit approval before any source
++justification or generated test executable runs.
+ 
+-Never promote secrets, credentials, customer data, sensitive stack traces, or
+-unverified one-off conclusions. Memory narrows the search; current code, tests,
+-specifications, and agent docs remain authoritative.
++The optional Codex plugin under `plugins/personal-polyspace-toolkit` is generated from the canonical
++catalog. Run `make sync-plugin` after editing a product skill.
+ 
+-## Audits And Verification
++## Verification
+ 
+-```bash
++See [BENCHMARK.md](BENCHMARK.md) for the reproducible A/B protocol against the fixed upstream
++baseline and for the distinction between verified repository evidence and pending runtime results.
++
++```sh
++make test-unit
++make test-integration
++make lint
++make typecheck
+ make validate-agent-docs
+-make check-context-staleness
+-make audit-module-cards
+-make audit-task-logs
+-make audit-memory
+-make detect-large-agent-files
+-make detect-large-context-docs
+ ```
+ 
+-Use audits as warnings during setup and stricter gates before sharing the kit
+-with a team.
++Real Polyspace smoke tests are opt-in because CI does not have a licensed installation:
+ 
+-## Source Understanding
++```sh
++export POLYSPACE_ROOT=/absolute/path/to/polyspace-release
++export POLYSPACE_SMOKE_CHECKERS_FILE=/absolute/path/to/checkers.xml
++make test-polyspace-smoke
++```
+ 
+-Use Understand Anything to generate a knowledge graph for humans and agents:
++The first smoke test probes the installed analysis executable. Supplying the checker file additionally
++runs a standalone C analysis. Setting these variables is explicit approval to execute licensed local
++Polyspace commands.
+ 
+-```bash
+-make understand
+-make understand-search QUERY="api route"
+-```
++## Security
+ 
+-Generated graph files are ignored by default; setup notes and ignore rules are
+-committed.
++- The tested MCP server release is pinned and verified against its published SHA-256 digest.
++- Installation and configuration writes are atomic where supported.
++- Existing client entries and skill directories are treated as user-owned unless setup records them.
++- Operating-system download protections are not removed automatically.
++- State contains paths, versions, hashes, and backups only; it never stores model or API secrets.
+ 
+-## Credits
++## Upstream
+ 
+-See [`CREDITS.md`](CREDITS.md) for the open-source projects that influenced this
+-template and the optional tools it is designed to work with.
++The initial domain workflows derive from MathWorks' Polyspace Agentic Toolkit at commit
++`cc15b840e80bf5187963d13ed86c4c5bb86381ad`. See [UPSTREAM.md](UPSTREAM.md) for the sync policy.
+diff --git a/agentkit-manifest.json b/agentkit-manifest.json
+deleted file mode 100644
+index a793fc5..0000000
+--- a/agentkit-manifest.json
++++ /dev/null
+@@ -1,66 +0,0 @@
+-{
+-  "name": "agent-native-template",
+-  "version": "0.2.0",
+-  "description": "Progressive-context agent kit files for installation into existing projects.",
+-  "included_harness_files": [
+-    ".agents/skills/",
+-    ".claude/agents/",
+-    ".claude/hooks/",
+-    ".mcp/README.md",
+-    ".mcp/rtk.md",
+-    ".mcp/servers.example.json",
+-    ".mcp/semble.md",
+-    ".mcp/serena.md",
+-    ".sembleignore",
+-    ".understand-anything/README.md",
+-    ".understand-anything/.understandignore",
+-    "docs/agent/",
+-    "scripts/",
+-    "eval/retrieval/"
+-  ],
+-  "merge_files": [
+-    "AGENTS.md",
+-    "CLAUDE.md"
+-  ],
+-  "copy_if_missing_files": [
+-    ".agent/tasks/README.md",
+-    ".agent/memory/README.md",
+-    ".agent/memory/index.json",
+-    ".agent/memory/semantic/project-facts.md",
+-    ".agent/memory/semantic/conventions.md",
+-    ".agent/memory/semantic/decisions.md",
+-    ".agent/memory/procedural/debugging-playbooks.md",
+-    ".agent/memory/procedural/testing-playbooks.md",
+-    ".agent/memory/procedural/refactor-playbooks.md",
+-    ".agent/memory/candidates/README.md",
+-    ".agent/plans/template.md",
+-    ".agent/plans/active/.gitkeep",
+-    ".agent/plans/completed/.gitkeep",
+-    ".agent/plans/backlog/.gitkeep",
+-    ".agent/plans/reports/.gitkeep"
+-  ],
+-  "project_local_files": [
+-    "src/",
+-    "tests/",
+-    "docs/product/",
+-    "docs/specs/",
+-    "docs/adr/",
+-    ".env",
+-    ".env.example",
+-    "package.json",
+-    "pyproject.toml",
+-    "Makefile"
+-  ],
+-  "excluded_files": [
+-    ".agent/tasks/*.md",
+-    ".agent/memory/candidates/*.md",
+-    ".agent/summaries/",
+-    ".agent/traces/",
+-    ".agent/context-cache/",
+-    ".git/",
+-    ".venv/",
+-    "node_modules/",
+-    "__pycache__/"
+-  ],
+-  "symlinks": []
+-}
+diff --git a/agents_analysis.md b/agents_analysis.md
+deleted file mode 100644
+index 149a8e4..0000000
+--- a/agents_analysis.md
++++ /dev/null
+@@ -1,115 +0,0 @@
+-# Agent Kit Analysis
+-
+-This template is now stronger as a reusable agent kit because it is not only a clean project layout. It can be installed into an existing project, refreshed later, and audited for context drift.
+-
+-## Highest-Value Pieces
+-
+-1. Progressive context loading
+-   - `AGENTS.md` and `CLAUDE.md` stay short.
+-   - `docs/agent/INDEX.md` routes agents to the smallest useful docs.
+-   - `docs/agent/CODEMAP.md` and module cards hold durable source context.
+-
+-2. Installer and manifest
+-   - `agentkit-manifest.json` separates harness files, merge files, copy-if-missing files, project-local files, exclusions, and symlinks.
+-   - `install.sh` and `update.sh` install the kit into real projects.
+-   - `scripts/agentkit_installer.py` backs up existing agent config, merges managed blocks into `AGENTS.md` and `CLAUDE.md`, preserves project-local files, writes `.agentkit-version`, and records `.agentkit-installed-files`.
+-
+-3. Setup skill
+-   - `.agents/skills/agent-setup/SKILL.md` defines the workflow.
+-   - `scripts/agent_setup.py` detects stack and commands, refreshes `docs/agent/CODEMAP.md`, creates missing module cards, ensures task scaffolding exists, and runs validation.
+-
+-4. Deterministic audit tools
+-   - `scripts/validate_agent_docs.py`
+-   - `scripts/check_context_staleness.py`
+-   - `scripts/audit_module_cards.py`
+-   - `scripts/audit_task_logs.py`
+-   - `scripts/detect_large_agent_files.py`
+-
+-5. Lightweight plan lifecycle
+-   - `.agent/plans/active/`
+-   - `.agent/plans/completed/`
+-   - `.agent/plans/backlog/`
+-   - `.agent/plans/reports/`
+-   - `.agent/plans/template.md`
+-
+-6. Minimal hooks
+-   - `.claude/hooks/block-secret-output.sh`
+-   - `.claude/hooks/warn-large-agent-files.sh`
+-
+-## Reusable Skills
+-
+-These should remain general and reusable across projects:
+-
+-- `repo-navigator`: find relevant files without scanning the whole repository.
+-- `safe-implementation`: make the smallest safe change and verify it.
+-- `test-debug-loop`: reproduce, isolate, patch, and rerun targeted tests.
+-- `code-review`: review correctness, security, architecture drift, and tests.
+-- `docs-sync`: update durable docs when behavior changes.
+-- `architecture-decision`: decide and record architectural tradeoffs.
+-- `task-handoff`: preserve work state for continuation or audit.
+-- `source-understanding`: use graph-backed source discovery when available.
+-- `knowledge-graph-search`: query source graphs without loading huge files.
+-- `understand-refresh`: refresh source understanding artifacts.
+-- `agent-setup`: bootstrap project-specific agent context.
+-
+-## Deterministic Scripts
+-
+-Scripts are better than asking another agent when the work is repeatable, cheap, and auditable.
+-
+-| Script | Why it matters |
+-| --- | --- |
+-| `generate_codemap.py` | Saves file-discovery tokens. |
+-| `update_module_cards.py` | Keeps module cards present as source folders change. |
+-| `agent_setup.py` | Creates a practical first pass of project context. |
+-| `agentkit_installer.py` | Makes the kit installable and updatable. |
+-| `run_targeted_tests.py` | Prevents expensive broad test loops too early. |
+-| `summarize_changed_files.py` | Makes handoff and review cheaper. |
+-| `validate_agent_docs.py` | Prevents missing agent docs and skills. |
+-| `check_context_staleness.py` | Warns when generated context may be stale. |
+-| `audit_module_cards.py` | Keeps module cards useful, not just present. |
+-| `audit_task_logs.py` | Keeps task notes auditable. |
+-| `detect_large_agent_files.py` | Protects auto-loaded context budgets. |
+-| `check_architecture_boundaries.py` | Catches simple layer violations. |
+-| `collect_task_trace.py` | Captures changed-file state for handoff. |
+-
+-## Claude Subagents
+-
+-Keep the default subagent set small:
+-
+-- `repo-researcher`: read-only code discovery.
+-- `code-reviewer`: post-change review.
+-- `test-debugger`: failing tests and runtime errors.
+-- `security-reviewer`: auth, secrets, permissions, and sensitive data.
+-- `docs-maintainer`: synchronize module cards and durable docs.
+-- `understand-researcher`: graph-backed source research.
+-
+-Add project-specific subagents only after repeated project-specific mistakes appear.
+-
+-## Project-Specific Assets
+-
+-Create project-specific skills or subagents when general guidance cannot know the rules.
+-
+-Good examples:
+-
+-- Domain rules for regulated or specialized data.
+-- Evaluation runners for AI pipelines.
+-- Migration reviewers for database-heavy systems.
+-- Release gatekeepers for deployment readiness.
+-- API contract change workflows for backend-heavy projects.
+-- Retrieval or evidence-checking skills for RAG projects.
+-
+-Avoid adding project-specific assets too early. The default kit should stay small enough that agents actually follow it.
+-
+-## Current Verdict
+-
+-The template is stronger after the installer, setup skill, audit scripts, plan lifecycle, and minimal hooks.
+-
+-The tradeoff is more maintenance surface. The highest-risk piece is now `scripts/agentkit_installer.py`, because it writes into existing projects. It should stay well tested with temp-directory tests that verify merge, backup, copy-if-missing, update, and installed-file behavior without creating permanent test fixtures.
+-
+-## Next Improvements
+-
+-1. Add a formal test suite for `scripts/agentkit_installer.py` when the project is ready to keep tests.
+-2. Add a dry-run mode to the installer.
+-3. Add a small Windows wrapper, such as `install.ps1`, if Windows users are a primary audience.
+-4. Make `check_context_staleness.py` hash-based if mtime warnings become noisy.
+-5. Keep hooks opt-in and warning-first.
+diff --git a/docs/adr/0001-architecture-style.md b/docs/adr/0001-architecture-style.md
+deleted file mode 100644
+index 0d22f88..0000000
+--- a/docs/adr/0001-architecture-style.md
++++ /dev/null
+@@ -1,15 +0,0 @@
+-# ADR 0001: Agent-Native Documentation Architecture
+-
+-## Status
+-Accepted
+-
+-## Decision
+-Use thin auto-loaded instruction files plus on-demand agent documentation.
+-
+-## Rationale
+-Small entrypoint files reduce automatic context load. Richer docs remain available through `docs/agent/INDEX.md` when a task requires them.
+-
+-## Consequences
+-- Agents need a routing habit before editing.
+-- Documentation must stay organized by task and module.
+-- Generated code maps should be refreshed as the project grows.
+diff --git a/docs/adr/0002-database-choice.md b/docs/adr/0002-database-choice.md
+deleted file mode 100644
+index cbcb479..0000000
+--- a/docs/adr/0002-database-choice.md
++++ /dev/null
+@@ -1,14 +0,0 @@
+-# ADR 0002: Database Choice
+-
+-## Status
+-Placeholder
+-
+-## Decision
+-No database is selected in this template.
+-
+-## Rationale
+-The template is framework-agnostic. Real projects should replace this ADR with their persistence decision.
+-
+-## Consequences
+-- Database module cards are documentation placeholders.
+-- Tests and migrations should be added when a real database is introduced.
+diff --git a/docs/agent/AGENTS_AND_SKILLS.md b/docs/agent/AGENTS_AND_SKILLS.md
+index ef44308..4c5fe52 100644
+--- a/docs/agent/AGENTS_AND_SKILLS.md
++++ b/docs/agent/AGENTS_AND_SKILLS.md
+@@ -1,61 +1,27 @@
+ # Agents And Skills
+ 
+-This repository supports a small reusable agent kit:
++`skills/` is the sole product skill source. Client installers copy from it; plugin metadata points to
++it; Qwen users link or copy it manually.
+ 
+-- `.agents/skills/`: reusable Codex-style skills.
+-- `.claude/agents/`: Claude Code subagent templates.
+-- `scripts/`: deterministic tools that are cheaper and more auditable than agent reasoning.
+-- `docs/agent/`: routing docs and durable project context.
+-- `.agent/memory/`: lightweight semantic and procedural memory.
++The Codex plugin contains a generated copy because plugin bundles must be self-contained. Refresh it
++with `python scripts/sync_codex_plugin.py` and enforce parity with `--check`.
+ 
+-## General Skills
++## Product Skills
+ 
+-| Skill | Use |
++| Skill | Responsibility |
+ | --- | --- |
+-| `repo-navigator` | Find relevant files without broad scanning. |
+-| `safe-implementation` | Implement a feature or fix safely. |
+-| `test-debug-loop` | Reproduce, isolate, patch, and re-test failures. |
+-| `code-review` | Review code before merge. |
+-| `docs-sync` | Update durable docs after behavior changes. |
+-| `architecture-decision` | Compare options and record durable decisions. |
+-| `task-handoff` | Capture task state for continuation or audit. |
+-| `source-understanding` | Use Understand Anything for source discovery and onboarding. |
+-| `knowledge-graph-search` | Answer code questions through targeted graph search. |
+-| `agent-setup` | Bootstrap project-specific stack, command, codemap, module-card, and validation context. |
+-
+-## Long-Term Memory
+-
+-Use `.agent/memory/` after `docs/agent/INDEX.md` and before broad code search.
+-Memory should suggest likely files, workflows, and risks, but current source,
+-tests, and docs remain authoritative.
+-
+-Promote task lessons manually:
+-
+-1. Keep raw task state in `.agent/tasks/`.
+-2. Generate a candidate with `make extract-task-memory TASK=.agent/tasks/<task>.md`.
+-3. Review it for usefulness, safety, and staleness.
+-4. Move durable lessons into semantic or procedural memory.
+-5. Update `.agent/memory/index.json` and run `make audit-memory`.
+-
+-## General Subagents
+-
+-| Subagent | Use |
+-| --- | --- |
+-| `repo-researcher` | Read-only code discovery. |
+-| `code-reviewer` | Pre-merge review. |
+-| `test-debugger` | Failing tests and runtime errors. |
+-| `security-reviewer` | Auth, secrets, permissions, and sensitive data. |
+-| `docs-maintainer` | Documentation synchronization. |
+-| `understand-researcher` | Knowledge-graph backed source research. |
+-
+-## When To Add Project-Specific Assets
+-
+-Create project-specific skills or subagents only after repeated project-specific mistakes appear.
+-
+-Good examples:
+-- Domain rules for regulated data.
+-- Evaluation runner for a specific AI pipeline.
+-- Migration reviewer for database-heavy projects.
+-- Release gatekeeper for deployment readiness.
+-
+-Keep general skills reusable. Put domain knowledge in project-specific skills.
++| `toolkit-setup` | Deterministic setup and verification |
++| `c-compliance-loop` | End-to-end compliance workflow |
++| `run-analysis` | C translation-unit analysis |
++| `fix-findings` | Evidence-led remediation |
++| `justify-findings` | Approval-gated annotations |
++| `configure-build-options` | C build capture |
++| `configure-checkers` | Explicit C checker profiles |
++| `find-checker-documentation` | Finding documentation |
++| `find-option-documentation` | Installed-release option documentation |
++| `query-justification-catalog` | Exact approved-text lookup |
++| `generate-c-pstunit-tests` | Approval-gated C unit tests |
++
++General repository skills under `.agents/skills/` remain development aids, not product deliverables.
++Product skills must have YAML frontmatter, stay focused, use exact MCP tool names, and place lengthy
++reference material beside the owning skill.
+diff --git a/docs/agent/ARCHITECTURE.md b/docs/agent/ARCHITECTURE.md
+index d3d4185..b1bd1da 100644
+--- a/docs/agent/ARCHITECTURE.md
++++ b/docs/agent/ARCHITECTURE.md
+@@ -1,22 +1,26 @@
+ # Architecture
+ 
+-This template uses a layered structure:
++The product has three layers:
+ 
+-- `src/api/`: input and output boundary.
+-- `src/services/`: business workflows and application logic.
+-- `src/models/`: domain data structures.
+-- `src/core/`: configuration and runtime setup.
+-- `src/utils/`: small reusable helpers.
++1. **Deterministic Python core**: discovers installations, validates versions and project config,
++   downloads verified MCP assets, manages ownership state, and configures supported clients.
++2. **Canonical skills**: progressive Polyspace domain workflows under `skills/`; these call the
++   existing MCP tools or documented direct binary fallbacks.
++3. **Client surfaces**: Codex and Claude metadata plus manual Qwen Code documentation.
+ 
+ ## Boundaries
+-- API modules may call services.
+-- Services may use models and utilities.
+-- Models should not depend on API modules.
+-- Utilities should not know about product workflows.
+ 
+-## Data Flow
+-1. A caller reaches an API boundary.
+-2. The API validates input and delegates to a service.
+-3. The service performs business logic.
+-4. Models represent returned or persisted data.
+-5. The API formats the response.
++- `cli.py` parses user intent and formats results; it delegates behavior.
++- `installer.py` orchestrates stateful operations through discovery, release, state, and client APIs.
++- `clients.py` owns client-specific configuration and must preserve unrelated user settings.
++- `releases.py` is the only network download boundary.
++- `project_config.py` validates project data without mutating it.
++- Skills do not implement installers and Python code does not encode finding-remediation prompts.
++
++## Safety Invariants
++
++- Setup is plan-first and confirmation-gated unless `--yes` is explicit.
++- Release versions and digests come from the tested manifest.
++- Unknown existing configuration is user-owned.
++- State never stores secrets.
++- C checker profiles are explicit and C source filtering is enforced independently of agent behavior.
+diff --git a/docs/agent/CODEMAP.md b/docs/agent/CODEMAP.md
+index 60f688d..5c0efc3 100644
+--- a/docs/agent/CODEMAP.md
++++ b/docs/agent/CODEMAP.md
+@@ -4,119 +4,161 @@ Generated from the current `src/` directory by `scripts/generate_codemap.py`.
+ 
+ Use this for quick orientation, then confirm with Semble, `rg`, module cards, and source reads.
+ 
+-## src/api/
+-Purpose: HTTP routes, request validation, response shaping, and transport boundaries.
++## src/personal_polyspace_toolkit/
++Purpose: Deterministic Polyspace discovery, setup, client integration, configuration, and state.
+ 
+ Files:
+-- `src/api/__init__.py`
+-- `src/api/dependencies.py`
+-- `src/api/routes.py`
++- `src/personal_polyspace_toolkit/__init__.py`
++- `src/personal_polyspace_toolkit/c_sources.py`
++- `src/personal_polyspace_toolkit/cli.py`
++- `src/personal_polyspace_toolkit/clients.py`
++- `src/personal_polyspace_toolkit/constants.py`
++- `src/personal_polyspace_toolkit/discovery.py`
++- `src/personal_polyspace_toolkit/errors.py`
++- `src/personal_polyspace_toolkit/installer.py`
++- `src/personal_polyspace_toolkit/project_config.py`
++- `src/personal_polyspace_toolkit/releases.py`
++- `src/personal_polyspace_toolkit/state.py`
+ 
+ Exported symbols:
+-- `get_settings`
+-- `health`
++- `HostPlatform`
++- `OwnershipConflict`
++- `PolyspaceInstallation`
++- `ProjectConfig`
++- `ReleaseAsset`
++- `ServerSpec`
++- `ToolkitError`
++- `atomic_write_text`
++- `backup_file`
++- `binary_path`
++- `c_translation_units_from_database`
++- `codex_config_path`
++- `desired_codex_entry`
++- `detect_platform`
++- `discover_polyspace`
++- `doctor_report`
++- `download_verified`
++- `empty_state`
++- `load_project_config`
++- `load_state`
++- `main`
++- `read_polyspace_release`
++- `register_claude`
++- `register_codex`
++- `release_asset`
++- `release_key`
++- `release_url`
++- `save_state`
++- `server_spec`
++- `setup`
++- `setup_plan`
++- `sha256_file`
++- `sha256_tree`
++- `state_dir`
++- `translation_units_for_header`
++- `uninstall`
++- `unregister_claude`
++- `unregister_codex`
++- `validate_supported_release`
++- `verify`
++- `verify_claude`
++- `verify_codex`
++- `verify_qwen`
+ 
+ Important classes/functions:
+-- function `get_settings`
+-- function `health`
++- class `HostPlatform`
++- class `OwnershipConflict`
++- class `PolyspaceInstallation`
++- class `ProjectConfig`
++- class `ReleaseAsset`
++- class `ServerSpec`
++- class `ToolkitError`
++- function `_claude_snapshot`
++- function `_default_open`
++- function `_install_skills`
++- function `_marketplace_name_present`
++- function `_parser`
++- function `_print`
++- function `_probe_binary`
++- function `_register_claude_marketplace`
++- function `_registry_candidates`
++- function `_reject_cpp`
++- function `_remove_skills`
++- function `_require_string`
++- function `_root_from_binary`
++- function `_roots_from_registry`
++- function `_run`
++- function `_skill_destination`
++- function `_skills_root`
++- function `atomic_write_text`
++- function `backup_file`
++- function `binary_path`
++- function `c_translation_units_from_database`
++- function `codex_config_path`
++- function `desired_codex_entry`
++- function `detect_platform`
++- function `discover_polyspace`
++- function `doctor_report`
++- function `download_verified`
++- function `empty_state`
++- function `load_project_config`
++- function `load_state`
++- function `main`
++- function `read_polyspace_release`
++- function `register_claude`
++- function `register_codex`
++- function `release_asset`
++- function `release_key`
++- function `release_url`
++- function `save_state`
++- function `server_spec`
++- function `setup`
++- function `setup_plan`
++- function `sha256_file`
++- function `sha256_tree`
++- function `state_dir`
++- function `translation_units_for_header`
++- function `uninstall`
++- function `unregister_claude`
++- function `unregister_codex`
++- function `validate_supported_release`
++- function `verify`
++- function `verify_claude`
++- function `verify_codex`
++- function `verify_qwen`
+ 
+ Public APIs:
+-- `src/api/dependencies.py` -> `get_settings`
+-- `src/api/routes.py` -> `health`
++- `src/personal_polyspace_toolkit/c_sources.py` -> `c_translation_units_from_database`, `translation_units_for_header`
++- `src/personal_polyspace_toolkit/cli.py` -> `main`
++- `src/personal_polyspace_toolkit/clients.py` -> `ServerSpec`, `codex_config_path`, `desired_codex_entry`, `register_claude`, `register_codex`, `server_spec`, `unregister_claude`, `unregister_codex`, `verify_claude`, `verify_codex`, `verify_qwen`
++- `src/personal_polyspace_toolkit/constants.py` -> `ReleaseAsset`
++- `src/personal_polyspace_toolkit/discovery.py` -> `HostPlatform`, `PolyspaceInstallation`, `detect_platform`, `discover_polyspace`, `doctor_report`, `read_polyspace_release`, `release_key`, `validate_supported_release`
++- `src/personal_polyspace_toolkit/errors.py` -> `OwnershipConflict`, `ToolkitError`
++- `src/personal_polyspace_toolkit/installer.py` -> `setup`, `setup_plan`, `uninstall`, `verify`
++- `src/personal_polyspace_toolkit/project_config.py` -> `ProjectConfig`, `load_project_config`
++- `src/personal_polyspace_toolkit/releases.py` -> `backup_file`, `download_verified`, `release_asset`, `release_url`
++- `src/personal_polyspace_toolkit/state.py` -> `atomic_write_text`, `binary_path`, `empty_state`, `load_state`, `save_state`, `sha256_file`, `sha256_tree`, `state_dir`
+ 
+ Dependency edges:
+-- `src/api` -> `src/core/config`
+-- `src/api` -> `src/services/example_service`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/clients`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/constants`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/discovery`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/errors`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/installer`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/project_config`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/releases`
++- `src/personal_polyspace_toolkit` -> `src/personal_polyspace_toolkit/state`
+ 
+ Tests:
+-- `tests/integration/test_api.py`
++- `tests/integration/test_cli.py`
++- `tests/integration/test_installer.py`
++- `tests/unit/test_c_sources.py`
++- `tests/unit/test_clients.py`
++- `tests/unit/test_discovery.py`
++- `tests/unit/test_project_config.py`
++- `tests/unit/test_releases.py`
+ 
+ Risk notes:
+ - Public exports may be imported by other modules; confirm references before renaming.
+ - Public API or schema changes should be reflected in specs and tests.
+ - Dependency edges are import hints, not a full call graph; verify behavior in source.
+-
+-## src/core/
+-Purpose: Configuration, application setup, and cross-cutting primitives.
+-
+-Files:
+-- `src/core/__init__.py`
+-- `src/core/config.py`
+-
+-Exported symbols:
+-- `Settings`
+-- `load_settings`
+-
+-Important classes/functions:
+-- class `Settings`
+-- function `load_settings`
+-
+-Public APIs:
+-- `src/core/config.py` -> `Settings`, `load_settings`
+-
+-Risk notes:
+-- Public exports may be imported by other modules; confirm references before renaming.
+-
+-## src/models/
+-Purpose: Domain models and persistence-facing data structures.
+-
+-Files:
+-- `src/models/__init__.py`
+-- `src/models/example.py`
+-
+-Exported symbols:
+-- `Example`
+-
+-Important classes/functions:
+-- class `Example`
+-
+-Public APIs:
+-- `src/models/example.py` -> `Example`
+-
+-Tests:
+-- `tests/unit/test_models.py`
+-
+-Risk notes:
+-- Public exports may be imported by other modules; confirm references before renaming.
+-- Public API or schema changes should be reflected in specs and tests.
+-
+-## src/services/
+-Purpose: Business workflows and application logic.
+-
+-Files:
+-- `src/services/__init__.py`
+-- `src/services/example_service.py`
+-
+-Exported symbols:
+-- `ExampleService`
+-
+-Important classes/functions:
+-- class `ExampleService`
+-
+-Public APIs:
+-- `src/services/example_service.py` -> `ExampleService`
+-
+-Tests:
+-- `tests/unit/test_services.py`
+-
+-Risk notes:
+-- Public exports may be imported by other modules; confirm references before renaming.
+-
+-## src/utils/
+-Purpose: Small shared helpers with no business ownership.
+-
+-Files:
+-- `src/utils/__init__.py`
+-- `src/utils/strings.py`
+-
+-Exported symbols:
+-- `normalize_name`
+-
+-Important classes/functions:
+-- function `normalize_name`
+-
+-Public APIs:
+-- `src/utils/strings.py` -> `normalize_name`
+-
+-Risk notes:
+-- Public exports may be imported by other modules; confirm references before renaming.
+diff --git a/docs/agent/CODE_SEARCH.md b/docs/agent/CODE_SEARCH.md
+index 1555c14..3fc5eef 100644
+--- a/docs/agent/CODE_SEARCH.md
++++ b/docs/agent/CODE_SEARCH.md
+@@ -57,8 +57,8 @@ rg --files | rg "module-name|test-name"
+ | "Understand repo modules quickly" | `docs/agent/CODEMAP.md` |
+ | "Analyze dependency impact" | Understand Anything / graph |
+ | "Send whole repo to external model" | Repomix |
+-| "Large enterprise monorepo search" | Sourcegraph/Cody |
+-| "General template default" | Semble + `rg` + CODEMAP |
++| "Large repository behavior search" | Semble, then graph tools if needed |
++| "General project default" | Semble + `rg` + CODEMAP |
+ | "Advanced coding setup" | Semble + Serena + `rg` + CODEMAP |
+ 
+ ## Before Editing
+diff --git a/docs/agent/COMMANDS.md b/docs/agent/COMMANDS.md
+index 5d5a2f6..c0e6ae2 100644
+--- a/docs/agent/COMMANDS.md
++++ b/docs/agent/COMMANDS.md
+@@ -1,24 +1,15 @@
+ # Commands
+ 
+-Detected project commands.
+-
+-- dev: `make dev`
+-- lint: `make lint`
+-- test: `make test`
+-- test-integration: `make test-integration`
+-- test-unit: `make test-unit`
+-- test-unit-compact: `make test-unit-compact`
+-- typecheck: `make typecheck`
+-- typecheck-compact: `make typecheck-compact`
+-
+-Optional compact-output helpers:
+-- rtk-gain: `make rtk-gain`
+-- git-status: `make git-status`
+-- git-diff: `make git-diff`
+-- lint-compact: `make lint-compact`
+-
+-Memory helpers:
+-- extract-task-memory: `make extract-task-memory TASK=.agent/tasks/<task>.md`
+-- validate-memory-links: `make validate-memory-links`
+-- audit-memory-staleness: `make audit-memory-staleness`
+-- audit-memory: `make audit-memory`
++| Task | Command |
++| --- | --- |
++| Install development environment | `python -m pip install -e ".[dev]"` |
++| Inspect prerequisites | `polyspace-toolkit doctor --json` |
++| Preview setup | `polyspace-toolkit setup --client codex --dry-run` |
++| Validate project config | `polyspace-toolkit config validate .polyspace-toolkit.json` |
++| Unit tests | `python -m pytest tests/unit -q` |
++| Integration tests | `python -m pytest tests/integration -q` |
++| Lint | `python -m ruff check src tests scripts` |
++| Typecheck | `python -m mypy` |
++| Agent docs | `python scripts/validate_agent_docs.py` |
++
++No normal development command requires a licensed Polyspace installation. The smoke target does.
+diff --git a/docs/agent/CONTEXT_ROUTER.md b/docs/agent/CONTEXT_ROUTER.md
+index 123f633..e55716c 100644
+--- a/docs/agent/CONTEXT_ROUTER.md
++++ b/docs/agent/CONTEXT_ROUTER.md
+@@ -1,54 +1,15 @@
+ # Context Router
+ 
+-Use this router when a task is more than a one-line command or isolated question.
+-
+-## Routing Policy
+-
+-Do not scan the whole repository for non-trivial code tasks. Start with the cheapest reliable context, then expand only when uncertainty remains.
+-
+-## Standard Route
++For non-trivial work:
+ 
+ 1. Read `docs/agent/INDEX.md`.
+-2. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
+-3. Verify useful memory against current files before relying on it.
+-4. Read the relevant module card or `docs/agent/CODEMAP.md`.
+-5. Use Semble for natural-language retrieval.
+-6. Use `rg` for exact confirmation.
+-7. Use Serena when language-server semantics are valuable.
+-8. Read full files only after retrieval identifies likely targets.
+-9. Run targeted tests before broad suites.
+-
+-## Tool Profiles
+-
+-### Default
+-
+-Use Semble + `rg` + CODEMAP/module cards.
+-
+-This profile has low setup cost, low token cost, high portability, and works well across Codex, Claude Code, Cursor, and similar agents.
+-
+-### Advanced Coding
+-
+-Use Semble + Serena + `rg` + CODEMAP/module cards.
+-
+-Enable this profile for serious Python, TypeScript, Java, C#, and Go projects where references, declarations, diagnostics, and refactors benefit from language-server semantics.
+-
+-### Export
+-
+-Use Repomix only when the task requires sending a bundled repository snapshot to an external model or reviewer. It should not be the default daily retrieval workflow.
+-
+-## Escalation Signals
+-
+-Escalate from CODEMAP/module cards to Semble when:
+-- The task is phrased in product or behavior language.
+-- You do not know the exact symbol name.
+-- Relevant files could span docs, config, tests, and source.
+-
+-Escalate from Semble or `rg` to Serena when:
+-- You must identify all references.
+-- A rename or refactor crosses files.
+-- Diagnostics or type-aware symbol information affects correctness.
+-
+-Escalate to graph tools when:
+-- Dependency impact matters.
+-- You need architecture-level relationships.
+-- The task is onboarding, review, or broad source understanding.
++2. Check `.agent/memory/index.json`; verify any useful memory against current source.
++3. Read the relevant module card or `docs/agent/CODEMAP.md`.
++4. Use Semble for behavior-level discovery when available.
++5. Use `rg` for exact symbols, config keys, paths, client names, and policy text.
++6. Use Serena only when reference or refactor semantics materially improve correctness.
++7. Read full files after retrieval identifies likely targets.
++8. Run targeted tests before the broad suite.
++
++Use graph tooling for architecture impact and Repomix only for an explicitly requested external
++repository export. Neither is part of the normal implementation loop.
+diff --git a/docs/agent/INDEX.md b/docs/agent/INDEX.md
+index 363008c..c4dd2c9 100644
+--- a/docs/agent/INDEX.md
++++ b/docs/agent/INDEX.md
+@@ -1,83 +1,36 @@
+ # Agent Context Index
+ 
+-Use this file to choose the smallest useful context for the task.
+-
+-## For Bug Fixes
+-Read:
+-1. `docs/agent/CONTEXT_ROUTER.md`
+-2. `docs/agent/CODEMAP.md`
+-3. Relevant module card in `docs/agent/module-cards/`
+-4. Related tests
+-
+-Do not read:
+-- Full product docs
+-- Full architecture docs
+-- Unrelated modules
+-
+-## For New API Endpoints
+-Read:
+-1. `docs/agent/module-cards/api.md`
+-2. `docs/specs/api-contracts.md`
+-3. Existing similar endpoint
+-4. Relevant service module card
+-
+-## For Database Changes
+-Read:
+-1. `docs/agent/module-cards/database.md`
+-2. Relevant ADRs in `docs/adr/`
+-3. Existing migrations or model files
+-4. Related model tests
+-
+-## For Frontend Changes
+-Read:
+-1. `docs/agent/module-cards/frontend.md`
+-2. `docs/product/USER_FLOWS.md`
+-3. Existing similar screen or component
+-4. Related tests
+-
+-## For Refactors
+-Read:
+-1. `docs/agent/ARCHITECTURE.md`
+-2. Relevant module cards
+-3. Current tests
+-4. `docs/agent/PITFALLS.md`
+-
+-## For Planning Or Product Questions
+-Read:
+-1. `docs/product/PRD.md`
+-2. `docs/product/REQUIREMENTS.md`
+-3. `docs/product/USER_FLOWS.md`
+-
+-## For Agent, Skill, Tool, Or MCP Changes
+-Read:
++Load the smallest relevant context for the task.
++
++## Setup, Discovery, Download, Or Uninstall
++1. `docs/agent/module-cards/installer.md`
++2. `docs/agent/ARCHITECTURE.md`
++3. `skills/toolkit-setup/SKILL.md`
++4. Related unit and integration tests
++
++## Client Integration
++1. `docs/agent/module-cards/clients.md`
++2. `docs/setup/qwen-local.md` only for Qwen Code
++3. Current official client documentation when configuration behavior may have changed
++
++## Polyspace Workflow Or Skill Change
++1. `docs/agent/module-cards/skills.md`
++2. The exact skill under `skills/`
++3. `.polyspace-toolkit.schema.json` when project configuration is involved
++4. Related policy tests
++
++## Project Configuration
++1. `docs/product/REQUIREMENTS.md`
++2. `.polyspace-toolkit.schema.json`
++3. `src/personal_polyspace_toolkit/project_config.py`
++4. Configuration tests
++
++## Agent Context Or Memory Change
+ 1. `docs/agent/AGENTS_AND_SKILLS.md`
+-2. `docs/agent/TOOLS.md`
+-3. `docs/agent/MCPS.md`
+-4. `docs/agent/COMMAND_OUTPUT_POLICY.md` when command execution or output volume is affected
+-5. Relevant files under `.agents/skills/`, `.claude/agents/`, `.mcp/`, or `scripts/`
+-
+-## For Long-Term Memory Changes
+-Read:
+-1. `docs/agent/MEMORY_POLICY.md`
+-2. `docs/agent/MEMORY_RETRIEVAL.md`
+-3. `docs/agent/MEMORY_PROMOTION_RULES.md`
+-4. `.agent/memory/index.json`
+-5. Relevant memory cards under `.agent/memory/semantic/` or `.agent/memory/procedural/`
+-
+-## For Agent Kit Setup, Install, Or Audit
+-Read:
+-1. `agentkit-manifest.json`
+-2. `docs/agent/TOOLS.md`
+-3. `docs/agent/COMMAND_OUTPUT_POLICY.md`
+-4. `.agents/skills/agent-setup/SKILL.md`
+-5. Relevant installer, setup, audit, or hook files under `scripts/`, `.agent/`, or `.claude/hooks/`
++2. Relevant memory policy under `docs/agent/`
++3. `.agent/memory/index.json`
+ 
+-## For Source Understanding Or Code Search
+-Read:
+-1. `docs/agent/CONTEXT_ROUTER.md`
++## Source Understanding
++1. `docs/agent/CODEMAP.md`
+ 2. `docs/agent/CODE_SEARCH.md`
+-3. `docs/agent/CODEMAP.md`
+-4. `docs/agent/SOURCE_UNDERSTANDING.md`
+-5. `docs/agent/module-cards/source-understanding.md`
+-6. `.understand-anything/README.md`
+-7. `.understand-anything/knowledge-graph.json` only through targeted search when it exists
++3. Exact searches with `rg`
+diff --git a/docs/agent/MCPS.md b/docs/agent/MCPS.md
+index d1d11cf..2c7524b 100644
+--- a/docs/agent/MCPS.md
++++ b/docs/agent/MCPS.md
+@@ -1,33 +1,18 @@
+-# MCPs
++# Polyspace MCP
+ 
+-Model Context Protocol servers should be added only when they provide useful external context or reliable actions that scripts cannot provide locally.
++The toolkit consumes the official per-user Polyspace MCP server binary. It does not implement or
++redistribute the server.
+ 
+-## General MCP Categories
++Compatible tool names:
+ 
+-| MCP Category | Use |
+-| --- | --- |
+-| Semble | Natural-language project search before broad file reads. |
+-| Serena | Optional language-server semantics for references, declarations, diagnostics, and refactors. |
+-| Filesystem | Structured file reads, writes, and project resources. |
+-| GitHub | Issues, pull requests, review comments, CI state, and repository metadata. |
+-| Browser | Local app inspection, screenshots, and interactive UI verification. |
+-| Database | Schema inspection and safe read-only query workflows. |
+-| Documentation | Current official docs for unstable APIs or SDKs. |
+-| Design | Figma, FigJam, or design-system workflows. |
+-| Secrets | Controlled credential provisioning without exposing plaintext. |
++1. `run_polyspace_as_you_code`
++2. `configure_build_options_for_polyspace`
++3. `configure_checkers_for_polyspace`
++4. `get_polyspace_documentation`
++5. `query_justification_catalog`
+ 
+-## MCP Selection Rules
++Tool names are a compatibility contract. Validate argument details against the tested server release
++and installed Polyspace documentation before changing a skill.
+ 
+-- Use local scripts first for deterministic repo checks.
+-- Use Semble as the default low-cost code retrieval profile when available.
+-- Use Serena only when symbol-level accuracy or refactoring support is needed.
+-- Use MCPs when external state matters.
+-- Keep write-capable MCPs scoped and documented.
+-- Prefer read-only modes for research and review agents.
+-- Document required MCPs in `docs/agent/COMMANDS.md` or a project-specific setup guide.
+-
+-## Project Template
+-
+-Use `.mcp/README.md` to document candidate MCPs for a project. Use `.mcp/servers.example.json` as a non-secret placeholder. Add real MCP configuration only when the team knows which runtime will consume it.
+-
+-RTK is documented under `.mcp/rtk.md` because it is an agent-runtime integration point, but it is not required to be an MCP server. Keep it optional and fail open to raw commands.
++The server is registered at user scope for Codex and Claude. Qwen registration is manual and keeps
++`trust` false. Telemetry is disabled by default for every generated server command.
+diff --git a/docs/agent/PITFALLS.md b/docs/agent/PITFALLS.md
+index 0cab330..e1f8029 100644
+--- a/docs/agent/PITFALLS.md
++++ b/docs/agent/PITFALLS.md
+@@ -1,7 +1,11 @@
+ # Pitfalls
+ 
+-- Do not turn `AGENTS.md` or `CLAUDE.md` into a full project manual.
+-- Do not scan unrelated directories before checking `docs/agent/INDEX.md`.
+-- Do not manually edit generated code maps without updating the generator.
+-- Do not hide behavior changes in refactors.
+-- Do not commit local traces, cache files, secrets, or debug logs.
++- A valid MCP binary does not prove Polyspace or its license is available.
++- Header findings require build context and a containing C translation unit.
++- Project-level Qwen model-provider arrays can replace user-level arrays.
++- Codex TOML must be edited structurally; formatting-preserving `tomlkit` is intentional.
++- Claude configuration must go through its CLI; do not guess internal storage files.
++- Existing same-named client entries or skill folders are user-owned unless state proves ownership.
++- A catalog match is wording approval, not permission to annotate source.
++- Do not weaken profiles, options, or baselines to manufacture a clean result.
++- Do not update release digests without verifying official GitHub asset metadata.
+diff --git a/docs/agent/TOOLS.md b/docs/agent/TOOLS.md
+index 365065f..1972327 100644
+--- a/docs/agent/TOOLS.md
++++ b/docs/agent/TOOLS.md
+@@ -1,76 +1,19 @@
+ # Tools
+ 
+-Use deterministic scripts for repeatable, cheap, auditable work.
++## Product CLI
+ 
+-## Included Scripts
++- `polyspace-toolkit doctor`: read-only prerequisite discovery
++- `polyspace-toolkit setup`: verified binary and automated-client setup
++- `polyspace-toolkit verify`: state and readiness checks
++- `polyspace-toolkit uninstall`: ownership-aware removal
++- `polyspace-toolkit config validate`: public project-config validation
+ 
+-| Script | Purpose |
+-| --- | --- |
+-| `scripts/generate_codemap.py` | Refresh `docs/agent/CODEMAP.md` from source folders. |
+-| `scripts/agent_setup.py` | Detect stack and commands, refresh agent context, and run validation. |
+-| `scripts/agentkit_installer.py` | Install or update agent-kit files from `agentkit-manifest.json`. |
+-| `scripts/summarize_changed_files.py` | Summarize changed files for handoff and review. |
+-| `scripts/update_module_cards.py` | Create missing module cards from source folders. |
+-| `scripts/run_targeted_tests.py` | Run a focused test command or pick a small default. |
+-| `scripts/validate_agent_docs.py` | Validate required agent docs and skill templates. |
+-| `scripts/detect_large_context_docs.py` | Warn when auto-loaded docs become too large. |
+-| `scripts/detect_large_agent_files.py` | Warn when agent entrypoints, skills, or subagents become too large. |
+-| `scripts/check_context_staleness.py` | Warn when generated agent context may be older than source files. |
+-| `scripts/audit_module_cards.py` | Check module-card coverage, headings, and unresolved TODOs. |
+-| `scripts/audit_task_logs.py` | Check task logs for required audit headings. |
+-| `scripts/extract_task_memory.py` | Create a manually reviewed memory candidate from a task log. |
+-| `scripts/validate_memory_links.py` | Validate promoted memory cards, metadata, index entries, and linked files. |
+-| `scripts/audit_memory_staleness.py` | Warn when promoted memory is old or references missing files. |
+-| `scripts/check_architecture_boundaries.py` | Catch simple layer import violations. |
+-| `scripts/collect_task_trace.py` | Create a task trace from current changed files. |
+-| `scripts/search_understand_graph.py` | Search the Understand Anything graph without loading it all into context. |
+-| `scripts/validate_understand_graph.py` | Validate the expected graph shape before graph-backed work. |
+-| `eval/retrieval/run_retrieval_eval.py` | Check whether Semble searches return expected context paths. |
++## Development Tools
+ 
+-## Command Output
++- Pytest: behavior and integration tests
++- Ruff: Python linting and import order
++- mypy: strict package type checking
++- Existing agent audit scripts: context, memory, module-card, and size checks
++- `rg`: exact source and policy confirmation
+ 
+-RTK is an optional output-compression layer for noisy local commands. Use the compact make targets when available, and fall back to the original command when RTK is missing or compressed output is insufficient.
+-
+-## Make Targets
+-
+-```bash
+-make docs-map
+-make agent-setup
+-make update-module-cards
+-make targeted-tests
+-make validate-agent-docs
+-make detect-large-context-docs
+-make detect-large-agent-files
+-make check-context-staleness
+-make audit-module-cards
+-make audit-task-logs
+-make extract-task-memory TASK=.agent/tasks/<task>.md
+-make validate-memory-links
+-make audit-memory-staleness
+-make audit-memory
+-make check-architecture-boundaries
+-make task-trace
+-make rtk-gain
+-make git-status
+-make git-diff
+-make test-unit-compact
+-make lint-compact
+-make typecheck-compact
+-make understand
+-make understand-search QUERY="service"
+-make validate-understand-graph
+-make retrieval-eval
+-```
+-
+-## Tool Principles
+-
+-- Prefer scripts for deterministic checks.
+-- Prefer Semble + `rg` + CODEMAP/module cards for normal retrieval.
+-- Keep Serena optional for language-server backed symbol work.
+-- Use Repomix as an export tool, not as the normal daily retrieval workflow.
+-- Prefer targeted checks before broad suites.
+-- Use memory as guidance only; verify it before editing.
+-- Keep scripts safe by default.
+-- Make script output easy for humans and agents to inspect.
+-- Compress noisy terminal output when possible, but keep raw reruns available for unclear failures.
+-- Avoid hiding policy decisions inside scripts; document decisions in ADRs.
++Use real Polyspace execution only through the opt-in smoke suite or an explicitly approved user task.
+diff --git a/docs/agent/WORKFLOWS.md b/docs/agent/WORKFLOWS.md
+index a6cedfe..43ebe2a 100644
+--- a/docs/agent/WORKFLOWS.md
++++ b/docs/agent/WORKFLOWS.md
+@@ -1,24 +1,13 @@
+ # Workflows
+ 
+-## Add A Feature
+-1. Read `docs/agent/INDEX.md`.
+-2. Read the relevant module card.
+-3. Inspect one similar implementation.
+-4. Add the smallest complete implementation.
+-5. Add or update focused tests.
+-6. Run targeted checks.
+-7. Update docs when behavior changes.
++## Setup Change
++Read the installer and client module cards, add unit tests for pure behavior, then exercise the full
++operation with a temporary home and fake executable. Test rollback and collisions, not only success.
+ 
+-## Fix A Bug
+-1. Reproduce the bug with a failing test or command.
+-2. Read the module card for the affected area.
+-3. Patch the narrowest responsible code.
+-4. Add a regression test.
+-5. Run targeted tests.
++## Skill Change
++Read only the owning skill and references. Preserve exact tool contracts, explicit profiles, C-only
++filtering, and approval gates. Run skill-policy validation.
+ 
+-## Refactor
+-1. Identify the behavior that must remain unchanged.
+-2. Read architecture and relevant module cards.
+-3. Prefer small mechanical steps.
+-4. Keep tests passing between steps when possible.
+-5. Avoid changing public contracts unless explicitly requested.
++## Release Update
++Confirm official asset names and digests, add them to the tested manifest, run the three-OS fake
++integration matrix, and complete a licensed smoke run before changing the default.
+diff --git a/docs/agent/module-cards/api.md b/docs/agent/module-cards/api.md
+deleted file mode 100644
+index 1266b65..0000000
+--- a/docs/agent/module-cards/api.md
++++ /dev/null
+@@ -1,24 +0,0 @@
+-# Module: API
+-
+-## Responsibility
+-Owns HTTP routes, request validation, response formatting, and boundary-level error handling.
+-
+-## Key Files
+-- `src/api/routes.py`: route definitions
+-- `src/api/dependencies.py`: shared request dependencies
+-- `tests/integration/test_api.py`: integration coverage
+-
+-## Public Interfaces
+-- Route handlers exposed by `src/api/routes.py`
+-
+-## Rules
+-- Keep business logic out of route handlers.
+-- Delegate workflows to services.
+-- Update `docs/specs/api-contracts.md` when public contracts change.
+-
+-## Common Tasks
+-- Add endpoint: inspect `routes.py`, service module card, and API contract specs.
+-- Change response shape: update specs and integration tests.
+-
+-## Known Pitfalls
+-- Do not duplicate validation rules across route and service layers without a reason.
+diff --git a/docs/agent/module-cards/core.md b/docs/agent/module-cards/core.md
+deleted file mode 100644
+index 44c510c..0000000
+--- a/docs/agent/module-cards/core.md
++++ /dev/null
+@@ -1,22 +0,0 @@
+-# Module: Core
+-
+-## Responsibility
+-Owns project configuration and other cross-cutting runtime primitives.
+-
+-## Key Files
+-- `src/core/config.py`: configuration defaults and access helpers
+-
+-## Public Interfaces
+-- Configuration objects and helpers exported from `src/core`
+-
+-## Rules
+-- Keep environment parsing centralized.
+-- Do not import API route handlers, services, or tests from core runtime modules.
+-- Document behavior changes that affect deployment or local setup.
+-
+-## Common Tasks
+-- Add configuration: update `src/core/config.py`, command docs, and relevant tests.
+-- Change defaults: check callers and update setup notes.
+-
+-## Known Pitfalls
+-- Avoid reading environment variables directly from feature modules when a core helper should own that concern.
+diff --git a/docs/agent/module-cards/database.md b/docs/agent/module-cards/database.md
+deleted file mode 100644
+index 3f6cb6e..0000000
+--- a/docs/agent/module-cards/database.md
++++ /dev/null
+@@ -1,23 +0,0 @@
+-# Module: Database
+-
+-## Responsibility
+-Documents persistence-related decisions and model boundaries.
+-
+-## Key Files
+-- `src/models/`
+-- `docs/adr/0002-database-choice.md`
+-
+-## Public Interfaces
+-- Domain models exported by `src/models/`
+-
+-## Rules
+-- Keep schema changes explicit and documented.
+-- Do not rewrite existing migrations without approval.
+-- Update ADRs when persistence strategy changes.
+-
+-## Common Tasks
+-- Add model: inspect existing models and related tests.
+-- Change persistence behavior: inspect ADRs and integration coverage.
+-
+-## Known Pitfalls
+-- Do not mix persistence concerns into API route handlers.
+diff --git a/docs/agent/module-cards/frontend.md b/docs/agent/module-cards/frontend.md
+deleted file mode 100644
+index 2f013d3..0000000
+--- a/docs/agent/module-cards/frontend.md
++++ /dev/null
+@@ -1,23 +0,0 @@
+-# Module: Frontend
+-
+-## Responsibility
+-Placeholder for frontend screens, components, state, and design rules.
+-
+-## Key Files
+-- `src/frontend/`: add frontend code here if this project grows a UI
+-- `docs/product/USER_FLOWS.md`: product journeys
+-
+-## Public Interfaces
+-- Application routes and reusable components, once implemented
+-
+-## Rules
+-- Match existing design conventions before introducing new ones.
+-- Keep common workflows ergonomic and efficient.
+-- Test user-facing behavior where practical.
+-
+-## Common Tasks
+-- Add screen: inspect similar screens and user flows.
+-- Change component: inspect usage sites and visual states.
+-
+-## Known Pitfalls
+-- Do not build a marketing landing page when the requested output is an app or tool.
+diff --git a/docs/agent/module-cards/models.md b/docs/agent/module-cards/models.md
+deleted file mode 100644
+index c9f651e..0000000
+--- a/docs/agent/module-cards/models.md
++++ /dev/null
+@@ -1,23 +0,0 @@
+-# Module: Models
+-
+-## Responsibility
+-Owns domain data structures and model-level behavior.
+-
+-## Key Files
+-- `src/models/example.py`: sample domain model
+-- `tests/unit/test_models.py`: model coverage
+-
+-## Public Interfaces
+-- Model classes and constructors exported from `src/models`
+-
+-## Rules
+-- Keep transport-specific request and response objects out of models.
+-- Keep persistence decisions aligned with `docs/agent/module-cards/database.md`.
+-- Update tests when model invariants change.
+-
+-## Common Tasks
+-- Add model: define the model, export it from the package when needed, and add unit tests.
+-- Change validation: update model tests and related API/service callers.
+-
+-## Known Pitfalls
+-- Avoid placing workflow logic in models when it belongs in services.
+diff --git a/docs/agent/module-cards/services.md b/docs/agent/module-cards/services.md
+deleted file mode 100644
+index ff5678b..0000000
+--- a/docs/agent/module-cards/services.md
++++ /dev/null
+@@ -1,23 +0,0 @@
+-# Module: Services
+-
+-## Responsibility
+-Owns business workflows and application logic.
+-
+-## Key Files
+-- `src/services/example_service.py`: sample service
+-- `tests/unit/test_services.py`: service tests
+-
+-## Public Interfaces
+-- `ExampleService`
+-
+-## Rules
+-- Services should not import framework-specific request objects.
+-- Services should receive dependencies explicitly.
+-- Keep persistence and transport concerns behind boundaries.
+-
+-## Common Tasks
+-- Add workflow: add a service method and unit tests.
+-- Change business rule: update tests and related product requirements.
+-
+-## Known Pitfalls
+-- Do not read environment variables directly inside service methods.
+diff --git a/docs/agent/module-cards/utils.md b/docs/agent/module-cards/utils.md
+deleted file mode 100644
+index bd02791..0000000
+--- a/docs/agent/module-cards/utils.md
++++ /dev/null
+@@ -1,22 +0,0 @@
+-# Module: Utils
+-
+-## Responsibility
+-Provides small reusable helpers that are not tied to a product workflow.
+-
+-## Key Files
+-- `src/utils/strings.py`: string helper examples
+-
+-## Public Interfaces
+-- Utility functions exported from `src/utils`
+-
+-## Rules
+-- Keep utilities narrow and dependency-light.
+-- Prefer module-specific helpers when logic is only used in one boundary.
+-- Add unit tests for helpers with branching or edge cases.
+-
+-## Common Tasks
+-- Add helper: check for an existing local helper first, then add focused tests.
+-- Change helper behavior: search all callers before updating expectations.
+-
+-## Known Pitfalls
+-- Avoid turning `utils` into a dumping ground for business logic.
+diff --git a/docs/product/PRD.md b/docs/product/PRD.md
+index 58247c9..74022ed 100644
+--- a/docs/product/PRD.md
++++ b/docs/product/PRD.md
+@@ -1,14 +1,21 @@
+ # Product Requirements Document
+ 
+-## Overview
+-This template helps teams create repositories that are easy for coding agents to navigate, modify, and verify.
++## Product
++
++Personal Polyspace Toolkit is an unofficial, local-first, C-only integration layer for Polyspace as
++You Code and strong coding agents.
+ 
+ ## Goals
+-- Keep auto-loaded context small.
+-- Route agents to the right docs and files.
+-- Preserve task history without bloating future sessions.
+-- Support generated code intelligence.
++
++- Make setup deterministic, reversible, and supply-chain aware.
++- Give agents focused Polyspace expertise without loading every workflow at once.
++- Drive an analyze, explain, fix, test, and re-analyze loop for C translation units.
++- Keep compliance choices and source justifications under human control.
++- Support Codex, Claude Code, and manually configured local Qwen Code.
+ 
+ ## Non-Goals
+-- This template does not prescribe a specific application framework.
+-- This template does not replace human architecture decisions.
++
++- Implementing or redistributing the Polyspace MCP server.
++- Supporting additional languages or coding clients.
++- Automatically selecting coding standards, justifying findings, or trusting generated executables.
++- Managing Qwen model endpoints or credentials.
+diff --git a/docs/product/REQUIREMENTS.md b/docs/product/REQUIREMENTS.md
+index 088877c..e3d6147 100644
+--- a/docs/product/REQUIREMENTS.md
++++ b/docs/product/REQUIREMENTS.md
+@@ -1,13 +1,19 @@
+ # Requirements
+ 
+-## Functional Requirements
+-- Provide concise agent entrypoint files.
+-- Provide an agent context index.
+-- Provide short module cards.
+-- Provide a task-log template.
+-- Provide placeholders for code map generation and validation.
+-
+-## Quality Requirements
+-- Keep instructions readable and concise.
+-- Separate durable docs from local session artifacts.
+-- Make generated context easy to refresh.
++## Functional
++
++- Detect supported hosts and Polyspace R2024b+ without broad searches.
++- Install only tested MCP release assets after SHA-256 verification.
++- Configure Codex and Claude at user scope while preserving unrelated settings.
++- Provide manual, non-secret Qwen local-model and MCP examples.
++- Validate a versioned C-only project configuration with explicit profiles.
++- Provide analysis, remediation, justification, configuration, documentation, catalog, and PSTUnit
++  skills with direct binary fallbacks where applicable.
++- Verify and uninstall only state owned by this toolkit.
++
++## Quality
++
++- Python 3.11+, strict typing, no secrets in state or examples.
++- Tests on Windows, Linux, and macOS using temporary homes and fake external tools.
++- Real Polyspace execution remains opt-in and is required before a stable release claim.
++- Active product surfaces must not reference removed clients or unsupported language workflows.
+diff --git a/docs/product/USER_FLOWS.md b/docs/product/USER_FLOWS.md
+index 6b799a4..c174777 100644
+--- a/docs/product/USER_FLOWS.md
++++ b/docs/product/USER_FLOWS.md
+@@ -1,14 +1,29 @@
+ # User Flows
+ 
+-## Agent Starts A Task
+-1. Agent reads `AGENTS.md` or `CLAUDE.md`.
+-2. Agent reads `docs/agent/INDEX.md`.
+-3. Agent chooses relevant module cards.
+-4. Agent inspects targeted files.
+-5. Agent patches, verifies, and summarizes.
+-
+-## Team Reviews Agent Work
+-1. Reviewer checks the final response.
+-2. Reviewer inspects changed files.
+-3. Reviewer reads the task note if the task was multi-step.
+-4. Reviewer confirms tests and risks.
++## Install
++1. User runs `doctor` and reviews detected prerequisites.
++2. User previews setup with `--dry-run`.
++3. CLI downloads the pinned asset, verifies its digest, configures selected clients, installs skills,
++   and writes ownership state.
++4. User restarts the client and runs `verify`.
++
++## Configure A C Project
++1. User explicitly selects checker profiles.
++2. User commits `.polyspace-toolkit.json` with project-relative paths.
++3. Agent creates or validates checker and build-option files.
++
++## Remediate Findings
++1. Agent analyzes selected `.c` translation units.
++2. Agent explains findings using installed-release documentation.
++3. Agent applies real fixes, compiles, tests, and re-analyzes.
++4. Any proposed justification is shown exactly and waits for approval.
++
++## Generate Tests
++1. Agent proposes a C PSTUnit test plan and waits for approval.
++2. Agent writes and builds the test.
++3. Agent shows the executable command and waits again before execution.
++
++## Remove
++1. CLI confirms current client entries and skills still match installed hashes.
++2. CLI removes owned state and restores safe backups.
++3. Drifted user files are left untouched and reported as conflicts.
+diff --git a/docs/specs/api-contracts.md b/docs/specs/api-contracts.md
+deleted file mode 100644
+index dea9a38..0000000
+--- a/docs/specs/api-contracts.md
++++ /dev/null
+@@ -1,15 +0,0 @@
+-# API Contracts
+-
+-Document public API contracts here.
+-
+-## Example Endpoint
+-```http
+-GET /health
+-```
+-
+-Expected response:
+-```json
+-{
+-  "status": "ok"
+-}
+-```
+diff --git a/docs/specs/feature-x.md b/docs/specs/feature-x.md
+deleted file mode 100644
+index 7746375..0000000
+--- a/docs/specs/feature-x.md
++++ /dev/null
+@@ -1,15 +0,0 @@
+-# Feature X Specification
+-
+-Use this file as a starting point for feature-level specifications.
+-
+-## Problem
+-Describe the user or system problem.
+-
+-## Proposed Behavior
+-Describe the expected behavior.
+-
+-## Acceptance Criteria
+-- Add clear, testable criteria.
+-
+-## Open Questions
+-- Add unresolved decisions.
+diff --git a/estimate.md b/estimate.md
+deleted file mode 100644
+index f5f84d6..0000000
+--- a/estimate.md
++++ /dev/null
+@@ -1,258 +0,0 @@
+-# Estimated Benefits With Progressive Context, Memory, And RTK
+-
+-This estimate models how much time, token usage, and rework this template can save when it combines three context controls:
+-
+-1. Progressive source retrieval:
+-   `AGENTS.md` / `CLAUDE.md` -> `docs/agent/INDEX.md` -> module cards / `CODEMAP.md` -> Semble -> `rg` -> optional Serena -> targeted files.
+-2. Lightweight long-term memory:
+-   inspect `.agent/memory/index.json` -> load only relevant semantic or procedural cards -> verify them against current files before use.
+-3. RTK-aware command output:
+-   compact `git`, search, test, lint, typecheck, and log output by default, with raw reruns only when exact details matter.
+-
+-These are directional estimates, not benchmark guarantees. Use `make retrieval-eval`, `make rtk-gain`, task traces, and provider usage logs to measure your own project.
+-
+-## What Changed With Long-Term Memory Joining
+-
+-The new memory layer targets repeated orientation work that source retrieval and
+-output compression do not preserve across tasks. It separates semantic facts
+-and conventions, procedural playbooks, and episodic task logs. Only compact,
+-reviewed lessons are promoted; current code, tests, and docs remain the source
+-of truth.
+-
+-| Memory stage | Template control | Expected effect |
+-| --- | --- | --- |
+-| Capture | Structured `.agent/tasks/` logs | Retains task evidence without auto-loading it |
+-| Extraction | `make extract-task-memory` | Converts verbose task history into a reviewable candidate |
+-| Promotion | Manual review plus `.agent/memory/index.json` | Keeps reusable knowledge discoverable and limits low-quality memory |
+-| Retrieval | Scope and keyword lookup after `INDEX.md` | Reduces repeated searches for known conventions and workflows |
+-| Verification | Related files, source task, confidence, and staleness triggers | Prevents memory from silently overriding current repository state |
+-| Audit | Link validation and a 180-day staleness check | Surfaces missing evidence and aging cards |
+-
+-This is intentionally a lightweight, PlugMem-inspired design rather than a
+-PlugMem dependency. It adds no embedding service, graph database, model server,
+-or API-key requirement.
+-
+-## What Changed With RTK Joining
+-
+-Before RTK, this template mostly reduced tokens spent reading the wrong files. RTK adds a second savings layer: reducing tokens spent reading noisy terminal output.
+-
+-| Context source | Template control | Memory control | RTK control | Expected effect |
+-| --- | --- | --- | --- | --- |
+-| Broad source reads | Index, module cards, CODEMAP, Semble, `rg` | Recalled file and workflow hints | None | Fewer irrelevant files loaded |
+-| Git status / diff | Compact make targets | None | RTK filters | Shorter patch review loops |
+-| Search output | Targeted `rg` / Semble | Fewer repeated discovery searches | `rtk grep`, `rtk find` | Less repeated scan noise |
+-| Test output | Targeted tests first | Recalled test-selection playbooks | `rtk pytest`, `rtk npm test`, `rtk cargo test` | Failures stay visible without full logs |
+-| Lint / typecheck output | Compact make targets | None | `rtk eslint`, `rtk tsc` | Faster diagnosis of actionable errors |
+-| Large runtime logs | Manual narrowing | Recalled debugging procedures | RTK log filtering when available | Lower context-window pressure |
+-
+-RTK is part of the context layer, not the correctness layer. It should preserve failures, degrade gracefully when missing, and allow raw output reruns whenever compressed output is incomplete or suspicious.
+-
+-## Assumptions
+-
+-| Factor | Small repo | Medium repo | Large repo |
+-| --- | ---: | ---: | ---: |
+-| Source files | 50-150 | 150-800 | 800-3,000 |
+-| Average file size | 150-300 lines | 150-350 lines | 150-400 lines |
+-| Typical task scope | 1-3 modules | 2-5 modules | 3-8 modules |
+-| Baseline source behavior | Reads many likely files | Reads module trees | Reads broad folders or repo bundles |
+-| Baseline command behavior | Raw command output | Raw noisy test/diff output | Raw logs, broad diffs, large suites |
+-| Template behavior | Reads routed context and likely targets; compresses noisy command output when RTK is available |
+-
+-## Token Savings
+-
+-### Source Context
+-
+-| Scenario | Baseline source context | Template source context | Estimated savings |
+-| --- | ---: | ---: | ---: |
+-| Small bug fix | 25k-60k tokens | 8k-20k tokens | 40%-70% |
+-| Medium feature change | 80k-180k tokens | 20k-55k tokens | 60%-80% |
+-| Cross-module refactor | 150k-400k tokens | 45k-120k tokens | 55%-75% |
+-| Onboarding / architecture question | 100k-300k tokens | 25k-90k tokens | 50%-75% |
+-| External whole-repo review | 250k+ tokens | No major savings if a full Repomix export is required | 0%-20% |
+-
+-Expected average across normal coding tasks: **50%-75% fewer source-context input tokens**.
+-
+-### Incremental Memory Impact
+-
+-Memory overlaps with progressive retrieval, so its benefit should not be added
+-directly to the source-context savings above. The clearest gains occur when a
+-repository has recurring task types and reviewed memory cards that still match
+-the current codebase.
+-
+-| Scenario | Expected incremental effect beyond routed retrieval |
+-| --- | ---: |
+-| First task in a new area or no relevant memory | 0%-5% fewer routine input tokens |
+-| Repeated task with a relevant verified card | 5%-20% fewer routine input tokens |
+-| Recurring debugging or test-selection workflow | 10%-30% fewer discovery and diagnosis loops |
+-| Stale, broad, or low-quality memory | No expected gain; may increase rework |
+-
+-Across a mixed workload, a conservative planning assumption is **0%-10%
+-additional routine input-token savings** beyond progressive retrieval and RTK,
+-with larger task-level gains only when relevant memory is reused. Treat this as
+-a hypothesis until task traces compare work with and without memory retrieval.
+-
+-### Command Output
+-
+-RTK savings vary more by workflow than source savings. A task with one clean unit test may save very little. A task with repeated test failures, large diffs, or broad lint output can save a lot.
+-
+-| Command/output type | Raw output pattern | With RTK or compact wrappers | Estimated savings |
+-| --- | ---: | ---: | ---: |
+-| `git status` / `git diff` | Full status and patch context | Condensed file/change summary | 30%-70% |
+-| Search output | Many matches and paths | Ranked or reduced matches | 30%-75% |
+-| Passing tests | Full runner output | Short pass summary | 40%-80% |
+-| Failing tests | Full trace/log output | Actionable failure sections preserved | 20%-60% |
+-| Lint/typecheck | Long issue lists | Compact actionable diagnostics | 30%-70% |
+-| Runtime logs | Large raw log blocks | Filtered relevant sections | 40%-85% |
+-
+-Expected average across command-heavy coding tasks: **25%-60% fewer command-output tokens**.
+-
+-### Combined Context Impact
+-
+-For a typical implementation task, assume:
+-
+-- 70%-85% of input context is source/docs.
+-- 15%-30% of input context is command output.
+-- Progressive retrieval saves 50%-75% of source/docs context.
+-- RTK saves 25%-60% of command-output context when available.
+-
+-That yields a practical combined estimate of **45%-75% fewer routine input tokens** across normal agent-assisted coding tasks.
+-
+-For a team doing 100 agent-assisted coding tasks per month, with a baseline of 100k input tokens per task:
+-
+-| Savings rate | Monthly input context after template | Tokens saved/month |
+-| --- | ---: | ---: |
+-| 45% | 5.5M tokens | 4.5M tokens |
+-| 60% | 4.0M tokens | 6.0M tokens |
+-| 75% | 2.5M tokens | 7.5M tokens |
+-
+-## Time Savings
+-
+-| Activity | Baseline | With template + RTK | Estimated savings |
+-| --- | ---: | ---: | ---: |
+-| Initial repo orientation per task | 5-20 min | 1-5 min | 50%-80% |
+-| Finding relevant files | 5-30 min | 2-8 min | 40%-75% |
+-| Inspecting git diff/status | 2-10 min | 1-4 min | 30%-60% |
+-| Confirming related tests | 3-15 min | 1-5 min | 40%-70% |
+-| Diagnosing test/lint/typecheck output | 5-30 min | 2-12 min | 30%-65% |
+-| Reviewing agent context choices | 5-15 min | 2-6 min | 40%-60% |
+-| New contributor/agent onboarding | 2-8 hr | 30-90 min | 50%-85% |
+-
+-Expected average for normal implementation tasks: **10-50 minutes saved per task**, depending on repo size, command noise, and ambiguity.
+-
+-For 100 tasks per month, that is roughly **17-83 engineering hours saved per month**.
+-
+-## Cost Savings Model
+-
+-Use this formula:
+-
+-```txt
+-monthly_token_savings =
+-  tasks_per_month
+-  * baseline_input_tokens_per_task
+-  * combined_savings_rate
+-```
+-
+-Example:
+-
+-```txt
+-100 tasks/month * 100,000 input tokens/task * 0.60 savings
+-= 6,000,000 input tokens saved/month
+-```
+-
+-If input tokens cost `C` dollars per million tokens:
+-
+-```txt
+-monthly_cost_savings = 6 * C
+-```
+-
+-This excludes secondary savings from fewer retries, fewer wrong-file edits, shorter review cycles, reduced output tokens, and less human time spent reading noisy command output.
+-
+-## Other Quantitative Benefits
+-
+-| Benefit | Estimated impact |
+-| --- | ---: |
+-| Fewer irrelevant files read by agents | 50%-80% reduction |
+-| Less noisy command output in context | 25%-60% reduction on command-heavy tasks |
+-| Faster first useful patch | 30%-70% faster |
+-| Fewer wrong-file edits | 20%-50% reduction |
+-| Fewer "where is this implemented?" loops | 40%-70% reduction |
+-| Faster test selection | 30%-60% faster |
+-| Faster failure triage | 25%-60% faster |
+-| Lower context-window pressure | 45%-75% less routine context load |
+-| Better handoff quality | 25%-50% fewer missing-context handoffs |
+-| Lower chance of stale generated context being trusted blindly | Improved by explicit risk notes and validation checks |
+-
+-## Why The Savings Happen
+-
+-- `INDEX.md` routes the task to the smallest relevant context.
+-- `CODEMAP.md` gives a quick generated map of files, symbols, APIs, dependencies, tests, and risk notes.
+-- Module cards preserve ownership and pitfalls without reading full architecture docs.
+-- Reviewed memory cards recall durable facts and successful workflows without loading raw task logs.
+-- The JSON memory index supports small scope and keyword lookups before broader search.
+-- Manual promotion, source links, confidence, and staleness audits limit memory pollution.
+-- Semble finds behavior-level matches without knowing exact symbol names.
+-- `rg` confirms exact strings and paths cheaply.
+-- Serena is optional, so projects only pay the setup cost when language-server semantics are valuable.
+-- RTK compresses noisy terminal output while preserving actionable failures.
+-- Compact make targets keep command-output behavior discoverable for agents.
+-- Raw reruns remain available for exact failures, security review, and generated artifact verification.
+-- Repomix is kept out of the daily workflow, avoiding large bundled context by default.
+-
+-## Measurement Plan
+-
+-Track these metrics for 20-50 real tasks before and after installing the template:
+-
+-| Metric | How to collect |
+-| --- | --- |
+-| Files read before first edit | Agent transcript or task trace |
+-| Input tokens per task | Model/provider usage logs |
+-| Command-output tokens per task | Agent transcript or RTK gain report |
+-| Time from task start to first patch | Task timestamps |
+-| Time from task start to accepted patch | Task timestamps |
+-| Search commands used | Agent transcript |
+-| Test commands used | Task handoff / logs |
+-| RTK used vs raw reruns | Command summary or task log |
+-| Wrong-file or reverted edits | Review notes |
+-| Missing-context review comments | PR comments |
+-| Relevant memory cards retrieved | Task trace or agent transcript |
+-| Memory hits verified or rejected | Task log memory-extraction notes |
+-| Time/tokens with and without memory | Paired recurring-task samples |
+-| Stale or broken memory cards | `make audit-memory` output |
+-
+-Run retrieval checks with:
+-
+-```bash
+-make retrieval-eval
+-```
+-
+-Check RTK savings with:
+-
+-```bash
+-make rtk-gain
+-```
+-
+-Use the results to tune `docs/agent/CODEMAP.md`, module cards, `.sembleignore`, retrieval fixtures, compact make targets, and RTK command-output rules.
+-
+-Audit the memory layer with:
+-
+-```bash
+-make audit-memory
+-```
+-
+-Review memory candidates and promoted cards separately; candidate count is not
+-a success metric. Useful reuse with successful verification is.
+-
+-## Conservative Summary
+-
+-For day-to-day agent-assisted coding, this template should reasonably save:
+-
+-- **45%-75% routine input tokens overall**
+-- **0%-10% additional routine input tokens from verified memory reuse**
+-- **50%-75% source/docs input tokens**
+-- **25%-60% command-output tokens on command-heavy tasks**
+-- **10-50 minutes per normal coding task**
+-- **17-83 engineering hours per 100 tasks**
+-- **30%-70% faster file discovery**
+-- **20%-50% fewer wrong-context edits**
+-
+-The largest gains come from medium and large repositories where agents otherwise read broad folders, bundled repo maps, raw diffs, full test output, and unrelated logs before editing.
+diff --git a/eval/retrieval/expected_context.json b/eval/retrieval/expected_context.json
+index 66364d0..1699f1d 100644
+--- a/eval/retrieval/expected_context.json
++++ b/eval/retrieval/expected_context.json
+@@ -1,18 +1,17 @@
+ {
+-  "api-route-behavior": [
+-    "docs/agent/module-cards/api.md",
+-    "src/api/routes.py",
+-    "tests/integration/test_api.py"
++  "verified-mcp-install": [
++    "src/personal_polyspace_toolkit/installer.py",
++    "src/personal_polyspace_toolkit/releases.py",
++    "docs/agent/module-cards/installer.md"
+   ],
+-  "service-business-logic": [
+-    "docs/agent/module-cards/services.md",
+-    "src/services/example_service.py",
+-    "tests/unit/test_services.py"
++  "c-compliance-workflow": [
++    "skills/c-compliance-loop/SKILL.md",
++    "skills/fix-findings/SKILL.md",
++    "skills/justify-findings/SKILL.md"
+   ],
+-  "agent-context-policy": [
+-    "AGENTS.md",
+-    "docs/agent/INDEX.md",
+-    "docs/agent/CODE_SEARCH.md",
+-    "docs/agent/CONTEXT_ROUTER.md"
++  "qwen-local-setup": [
++    "QWEN.md",
++    "docs/setup/qwen-local.md",
++    "examples/qwen-settings.local.example.json"
+   ]
+ }
+diff --git a/eval/retrieval/queries.json b/eval/retrieval/queries.json
+index 9f9ba69..5742fcc 100644
+--- a/eval/retrieval/queries.json
++++ b/eval/retrieval/queries.json
+@@ -1,17 +1,17 @@
+ [
+   {
+-    "id": "api-route-behavior",
+-    "query": "Where are HTTP routes and request validation handled?",
++    "id": "verified-mcp-install",
++    "query": "Where is the verified Polyspace MCP server installed and rolled back?",
+     "content": "code"
+   },
+   {
+-    "id": "service-business-logic",
+-    "query": "Where is the example business workflow implemented?",
+-    "content": "code"
++    "id": "c-compliance-workflow",
++    "query": "How does an agent analyze and remediate C findings without auto-justifying?",
++    "content": "all"
+   },
+   {
+-    "id": "agent-context-policy",
+-    "query": "What instructions control progressive context loading and code search?",
++    "id": "qwen-local-setup",
++    "query": "How is local Qwen configured without an extension or automatic settings changes?",
+     "content": "all"
+   }
+ ]
+diff --git a/eval/run_eval.py b/eval/run_eval.py
+deleted file mode 100644
+index be5eecb..0000000
+--- a/eval/run_eval.py
++++ /dev/null
+@@ -1,6 +0,0 @@
+-def main() -> None:
+-    print("Add project-specific evals here.")
+-
+-
+-if __name__ == "__main__":
+-    main()
+diff --git a/install.sh b/install.sh
+deleted file mode 100644
+index 0051286..0000000
+--- a/install.sh
++++ /dev/null
+@@ -1,35 +0,0 @@
+-#!/usr/bin/env sh
+-set -eu
+-
+-SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+-TARGET_DIR=${1:-.}
+-
+-normalize_path() {
+-  case "$1" in
+-    [A-Za-z]:\\* | *\\*)
+-      if command -v cygpath >/dev/null 2>&1; then
+-        cygpath -u "$1"
+-      else
+-        printf '%s\n' "$1"
+-      fi
+-      ;;
+-    *)
+-      printf '%s\n' "$1"
+-      ;;
+-  esac
+-}
+-
+-TARGET_DIR=$(normalize_path "$TARGET_DIR")
+-
+-PYTHON_BIN=${PYTHON:-}
+-if [ -z "$PYTHON_BIN" ]; then
+-  if command -v python3 >/dev/null 2>&1; then
+-    PYTHON_BIN=python3
+-  else
+-    PYTHON_BIN=python
+-  fi
+-fi
+-
+-"$PYTHON_BIN" "$SCRIPT_DIR/scripts/agentkit_installer.py" install \
+-  --source "$SCRIPT_DIR" \
+-  --target "$TARGET_DIR"
+diff --git a/instruction.txt b/instruction.txt
+deleted file mode 100644
+index 47ce2a1..0000000
+--- a/instruction.txt
++++ /dev/null
+@@ -1,401 +0,0 @@
+-My recommendation: build an agent-native repository with thin auto-loaded instruction files and rich on-demand documentation. Do not put everything into CLAUDE.md / AGENTS.md. Claude’s own docs warn that context fills fast and quality degrades as the context window fills; Claude also recommends keeping CLAUDE.md concise, targeting under ~200 lines. (Claude Code) (Claude Code) Codex also loads AGENTS.md before work and has a default project-doc cap of 32 KiB, with nested overrides supported. (OpenAI Developers) A 2026 empirical paper even found that bloated repository context files can reduce task success and increase inference cost by over 20%, so the best architecture is progressive context loading, not “one big guide.” (arXiv)
+-Best repo structure
+-my-project/
+-├── AGENTS.md                    # Codex entrypoint: short, strict, project-level rules
+-├── CLAUDE.md                    # Claude Code entrypoint: short, strict, project-level rules
+-├── README.md                    # Human onboarding, product overview
+-├── pyproject.toml / package.json
+-├── Makefile                     # Standard commands: test, lint, typecheck, docs-map
+-├── .env.example
+-├── .gitignore
+-│
+-├── src/ or app/
+-│   ├── AGENTS.md                # Local rules for this module, only if needed
+-│   ├── CLAUDE.md                # Local Claude rules, only if needed
+-│   ├── core/
+-│   ├── api/
+-│   ├── services/
+-│   ├── models/
+-│   └── utils/
+-│
+-├── tests/
+-│   ├── AGENTS.md                # Testing conventions
+-│   ├── unit/
+-│   ├── integration/
+-│   └── fixtures/
+-│
+-├── docs/
+-│   ├── agent/
+-│   │   ├── INDEX.md             # Agent navigation map: what to read for each task
+-│   │   ├── CODEMAP.md           # Generated/maintained codebase map
+-│   │   ├── ARCHITECTURE.md      # System architecture, data flow, boundaries
+-│   │   ├── WORKFLOWS.md         # Common workflows: add feature, fix bug, refactor
+-│   │   ├── COMMANDS.md          # Build/test/lint/run/debug commands
+-│   │   ├── CONVENTIONS.md       # Coding style, naming, API patterns
+-│   │   ├── PITFALLS.md          # Known mistakes agents often make
+-│   │   ├── TASK_LOG_TEMPLATE.md # Template for agent task tracking
+-│   │   └── module-cards/
+-│   │       ├── api.md
+-│   │       ├── services.md
+-│   │       ├── database.md
+-│   │       └── frontend.md
+-│   │
+-│   ├── product/
+-│   │   ├── PRD.md
+-│   │   ├── USER_FLOWS.md
+-│   │   └── REQUIREMENTS.md
+-│   │
+-│   ├── adr/
+-│   │   ├── 0001-architecture-style.md
+-│   │   └── 0002-database-choice.md
+-│   │
+-│   └── specs/
+-│       ├── feature-x.md
+-│       └── api-contracts.md
+-│
+-├── .agent/
+-│   ├── tasks/
+-│   │   ├── 2026-06-05-example-task.md
+-│   │   └── ...
+-│   ├── traces/                 # Usually gitignored; local session traces
+-│   ├── summaries/              # Long-session summaries, optional
+-│   └── context-cache/           # Generated summaries, optional
+-│
+-├── scripts/
+-│   ├── generate_codemap.py
+-│   ├── validate_docs.py
+-│   ├── check_agent_rules.py
+-│   └── summarize_changed_files.py
+-│
+-├── eval/
+-│   ├── golden/
+-│   ├── regression/
+-│   └── run_eval.py
+-│
+-└── .github/
+-    └── workflows/
+-        ├── test.yml
+-        ├── lint.yml
+-        └── agent-doc-check.yml
+-
+-The key idea: 4-layer context architecture
+-Layer 1: Auto-loaded, very small
+-These are loaded automatically by the agent.
+-AGENTS.md
+-CLAUDE.md
+-src/module/AGENTS.md
+-src/module/CLAUDE.md
+-
+-Use them only for:
+-- Project purpose
+-- Tech stack
+-- Critical commands
+-- Must-follow rules
+-- Where to find deeper docs
+-- Safety constraints
+-- Definition of done
+-
+-Do not put long architecture explanations, full API specs, old decisions, examples, or troubleshooting history here. Claude uses CLAUDE.md as persistent project instructions, while Codex uses AGENTS.md with global/project/nested precedence. (Claude Code) (OpenAI Developers)
+-Layer 2: On-demand agent docs
+-These are not auto-loaded unless the agent needs them.
+-docs/agent/INDEX.md
+-docs/agent/CODEMAP.md
+-docs/agent/ARCHITECTURE.md
+-docs/agent/WORKFLOWS.md
+-docs/agent/module-cards/*.md
+-
+-This is where token saving happens. Instead of asking Claude/Codex to explore the whole repo, you tell it:
+-Before editing, read docs/agent/INDEX.md.
+-Then read only the module-card related to the task.
+-Do not scan unrelated directories unless needed.
+-
+-This follows the production AI system principle that the model should not be the whole system; reliable systems need context building, retrieval/tools, validation, logs, metrics, and continuous improvement around the model.
+-Layer 3: Task-local memory
+-Each meaningful task gets one tracking file.
+-.agent/tasks/2026-06-05-fix-auth-refresh.md
+-
+-Template:
+-# Task: Fix auth refresh bug
+-
+-## Goal
+-Fix token refresh failure when access token expires.
+-
+-## User request
+-...
+-
+-## Relevant docs read
+-- docs/agent/INDEX.md
+-- docs/agent/module-cards/auth.md
+-- docs/specs/auth-flow.md
+-
+-## Files inspected
+-- src/auth/service.py
+-- src/auth/routes.py
+-- tests/integration/test_auth.py
+-
+-## Assumptions
+-- Refresh token remains valid for 7 days.
+-- We should not change database schema.
+-
+-## Plan
+-1. Reproduce failing test.
+-2. Inspect refresh flow.
+-3. Patch service.
+-4. Add regression test.
+-5. Run targeted tests.
+-
+-## Changes made
+-...
+-
+-## Commands run
+-```bash
+-pytest tests/integration/test_auth.py -q
+-ruff check src/auth tests/integration/test_auth.py
+-
+-Verification
+-...
+-Follow-up
+-...
+-
+-This solves the “easy to track document / agent interact” problem. You get an audit trail without stuffing the next session’s context.
+-
+-### Layer 4: Generated code intelligence
+-
+-This layer should be generated by scripts, not manually written every time.
+-
+-```txt
+-docs/agent/CODEMAP.md
+-docs/agent/module-cards/*.md
+-.agent/context-cache/*.md
+-
+-A good CODEMAP.md looks like:
+-# Code Map
+-
+-## app/api/
+-Purpose: HTTP routes and request/response validation.
+-Entry points:
+-- app/api/routes.py
+-- app/api/dependencies.py
+-Tests:
+-- tests/integration/test_api.py
+-Common changes:
+-- Add endpoint
+-- Update response schema
+-- Add auth dependency
+-
+-## app/services/
+-Purpose: business logic layer.
+-Entry points:
+-- app/services/user_service.py
+-- app/services/billing_service.py
+-Rules:
+-- No direct HTTP logic here.
+-- No direct environment variable access here.
+-
+-The goal is to let the agent find the right files in 30 seconds instead of exploring the repo for 20k tokens.
+-Minimal AGENTS.md
+-# AGENTS.md
+-
+-## Project purpose
+-This repository is [one-sentence product/system purpose].
+-
+-## Default workflow
+-1. Understand the task.
+-2. Read `docs/agent/INDEX.md`.
+-3. Read only the relevant module card under `docs/agent/module-cards/`.
+-4. Make the smallest safe change.
+-5. Add or update tests.
+-6. Run targeted tests before broad tests.
+-7. Summarize changed files, commands run, and remaining risks.
+-
+-## Context rules
+-- Do not scan the whole repository unless the task requires it.
+-- Prefer `rg`, targeted file reads, and module cards.
+-- Do not load large docs unless referenced by `docs/agent/INDEX.md`.
+-- Keep changes scoped to the user request.
+-
+-## Commands
+-- Install: `make install`
+-- Run app: `make dev`
+-- Unit tests: `make test-unit`
+-- Integration tests: `make test-integration`
+-- Lint: `make lint`
+-- Typecheck: `make typecheck`
+-
+-## Code rules
+-- Follow existing patterns before introducing new abstractions.
+-- Do not add new dependencies without explicit justification.
+-- Do not change public APIs without updating docs/specs.
+-- Do not modify generated files manually.
+-
+-## Definition of done
+-- Relevant tests pass.
+-- Lint/typecheck pass when applicable.
+-- Docs updated if behavior changes.
+-- Final response includes files changed, tests run, and risks.
+-
+-Minimal CLAUDE.md
+-# CLAUDE.md
+-
+-Use this project as an agent-native codebase.
+-
+-## Start here
+-For every non-trivial task:
+-1. Read `docs/agent/INDEX.md`.
+-2. Read the relevant module card.
+-3. Create or update a task note in `.agent/tasks/` if the task has more than one step.
+-
+-## Token-saving behavior
+-- Do not explore unrelated directories.
+-- Use `rg` before reading many files.
+-- Prefer targeted reads over broad scans.
+-- Summarize findings before expanding scope.
+-
+-## Safety
+-- Never delete files, rewrite migrations, rotate secrets, or change production config without explicit approval.
+-- Prefer small patches.
+-- Run targeted tests first.
+-
+-## Final response format
+-- Summary
+-- Files changed
+-- Tests/commands run
+-- Risks or follow-up
+-
+-Claude docs also support hooks, skills, MCP, and auto memory; hooks can block unsafe tool calls, and Claude reads hook decisions to deny actions. (Claude Code) Claude’s overview also notes MCP, skills, hooks, and multi-agent/background-agent workflows, but I would only add those after the base repo structure is stable. (Claude Code)
+-docs/agent/INDEX.md is the most important file
+-# Agent Context Index
+-
+-## For bug fixes
+-Read:
+-1. `docs/agent/CODEMAP.md`
+-2. Relevant module card in `docs/agent/module-cards/`
+-3. Related tests
+-
+-Do not read:
+-- Full PRD
+-- Full architecture doc
+-- Unrelated modules
+-
+-## For new API endpoint
+-Read:
+-1. `docs/agent/module-cards/api.md`
+-2. `docs/specs/api-contracts.md`
+-3. Existing similar endpoint
+-4. Relevant service module card
+-
+-## For database change
+-Read:
+-1. `docs/agent/module-cards/database.md`
+-2. `docs/adr/`
+-3. Existing migrations
+-4. Related model tests
+-
+-## For refactor
+-Read:
+-1. `docs/agent/ARCHITECTURE.md`
+-2. Relevant module cards
+-3. Current tests
+-4. `docs/agent/PITFALLS.md`
+-
+-This file acts like a routing layer. It prevents the agent from reading everything.
+-Best practice for module cards
+-Each module card should be short.
+-# Module: Auth
+-
+-## Responsibility
+-Handles login, refresh token, logout, and current-user lookup.
+-
+-## Key files
+-- `src/auth/routes.py`: HTTP endpoints
+-- `src/auth/service.py`: auth business logic
+-- `src/auth/security.py`: hashing/JWT utilities
+-- `tests/integration/test_auth.py`: integration tests
+-
+-## Public interfaces
+-- `AuthService.login(...)`
+-- `AuthService.refresh(...)`
+-- `get_current_user(...)`
+-
+-## Rules
+-- Routes should not contain business logic.
+-- Services should not import FastAPI request objects.
+-- JWT secrets come from config only.
+-
+-## Common tasks
+-- Add auth endpoint → inspect `routes.py`, `service.py`, tests
+-- Change token behavior → inspect `security.py`, `service.py`
+-
+-## Known pitfalls
+-- Do not change refresh token expiry without updating tests.
+-- Do not log raw tokens.
+-
+-What to commit vs ignore
+-Commit:
+-AGENTS.md
+-CLAUDE.md
+-docs/agent/*
+-docs/adr/*
+-docs/specs/*
+-.agent/tasks/*.md       # optional, useful for team audit
+-scripts/generate_codemap.py
+-
+-Usually ignore:
+-.agent/traces/
+-.agent/context-cache/
+-.codex-log/
+-.claude/settings.local.json
+-CLAUDE.local.md
+-.env
+-
+-Codex docs explicitly mention logs such as ./.codex-log/codex-tui.log and session-*.jsonl for auditing loaded instruction files, but those should usually be local/debug artifacts, not committed. (OpenAI Developers)
+-The structure I would avoid
+-BAD:
+-├── CLAUDE.md       # 2,000 lines
+-├── AGENTS.md       # 2,000 lines
+-├── docs/
+-│   └── everything.md
+-
+-Why bad:
+-wastes tokens every session
+-mixes stable rules with temporary task notes
+-makes agents over-read
+-increases conflicting instructions
+-makes debugging harder
+-empirical evidence suggests excessive context files can hurt success and cost (arXiv)
+-Best workflow for Claude Code / Codex
+-For every task, use this protocol:
+-1. Ask agent to restate the goal.
+-2. Ask agent to read docs/agent/INDEX.md.
+-3. Ask agent to identify relevant module cards.
+-4. Ask agent to produce a short plan.
+-5. Let it inspect targeted files only.
+-6. Let it patch.
+-7. Run targeted tests.
+-8. Run broader tests only if needed.
+-9. Update task log.
+-10. Final answer: summary, files changed, tests, risks.
+-
+-For bigger tasks, use this prompt:
+-Before editing code:
+-- Read AGENTS.md / CLAUDE.md.
+-- Read docs/agent/INDEX.md.
+-- Select the minimal relevant docs and files.
+-- Create a task note under .agent/tasks/.
+-- Explain your plan.
+-- Do not scan unrelated directories.
+-- After implementation, update the task note with files changed, commands run, and remaining risks.
+-
+-Final recommendation
+-Use this architecture:
+-Thin instruction files
+-+ Agent context index
+-+ Module cards
+-+ Generated code map
+-+ Task logs
+-+ ADR/spec docs
+-+ Test/eval layer
+-+ Local traces ignored by git
+-
+-This is the best balance for Claude Code and Codex today because it gives agents enough structure to act like senior engineers, but avoids the trap of auto-loading too much context. It also fits a product-level AI system mindset: context building, workflow control, validation, logging, and cost control are part of the system, not afterthoughts.
+-
+diff --git a/package.json b/package.json
+deleted file mode 100644
+index 542cb06..0000000
+--- a/package.json
++++ /dev/null
+@@ -1,26 +0,0 @@
+-{
+-  "name": "agent-native-template",
+-  "version": "0.1.0",
+-  "private": true,
+-  "description": "Sample project structure for agent-native coding workflows",
+-  "scripts": {
+-    "dev": "echo \"Start the development server here.\"",
+-    "test": "echo \"Run tests here.\"",
+-    "lint": "echo \"Run lint checks here.\"",
+-    "typecheck": "echo \"Run type checks here.\"",
+-    "docs-map": "python scripts/generate_codemap.py",
+-    "agent-setup": "python scripts/agent_setup.py",
+-    "validate-agent-docs": "python scripts/validate_agent_docs.py",
+-    "detect-large-context-docs": "python scripts/detect_large_context_docs.py",
+-    "detect-large-agent-files": "python scripts/detect_large_agent_files.py",
+-    "check-context-staleness": "python scripts/check_context_staleness.py",
+-    "audit-module-cards": "python scripts/audit_module_cards.py",
+-    "audit-task-logs": "python scripts/audit_task_logs.py",
+-    "check-architecture-boundaries": "python scripts/check_architecture_boundaries.py",
+-    "update-module-cards": "python scripts/update_module_cards.py",
+-    "targeted-tests": "python scripts/run_targeted_tests.py",
+-    "understand": "python scripts/understand_placeholder.py",
+-    "understand-search": "python scripts/search_understand_graph.py",
+-    "validate-understand-graph": "python scripts/validate_understand_graph.py"
+-  }
+-}
+diff --git a/pyproject.toml b/pyproject.toml
+index caa9698..6c69254 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,9 +1,43 @@
++[build-system]
++requires = ["setuptools>=77"]
++build-backend = "setuptools.build_meta"
++
+ [project]
+-name = "agent-native-template"
+-version = "0.1.0"
+-description = "Sample project structure for agent-native coding workflows"
++name = "personal-polyspace-toolkit"
++version = "0.1.0a1"
++description = "Unofficial C-only agent toolkit for Polyspace as You Code"
++readme = "README.md"
+ requires-python = ">=3.11"
+-dependencies = []
++license = { file = "LICENSE.md" }
++dependencies = ["tomlkit>=0.13,<1"]
++
++[project.optional-dependencies]
++dev = [
++  "mypy>=1.15,<2",
++  "pytest>=8.3,<9",
++  "ruff>=0.11,<1",
++]
++
++[project.scripts]
++polyspace-toolkit = "personal_polyspace_toolkit.cli:main"
++
++[tool.setuptools.packages.find]
++where = ["src"]
+ 
+ [tool.pytest.ini_options]
+ testpaths = ["tests"]
++pythonpath = ["src"]
++markers = ["polyspace: requires a licensed local Polyspace installation"]
++
++[tool.ruff]
++line-length = 100
++target-version = "py311"
++
++[tool.ruff.lint]
++select = ["E", "F", "UP", "B", "SIM"]
++
++[tool.mypy]
++python_version = "3.11"
++strict = true
++packages = ["personal_polyspace_toolkit"]
++mypy_path = "src"
+diff --git a/scripts/agent_setup.py b/scripts/agent_setup.py
+deleted file mode 100644
+index c03f2af..0000000
+--- a/scripts/agent_setup.py
++++ /dev/null
+@@ -1,178 +0,0 @@
+-import json
+-import subprocess
+-import sys
+-from pathlib import Path
+-
+-
+-ROOT = Path(__file__).resolve().parents[1]
+-
+-
+-def exists(path: str) -> bool:
+-    return (ROOT / path).exists()
+-
+-
+-def detect_stack() -> list[str]:
+-    stack = []
+-    if exists("pyproject.toml") or exists("requirements.txt"):
+-        stack.append("python")
+-    if exists("package.json"):
+-        stack.append("node")
+-    if exists("go.mod"):
+-        stack.append("go")
+-    if exists("Cargo.toml"):
+-        stack.append("rust")
+-    return stack or ["unknown"]
+-
+-
+-def package_scripts() -> dict[str, str]:
+-    path = ROOT / "package.json"
+-    if not path.exists():
+-        return {}
+-    data = json.loads(path.read_text(encoding="utf-8"))
+-    return data.get("scripts", {})
+-
+-
+-def detect_commands() -> dict[str, str]:
+-    scripts = package_scripts()
+-    commands = {}
+-    for name in ["test", "lint", "typecheck", "dev"]:
+-        if name in scripts:
+-            commands[name] = f"npm run {name}"
+-
+-    makefile = ROOT / "Makefile"
+-    if makefile.exists():
+-        make_text = makefile.read_text(encoding="utf-8")
+-        for name in ["test", "test-unit", "test-integration", "lint", "typecheck", "dev"]:
+-            if f"{name}:" in make_text:
+-                commands[name] = f"make {name}"
+-
+-    if exists("pyproject.toml") and "test" not in commands:
+-        commands["test"] = "pytest"
+-    return commands
+-
+-
+-def write_commands(commands: dict[str, str]) -> None:
+-    lines = ["# Commands", "", "Detected project commands.", ""]
+-    for name, command in sorted(commands.items()):
+-        lines.append(f"- {name}: `{command}`")
+-    if not commands:
+-        lines.append("- TODO: add install, test, lint, typecheck, and dev commands.")
+-    lines.extend(
+-        [
+-            "",
+-            "Optional compact-output helpers:",
+-            "- rtk-gain: `make rtk-gain`",
+-            "- git-status: `make git-status`",
+-            "- git-diff: `make git-diff`",
+-            "- test-unit-compact: `make test-unit-compact`",
+-            "- lint-compact: `make lint-compact`",
+-            "- typecheck-compact: `make typecheck-compact`",
+-            "",
+-            "Memory helpers:",
+-            "- extract-task-memory: `make extract-task-memory TASK=.agent/tasks/<task>.md`",
+-            "- validate-memory-links: `make validate-memory-links`",
+-            "- audit-memory-staleness: `make audit-memory-staleness`",
+-            "- audit-memory: `make audit-memory`",
+-        ]
+-    )
+-    (ROOT / "docs" / "agent" / "COMMANDS.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+-
+-
+-def ensure_task_readme() -> None:
+-    path = ROOT / ".agent" / "tasks" / "README.md"
+-    if path.exists():
+-        return
+-    path.parent.mkdir(parents=True, exist_ok=True)
+-    path.write_text(
+-        "# Task Logs\n\n"
+-        "Use one markdown file per multi-step task. Include the goal, docs read, files inspected, "
+-        "commands run, compressed-output usage, raw reruns, verification, memory extraction notes, "
+-        "and follow-up risk.\n",
+-        encoding="utf-8",
+-    )
+-
+-
+-def ensure_memory_scaffold() -> None:
+-    memory_root = ROOT / ".agent" / "memory"
+-    files = {
+-        "README.md": (
+-            "# Agent Memory\n\n"
+-            "Use this folder for semantic and procedural memory. Memory is guidance, not truth; "
+-            "verify it against current files before editing.\n"
+-        ),
+-        "index.json": '{\n  "version": 1,\n  "memories": []\n}\n',
+-        "semantic/project-facts.md": "# Memory: Project Facts\n\nTODO: add promoted semantic memory.\n",
+-        "semantic/conventions.md": "# Memory: Project Conventions\n\nTODO: add promoted semantic memory.\n",
+-        "semantic/decisions.md": "# Memory: Template Decisions\n\nTODO: add promoted semantic memory.\n",
+-        "procedural/debugging-playbooks.md": "# Memory: Debugging Playbooks\n\nTODO: add promoted procedural memory.\n",
+-        "procedural/testing-playbooks.md": "# Memory: Testing Playbooks\n\nTODO: add promoted procedural memory.\n",
+-        "procedural/refactor-playbooks.md": "# Memory: Refactor Playbooks\n\nTODO: add promoted procedural memory.\n",
+-        "candidates/README.md": (
+-            "# Candidate Memory\n\n"
+-            "Generated candidates require manual review before promotion.\n"
+-        ),
+-    }
+-    for relative, text in files.items():
+-        path = memory_root / relative
+-        if path.exists():
+-            continue
+-        path.parent.mkdir(parents=True, exist_ok=True)
+-        path.write_text(text, encoding="utf-8")
+-
+-
+-def ensure_agent_entrypoints(stack: list[str], commands: dict[str, str]) -> None:
+-    summary = ", ".join(stack)
+-    command_lines = "\n".join(f"- {name}: `{command}`" for name, command in sorted(commands.items()))
+-    if not command_lines:
+-        command_lines = "- TODO: confirm project commands."
+-
+-    for filename in ["AGENTS.md", "CLAUDE.md"]:
+-        path = ROOT / filename
+-        if path.exists():
+-            continue
+-        path.write_text(
+-            f"# {filename}\n\n"
+-            f"Project stack: {summary}.\n\n"
+-            "Start by reading `docs/agent/INDEX.md`, then only the relevant module card.\n\n"
+-            "Prefer compressed output for noisy commands when RTK is available, and rerun raw output only "
+-            "when failures are unclear.\n\n"
+-            "## Commands\n"
+-            f"{command_lines}\n",
+-            encoding="utf-8",
+-        )
+-
+-
+-def run_script(relative: str) -> int:
+-    result = subprocess.run([sys.executable, relative], cwd=ROOT, check=False)
+-    return result.returncode
+-
+-
+-def main() -> None:
+-    stack = detect_stack()
+-    commands = detect_commands()
+-    write_commands(commands)
+-    ensure_task_readme()
+-    ensure_memory_scaffold()
+-    ensure_agent_entrypoints(stack, commands)
+-
+-    failures = []
+-    for script in [
+-        "scripts/generate_codemap.py",
+-        "scripts/update_module_cards.py",
+-        "scripts/validate_agent_docs.py",
+-    ]:
+-        if run_script(script) != 0:
+-            failures.append(script)
+-
+-    print(f"Detected stack: {', '.join(stack)}")
+-    print(f"Detected commands: {', '.join(sorted(commands)) or 'none'}")
+-    if failures:
+-        print("Validation failures:")
+-        for script in failures:
+-            print(f"- {script}")
+-        raise SystemExit(1)
+-    print("Agent setup complete.")
+-
+-
+-if __name__ == "__main__":
+-    main()
+diff --git a/scripts/agentkit_installer.py b/scripts/agentkit_installer.py
+deleted file mode 100644
+index a2d1f24..0000000
+--- a/scripts/agentkit_installer.py
++++ /dev/null
+@@ -1,158 +0,0 @@
+-import argparse
+-import fnmatch
+-import json
+-import shutil
+-from datetime import datetime
+-from pathlib import Path
+-
+-
+-MANIFEST = "agentkit-manifest.json"
+-BEGIN = "<!-- agentkit:begin -->"
+-END = "<!-- agentkit:end -->"
+-
+-
+-def load_manifest(source: Path) -> dict:
+-    return json.loads((source / MANIFEST).read_text(encoding="utf-8"))
+-
+-
+-def iter_manifest_paths(source: Path, entries: list[str]) -> list[Path]:
+-    paths: list[Path] = []
+-    for entry in entries:
+-        full = source / entry
+-        if entry.endswith("/") and full.exists():
+-            paths.extend(path for path in full.rglob("*") if path.is_file())
+-        elif full.exists():
+-            paths.append(full)
+-    return sorted(set(paths))
+-
+-
+-def is_excluded(relative: str, patterns: list[str]) -> bool:
+-    normalized = relative.replace("\\", "/")
+-    for pattern in patterns:
+-        if pattern.endswith("/") and normalized.startswith(pattern):
+-            return True
+-        if fnmatch.fnmatch(normalized, pattern):
+-            return True
+-    return False
+-
+-
+-def backup_existing(target_root: Path, relative: Path, backup_root: Path) -> None:
+-    target = target_root / relative
+-    if not target.exists():
+-        return
+-
+-    backup = backup_root / relative
+-    backup.parent.mkdir(parents=True, exist_ok=True)
+-    if target.is_dir():
+-        shutil.copytree(target, backup, dirs_exist_ok=True)
+-    else:
+-        shutil.copy2(target, backup)
+-
+-
+-def copy_file(source_root: Path, target_root: Path, source_file: Path, backup_root: Path) -> str:
+-    relative = source_file.relative_to(source_root)
+-    target = target_root / relative
+-    backup_existing(target_root, relative, backup_root)
+-    target.parent.mkdir(parents=True, exist_ok=True)
+-    shutil.copy2(source_file, target)
+-    return relative.as_posix()
+-
+-
+-def copy_if_missing(source_root: Path, target_root: Path, relative_name: str) -> str | None:
+-    source = source_root / relative_name
+-    target = target_root / relative_name
+-    if target.exists() or not source.exists():
+-        return None
+-    target.parent.mkdir(parents=True, exist_ok=True)
+-    shutil.copy2(source, target)
+-    return Path(relative_name).as_posix()
+-
+-
+-def merge_file(source_root: Path, target_root: Path, relative_name: str, backup_root: Path) -> str:
+-    source = source_root / relative_name
+-    target = target_root / relative_name
+-    source_text = source.read_text(encoding="utf-8").strip()
+-
+-    if target.exists():
+-        target_text = target.read_text(encoding="utf-8")
+-        if BEGIN in target_text and END in target_text:
+-            before = target_text.split(BEGIN, 1)[0].rstrip()
+-            after = target_text.split(END, 1)[1].lstrip()
+-            merged = f"{before}\n\n{BEGIN}\n{source_text}\n{END}\n"
+-            if after:
+-                merged += f"\n{after}"
+-        else:
+-            merged = f"{target_text.rstrip()}\n\n{BEGIN}\n{source_text}\n{END}\n"
+-        backup_existing(target_root, Path(relative_name), backup_root)
+-    else:
+-        merged = f"{BEGIN}\n{source_text}\n{END}\n"
+-
+-    target.parent.mkdir(parents=True, exist_ok=True)
+-    target.write_text(merged, encoding="utf-8")
+-    return Path(relative_name).as_posix()
+-
+-
+-def create_symlink(source_root: Path, target_root: Path, item: dict, backup_root: Path) -> str:
+-    link = Path(item["link"])
+-    target_name = Path(item["target"])
+-    link_path = target_root / link
+-    source_target = source_root / target_name
+-    backup_existing(target_root, link, backup_root)
+-    link_path.parent.mkdir(parents=True, exist_ok=True)
+-    if link_path.exists() or link_path.is_symlink():
+-        if link_path.is_dir() and not link_path.is_symlink():
+-            shutil.rmtree(link_path)
+-        else:
+-            link_path.unlink()
+-    link_path.symlink_to(source_target, target_is_directory=source_target.is_dir())
+-    return link.as_posix()
+-
+-
+-def install(mode: str, source: Path, target: Path) -> None:
+-    manifest = load_manifest(source)
+-    backup_root = target / ".agentkit" / "backups" / datetime.now().strftime("%Y%m%d-%H%M%S")
+-    installed: list[str] = []
+-    excluded = manifest.get("excluded_files", []) + manifest.get("project_local_files", [])
+-
+-    for source_file in iter_manifest_paths(source, manifest.get("included_harness_files", [])):
+-        relative = source_file.relative_to(source).as_posix()
+-        if is_excluded(relative, excluded):
+-            continue
+-        installed.append(copy_file(source, target, source_file, backup_root))
+-
+-    for relative_name in manifest.get("merge_files", []):
+-        if (source / relative_name).exists():
+-            installed.append(merge_file(source, target, relative_name, backup_root))
+-
+-    for relative_name in manifest.get("copy_if_missing_files", []):
+-        copied = copy_if_missing(source, target, relative_name)
+-        if copied:
+-            installed.append(copied)
+-
+-    for item in manifest.get("symlinks", []):
+-        installed.append(create_symlink(source, target, item, backup_root))
+-
+-    version = manifest.get("version", "0.0.0")
+-    (target / ".agentkit-version").write_text(f"{version}\n", encoding="utf-8")
+-    (target / ".agentkit-installed-files").write_text(
+-        "\n".join(sorted(set(installed))) + "\n",
+-        encoding="utf-8",
+-    )
+-
+-    print(f"Agent kit {mode} complete: {len(set(installed))} files recorded.")
+-    if backup_root.exists():
+-        print(f"Backups written to {backup_root.relative_to(target)}")
+-
+-
+-def main() -> None:
+-    parser = argparse.ArgumentParser(description="Install or update the agent kit in a target project.")
+-    parser.add_argument("mode", choices=["install", "update"])
+-    parser.add_argument("--source", default=".", help="Agent kit source directory.")
+-    parser.add_argument("--target", default=".", help="Project directory to install into.")
+-    args = parser.parse_args()
+-
+-    install(args.mode, Path(args.source).resolve(), Path(args.target).resolve())
+-
+-
+-if __name__ == "__main__":
+-    main()
+diff --git a/scripts/audit_memory_staleness.py b/scripts/audit_memory_staleness.py
+index ef6db62..dbef79e 100644
+--- a/scripts/audit_memory_staleness.py
++++ b/scripts/audit_memory_staleness.py
+@@ -4,7 +4,6 @@ from datetime import date
+ from pathlib import Path
+ from typing import Any
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ INDEX = ROOT / ".agent" / "memory" / "index.json"
+ MAX_AGE_DAYS = 180
+diff --git a/scripts/audit_module_cards.py b/scripts/audit_module_cards.py
+index 53506ec..87f4b1a 100644
+--- a/scripts/audit_module_cards.py
++++ b/scripts/audit_module_cards.py
+@@ -1,6 +1,5 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ SRC = ROOT / "src"
+ CARDS = ROOT / "docs" / "agent" / "module-cards"
+@@ -10,10 +9,17 @@ REQUIRED_HEADINGS = ["## Responsibility", "## Key Files", "## Public Interfaces"
+ def main() -> None:
+     problems = []
+     if SRC.exists():
+-        for directory in sorted(path for path in SRC.iterdir() if path.is_dir()):
++        source_directories = (
++            path
++            for path in SRC.iterdir()
++            if path.is_dir() and not path.name.endswith(".egg-info") and any(path.rglob("*.py"))
++        )
++        for directory in sorted(source_directories):
+             card = CARDS / f"{directory.name}.md"
+             if not card.exists():
+-                problems.append(f"Missing module card for {directory.relative_to(ROOT).as_posix()}/")
++                problems.append(
++                    f"Missing module card for {directory.relative_to(ROOT).as_posix()}/"
++                )
+                 continue
+             text = card.read_text(encoding="utf-8")
+             for heading in REQUIRED_HEADINGS:
+diff --git a/scripts/audit_task_logs.py b/scripts/audit_task_logs.py
+index e957ddd..2e78152 100644
+--- a/scripts/audit_task_logs.py
++++ b/scripts/audit_task_logs.py
+@@ -1,6 +1,5 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ TASKS = ROOT / ".agent" / "tasks"
+ REQUIRED_HEADINGS = [
+diff --git a/scripts/check_agent_rules.py b/scripts/check_agent_rules.py
+index 19a0674..754b32b 100644
+--- a/scripts/check_agent_rules.py
++++ b/scripts/check_agent_rules.py
+@@ -1,6 +1,5 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ MAX_LINES = 200
+ 
+diff --git a/scripts/check_architecture_boundaries.py b/scripts/check_architecture_boundaries.py
+deleted file mode 100644
+index 86cc621..0000000
+--- a/scripts/check_architecture_boundaries.py
++++ /dev/null
+@@ -1,36 +0,0 @@
+-from pathlib import Path
+-
+-
+-ROOT = Path(__file__).resolve().parents[1]
+-
+-DISALLOWED_IMPORTS = {
+-    "src/models": ["src.api", "src.services"],
+-    "src/utils": ["src.api", "src.services", "src.models"],
+-    "src/services": ["src.api"],
+-}
+-
+-
+-def main() -> None:
+-    violations = []
+-
+-    for folder, imports in DISALLOWED_IMPORTS.items():
+-        base = ROOT / folder
+-        if not base.exists():
+-            continue
+-
+-        for path in base.rglob("*.py"):
+-            text = path.read_text(encoding="utf-8")
+-            for import_name in imports:
+-                if f"import {import_name}" in text or f"from {import_name}" in text:
+-                    violations.append((path.relative_to(ROOT).as_posix(), import_name))
+-
+-    if violations:
+-        for path, import_name in violations:
+-            print(f"Boundary violation: {path} imports {import_name}")
+-        raise SystemExit(1)
+-
+-    print("No simple architecture boundary violations found.")
+-
+-
+-if __name__ == "__main__":
+-    main()
+diff --git a/scripts/check_context_staleness.py b/scripts/check_context_staleness.py
+index ead73b2..81c5a2f 100644
+--- a/scripts/check_context_staleness.py
++++ b/scripts/check_context_staleness.py
+@@ -1,6 +1,5 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ GENERATED_DOCS = [
+     "docs/agent/CODEMAP.md",
+@@ -16,7 +15,9 @@ def newest_source_mtime() -> float:
+     for directory_name in SOURCE_DIRS:
+         directory = ROOT / directory_name
+         if directory.exists():
+-            mtimes.extend(path.stat().st_mtime for path in directory.rglob("*") if path.is_file())
++            mtimes.extend(
++                path.stat().st_mtime for path in directory.rglob("*.py") if path.is_file()
++            )
+     return max(mtimes, default=0)
+ 
+ 
+diff --git a/scripts/collect_task_trace.py b/scripts/collect_task_trace.py
+index 18f9932..3c94343 100644
+--- a/scripts/collect_task_trace.py
++++ b/scripts/collect_task_trace.py
+@@ -1,7 +1,6 @@
++import subprocess
+ from datetime import date
+ from pathlib import Path
+-import subprocess
+-
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ TASKS = ROOT / ".agent" / "tasks"
+diff --git a/scripts/detect_large_agent_files.py b/scripts/detect_large_agent_files.py
+index 1562415..d157553 100644
+--- a/scripts/detect_large_agent_files.py
++++ b/scripts/detect_large_agent_files.py
+@@ -1,6 +1,5 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ MAX_LINES = 200
+ PATTERNS = [
+@@ -22,7 +21,9 @@ def main() -> None:
+                 continue
+             line_count = len(path.read_text(encoding="utf-8").splitlines())
+             if line_count > MAX_LINES:
+-                print(f"{path.relative_to(ROOT).as_posix()}: {line_count} lines exceeds {MAX_LINES}.")
++                print(
++                    f"{path.relative_to(ROOT).as_posix()}: {line_count} lines exceeds {MAX_LINES}."
++                )
+                 failed = True
+             else:
+                 print(f"{path.relative_to(ROOT).as_posix()}: {line_count} lines.")
+diff --git a/scripts/detect_large_context_docs.py b/scripts/detect_large_context_docs.py
+index 99e83ab..c06589c 100644
+--- a/scripts/detect_large_context_docs.py
++++ b/scripts/detect_large_context_docs.py
+@@ -1,6 +1,5 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ MAX_LINES = 200
+ AUTO_LOADED_DOCS = [
+diff --git a/scripts/extract_task_memory.py b/scripts/extract_task_memory.py
+index 4eea19d..cf9bb03 100644
+--- a/scripts/extract_task_memory.py
++++ b/scripts/extract_task_memory.py
+@@ -3,7 +3,6 @@ import re
+ from datetime import date
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ TASKS = ROOT / ".agent" / "tasks"
+ CANDIDATES = ROOT / ".agent" / "memory" / "candidates"
+diff --git a/scripts/generate_codemap.py b/scripts/generate_codemap.py
+index faad3ad..4536687 100644
+--- a/scripts/generate_codemap.py
++++ b/scripts/generate_codemap.py
+@@ -2,22 +2,21 @@ import ast
+ from dataclasses import dataclass
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ CODEMAP = ROOT / "docs" / "agent" / "CODEMAP.md"
+ 
+ PURPOSES = {
+-    "api": "HTTP routes, request validation, response shaping, and transport boundaries.",
+-    "core": "Configuration, application setup, and cross-cutting primitives.",
+-    "models": "Domain models and persistence-facing data structures.",
+-    "services": "Business workflows and application logic.",
+-    "utils": "Small shared helpers with no business ownership.",
++    "personal_polyspace_toolkit": (
++        "Deterministic Polyspace discovery, setup, client integration, configuration, and state."
++    ),
+ }
+ 
+ TEST_HINTS = {
+-    "api": ["tests/integration/test_api.py"],
+-    "models": ["tests/unit/test_models.py"],
+-    "services": ["tests/unit/test_services.py"],
++    "personal_polyspace_toolkit": [
++        "tests/unit/test_discovery.py",
++        "tests/unit/test_project_config.py",
++        "tests/integration/test_cli.py",
++    ],
+ }
+ 
+ 
+@@ -89,7 +88,9 @@ def add_local_dependency(dependencies: set[str], module: str) -> None:
+         dependencies.add(module.replace(".", "/"))
+ 
+ 
+-def add_relative_dependency(dependencies: set[str], relative_path: str, level: int, module: str) -> None:
++def add_relative_dependency(
++    dependencies: set[str], relative_path: str, level: int, module: str
++) -> None:
+     package_parts = relative_path.removesuffix(".py").split("/")[:-1]
+     base_parts = package_parts[: max(len(package_parts) - level + 1, 0)]
+     target_parts = base_parts + ([part for part in module.split(".") if part] if module else [])
+@@ -114,22 +115,33 @@ def find_tests(module_name: str, files: list[Path]) -> list[str]:
+ def risk_notes(module_name: str, summaries: list[FileSummary]) -> list[str]:
+     notes = []
+     if any(summary.exports for summary in summaries):
+-        notes.append("Public exports may be imported by other modules; confirm references before renaming.")
+-    if module_name in {"api", "models"}:
++        notes.append(
++            "Public exports may be imported by other modules; confirm references before renaming."
++        )
++    if module_name == "personal_polyspace_toolkit":
+         notes.append("Public API or schema changes should be reflected in specs and tests.")
+     if any(summary.dependencies for summary in summaries):
+-        notes.append("Dependency edges are import hints, not a full call graph; verify behavior in source.")
+-    return notes or ["Low obvious coupling in generated map; verify with source search before edits."]
++        notes.append(
++            "Dependency edges are import hints, not a full call graph; verify behavior in source."
++        )
++    return notes or [
++        "Low obvious coupling in generated map; verify with source search before edits."
++    ]
+ 
+ 
+ def main() -> None:
+-    source_dirs = [path for path in (ROOT / "src").iterdir() if path.is_dir()]
++    source_dirs = [
++        path
++        for path in (ROOT / "src").iterdir()
++        if path.is_dir() and not path.name.endswith(".egg-info") and any(path.rglob("*.py"))
++    ]
+     lines = [
+         "# Code Map",
+         "",
+         "Generated from the current `src/` directory by `scripts/generate_codemap.py`.",
+         "",
+-        "Use this for quick orientation, then confirm with Semble, `rg`, module cards, and source reads.",
++        "Use this for quick orientation, then confirm with Semble, `rg`, module cards, "
++        "and source reads.",
+         "",
+     ]
+ 
+@@ -137,7 +149,9 @@ def main() -> None:
+         paths = sorted(directory.rglob("*.py"))
+         summaries = [parse_python_file(path) for path in paths]
+         name = directory.name
+-        purpose = PURPOSES.get(name, "Project module. Replace this line with project-specific ownership notes.")
++        purpose = PURPOSES.get(
++            name, "Project module. Replace this line with project-specific ownership notes."
++        )
+         lines.extend([f"## {directory.relative_to(ROOT).as_posix()}/", f"Purpose: {purpose}", ""])
+ 
+         lines.append("Files:")
+@@ -153,7 +167,9 @@ def main() -> None:
+             lines.extend(f"- `{symbol}`" for symbol in exports)
+ 
+         classes = sorted({class_name for summary in summaries for class_name in summary.classes})
+-        functions = sorted({function_name for summary in summaries for function_name in summary.functions})
++        functions = sorted(
++            {function_name for summary in summaries for function_name in summary.functions}
++        )
+         if classes or functions:
+             lines.extend(["", "Important classes/functions:"])
+             lines.extend(f"- class `{class_name}`" for class_name in classes)
+@@ -163,12 +179,19 @@ def main() -> None:
+         if public_apis:
+             lines.extend(["", "Public APIs:"])
+             for summary in public_apis:
+-                lines.append(f"- `{summary.path}` -> {', '.join(f'`{item}`' for item in summary.exports)}")
++                lines.append(
++                    f"- `{summary.path}` -> {', '.join(f'`{item}`' for item in summary.exports)}"
++                )
+ 
+-        dependencies = sorted({dependency for summary in summaries for dependency in summary.dependencies})
++        dependencies = sorted(
++            {dependency for summary in summaries for dependency in summary.dependencies}
++        )
+         if dependencies:
+             lines.extend(["", "Dependency edges:"])
+-            lines.extend(f"- `{directory.relative_to(ROOT).as_posix()}` -> `{dependency}`" for dependency in dependencies)
++            lines.extend(
++                f"- `{directory.relative_to(ROOT).as_posix()}` -> `{dependency}`"
++                for dependency in dependencies
++            )
+ 
+         tests = find_tests(name, paths)
+         if tests:
+diff --git a/scripts/run_targeted_tests.py b/scripts/run_targeted_tests.py
+index b4f2fbd..793db35 100644
+--- a/scripts/run_targeted_tests.py
++++ b/scripts/run_targeted_tests.py
+@@ -1,7 +1,6 @@
+ import subprocess
+ import sys
+ 
+-
+ DEFAULT_COMMAND = ["python", "-m", "pytest", "tests/unit", "-q"]
+ 
+ 
+diff --git a/scripts/search_understand_graph.py b/scripts/search_understand_graph.py
+index 3e25370..97425b9 100644
+--- a/scripts/search_understand_graph.py
++++ b/scripts/search_understand_graph.py
+@@ -3,7 +3,6 @@ import os
+ import sys
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ GRAPH = ROOT / ".understand-anything" / "knowledge-graph.json"
+ 
+@@ -53,9 +52,7 @@ def main() -> None:
+ 
+     match_ids = {node.get("id") for node in matches}
+     connected = [
+-        edge
+-        for edge in edges
+-        if edge.get("source") in match_ids or edge.get("target") in match_ids
++        edge for edge in edges if edge.get("source") in match_ids or edge.get("target") in match_ids
+     ]
+     layer_hits = [
+         layer
+diff --git a/scripts/understand_placeholder.py b/scripts/understand_placeholder.py
+index 4e57289..97b27ed 100644
+--- a/scripts/understand_placeholder.py
++++ b/scripts/understand_placeholder.py
+@@ -1,13 +1,18 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ 
+ 
+ def main() -> None:
+     print("Understand Anything is provided by the installed agent/plugin runtime.")
+-    print("Run the runtime command `/understand` from this repository, or use the dashboard/chat skills when available.")
+-    print(f"Expected graph path: {(ROOT / '.understand-anything' / 'knowledge-graph.json').relative_to(ROOT)}")
++    print(
++        "Run `/understand` from this repository, or use the dashboard and chat skills "
++        "when available."
++    )
++    print(
++        "Expected graph path: "
++        f"{(ROOT / '.understand-anything' / 'knowledge-graph.json').relative_to(ROOT)}"
++    )
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/scripts/update_module_cards.py b/scripts/update_module_cards.py
+deleted file mode 100644
+index 5a3515a..0000000
+--- a/scripts/update_module_cards.py
++++ /dev/null
+@@ -1,57 +0,0 @@
+-from pathlib import Path
+-
+-
+-ROOT = Path(__file__).resolve().parents[1]
+-SRC = ROOT / "src"
+-CARDS = ROOT / "docs" / "agent" / "module-cards"
+-
+-
+-TEMPLATE = """# Module: {name}
+-
+-## Responsibility
+-TODO - describe this module's responsibility.
+-
+-## Key Files
+-{files}
+-
+-## Public Interfaces
+-- TODO
+-
+-## Rules
+-- Follow existing project boundaries.
+-
+-## Common Tasks
+-- TODO
+-
+-## Known Pitfalls
+-- TODO
+-"""
+-
+-
+-def main() -> None:
+-    CARDS.mkdir(parents=True, exist_ok=True)
+-    created = []
+-
+-    for directory in sorted(path for path in SRC.iterdir() if path.is_dir()):
+-        card = CARDS / f"{directory.name}.md"
+-        if card.exists():
+-            continue
+-
+-        files = sorted(path.relative_to(ROOT).as_posix() for path in directory.rglob("*.py"))
+-        file_lines = "\n".join(f"- `{file}`" for file in files) if files else "- TODO"
+-        card.write_text(
+-            TEMPLATE.format(name=directory.name.title(), files=file_lines),
+-            encoding="utf-8",
+-        )
+-        created.append(card.relative_to(ROOT).as_posix())
+-
+-    if created:
+-        print("Created module cards:")
+-        for path in created:
+-            print(f"- {path}")
+-    else:
+-        print("No missing module cards.")
+-
+-
+-if __name__ == "__main__":
+-    main()
+diff --git a/scripts/validate_agent_docs.py b/scripts/validate_agent_docs.py
+index 7d51727..4932add 100644
+--- a/scripts/validate_agent_docs.py
++++ b/scripts/validate_agent_docs.py
+@@ -1,11 +1,16 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ 
+ REQUIRED_FILES = [
+     "AGENTS.md",
+     "CLAUDE.md",
++    "QWEN.md",
++    "README.md",
++    "LICENSE.md",
++    "NOTICE.md",
++    "UPSTREAM.md",
++    ".polyspace-toolkit.schema.json",
+     "docs/agent/INDEX.md",
+     "docs/agent/CODEMAP.md",
+     "docs/agent/CODE_SEARCH.md",
+@@ -57,6 +62,20 @@ REQUIRED_SKILLS = [
+     "code-search",
+ ]
+ 
++PRODUCT_SKILLS = [
++    "toolkit-setup",
++    "c-compliance-loop",
++    "run-analysis",
++    "fix-findings",
++    "justify-findings",
++    "configure-build-options",
++    "configure-checkers",
++    "find-checker-documentation",
++    "find-option-documentation",
++    "query-justification-catalog",
++    "generate-c-pstunit-tests",
++]
++
+ 
+ def main() -> None:
+     missing = [path for path in REQUIRED_FILES if not (ROOT / path).exists()]
+@@ -66,12 +85,17 @@ def main() -> None:
+         if not path.exists():
+             missing.append(path.relative_to(ROOT).as_posix())
+ 
++    for skill in PRODUCT_SKILLS:
++        path = ROOT / "skills" / skill / "SKILL.md"
++        if not path.exists():
++            missing.append(path.relative_to(ROOT).as_posix())
++
+     if missing:
+         for path in missing:
+             print(f"Missing: {path}")
+         raise SystemExit(1)
+ 
+-    print("Agent docs, memory scaffold, skills, and MCP notes look complete.")
++    print("Agent docs, memory scaffold, product skills, and MCP notes look complete.")
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/scripts/validate_docs.py b/scripts/validate_docs.py
+index f162a54..14cec98 100644
+--- a/scripts/validate_docs.py
++++ b/scripts/validate_docs.py
+@@ -1,10 +1,14 @@
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ REQUIRED_FILES = [
+     "AGENTS.md",
+     "CLAUDE.md",
++    "QWEN.md",
++    "README.md",
++    "LICENSE.md",
++    "NOTICE.md",
++    ".polyspace-toolkit.schema.json",
+     "docs/agent/INDEX.md",
+     "docs/agent/CODEMAP.md",
+     "docs/agent/AGENTS_AND_SKILLS.md",
+diff --git a/scripts/validate_memory_links.py b/scripts/validate_memory_links.py
+index 9d7b9bf..0d2965a 100644
+--- a/scripts/validate_memory_links.py
++++ b/scripts/validate_memory_links.py
+@@ -4,7 +4,6 @@ from datetime import date
+ from pathlib import Path
+ from typing import Any
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ INDEX = ROOT / ".agent" / "memory" / "index.json"
+ VALID_TYPES = {"semantic", "procedural"}
+@@ -52,7 +51,9 @@ def parse_metadata(text: str) -> dict[str, str]:
+ 
+ 
+ def headings(text: str) -> set[str]:
+-    return {match.group(1).strip() for match in re.finditer(r"^##\s+(.+)$", text, flags=re.MULTILINE)}
++    return {
++        match.group(1).strip() for match in re.finditer(r"^##\s+(.+)$", text, flags=re.MULTILINE)
++    }
+ 
+ 
+ def related_files(text: str) -> list[str]:
+@@ -144,7 +145,9 @@ def main() -> None:
+             problems.append(f"{entry['id']}: invalid type {entry['type']}")
+         if entry["confidence"] not in VALID_CONFIDENCE:
+             problems.append(f"{entry['id']}: invalid confidence {entry['confidence']}")
+-        if not isinstance(entry["keywords"], list) or not all(isinstance(item, str) for item in entry["keywords"]):
++        if not isinstance(entry["keywords"], list) or not all(
++            isinstance(item, str) for item in entry["keywords"]
++        ):
+             problems.append(f"{entry['id']}: keywords must be a list of strings")
+         validate_date(entry["last_verified"], f"{entry['id']} last_verified", problems)
+         if not as_path(entry["source_task"]).exists():
+diff --git a/scripts/validate_understand_graph.py b/scripts/validate_understand_graph.py
+index 3b8fa9c..62c4b87 100644
+--- a/scripts/validate_understand_graph.py
++++ b/scripts/validate_understand_graph.py
+@@ -1,7 +1,6 @@
+ import json
+ from pathlib import Path
+ 
+-
+ ROOT = Path(__file__).resolve().parents[1]
+ GRAPH = ROOT / ".understand-anything" / "knowledge-graph.json"
+ 
+diff --git a/src/AGENTS.md b/src/AGENTS.md
+deleted file mode 100644
+index 700622c..0000000
+--- a/src/AGENTS.md
++++ /dev/null
+@@ -1,6 +0,0 @@
+-# src/AGENTS.md
+-
+-## Local Rules
+-- Keep source changes aligned with the layer boundaries in `docs/agent/ARCHITECTURE.md`.
+-- Prefer updating the relevant module card when module ownership or entry points change.
+-- Add or update nearby tests for behavior changes.
+diff --git a/src/CLAUDE.md b/src/CLAUDE.md
+deleted file mode 100644
+index 74f66c8..0000000
+--- a/src/CLAUDE.md
++++ /dev/null
+@@ -1,5 +0,0 @@
+-# src/CLAUDE.md
+-
+-Read the relevant module card before editing source files.
+-
+-Keep source changes small, targeted, and covered by tests when behavior changes.
+diff --git a/src/__init__.py b/src/__init__.py
+deleted file mode 100644
+index 054368f..0000000
+--- a/src/__init__.py
++++ /dev/null
+@@ -1 +0,0 @@
+-"""Sample application package for the agent-native template."""
+diff --git a/src/api/__init__.py b/src/api/__init__.py
+deleted file mode 100644
+index 5b45c4d..0000000
+--- a/src/api/__init__.py
++++ /dev/null
+@@ -1 +0,0 @@
+-"""API boundary package."""
+diff --git a/src/api/dependencies.py b/src/api/dependencies.py
+deleted file mode 100644
+index 2b6d378..0000000
+--- a/src/api/dependencies.py
++++ /dev/null
+@@ -1,5 +0,0 @@
+-from src.core.config import Settings, load_settings
+-
+-
+-def get_settings() -> Settings:
+-    return load_settings()
+diff --git a/src/api/routes.py b/src/api/routes.py
+deleted file mode 100644
+index 378801c..0000000
+--- a/src/api/routes.py
++++ /dev/null
+@@ -1,6 +0,0 @@
+-from src.services.example_service import ExampleService
+-
+-
+-def health() -> dict[str, str]:
+-    service = ExampleService()
+-    return {"status": service.health_status()}
+diff --git a/src/core/__init__.py b/src/core/__init__.py
+deleted file mode 100644
+index dc7e89d..0000000
+--- a/src/core/__init__.py
++++ /dev/null
+@@ -1 +0,0 @@
+-"""Core runtime helpers."""
+diff --git a/src/core/config.py b/src/core/config.py
+deleted file mode 100644
+index 18af61d..0000000
+--- a/src/core/config.py
++++ /dev/null
+@@ -1,15 +0,0 @@
+-from dataclasses import dataclass
+-from os import getenv
+-
+-
+-@dataclass(frozen=True)
+-class Settings:
+-    app_env: str = "development"
+-    log_level: str = "info"
+-
+-
+-def load_settings() -> Settings:
+-    return Settings(
+-        app_env=getenv("APP_ENV", "development"),
+-        log_level=getenv("LOG_LEVEL", "info"),
+-    )
+diff --git a/src/models/__init__.py b/src/models/__init__.py
+deleted file mode 100644
+index 69e9755..0000000
+--- a/src/models/__init__.py
++++ /dev/null
+@@ -1 +0,0 @@
+-"""Domain model package."""
+diff --git a/src/models/example.py b/src/models/example.py
+deleted file mode 100644
+index f84c219..0000000
+--- a/src/models/example.py
++++ /dev/null
+@@ -1,7 +0,0 @@
+-from dataclasses import dataclass
+-
+-
+-@dataclass(frozen=True)
+-class Example:
+-    id: str
+-    name: str
+diff --git a/src/services/__init__.py b/src/services/__init__.py
+deleted file mode 100644
+index ac5acdf..0000000
+--- a/src/services/__init__.py
++++ /dev/null
+@@ -1 +0,0 @@
+-"""Business service package."""
+diff --git a/src/services/example_service.py b/src/services/example_service.py
+deleted file mode 100644
+index d59f53e..0000000
+--- a/src/services/example_service.py
++++ /dev/null
+@@ -1,3 +0,0 @@
+-class ExampleService:
+-    def health_status(self) -> str:
+-        return "ok"
+diff --git a/src/utils/__init__.py b/src/utils/__init__.py
+deleted file mode 100644
+index 88c371e..0000000
+--- a/src/utils/__init__.py
++++ /dev/null
+@@ -1 +0,0 @@
+-"""Utility package."""
+diff --git a/src/utils/strings.py b/src/utils/strings.py
+deleted file mode 100644
+index d63aefe..0000000
+--- a/src/utils/strings.py
++++ /dev/null
+@@ -1,2 +0,0 @@
+-def normalize_name(value: str) -> str:
+-    return " ".join(value.strip().split())
+diff --git a/tests/integration/test_api.py b/tests/integration/test_api.py
+deleted file mode 100644
+index 195197b..0000000
+--- a/tests/integration/test_api.py
++++ /dev/null
+@@ -1,5 +0,0 @@
+-from src.api.routes import health
+-
+-
+-def test_health_route_returns_ok() -> None:
+-    assert health() == {"status": "ok"}
+diff --git a/tests/unit/test_models.py b/tests/unit/test_models.py
+deleted file mode 100644
+index 156572a..0000000
+--- a/tests/unit/test_models.py
++++ /dev/null
+@@ -1,8 +0,0 @@
+-from src.models.example import Example
+-
+-
+-def test_example_model_holds_values() -> None:
+-    example = Example(id="example-1", name="Sample")
+-
+-    assert example.id == "example-1"
+-    assert example.name == "Sample"
+diff --git a/tests/unit/test_services.py b/tests/unit/test_services.py
+deleted file mode 100644
+index eb0bcfe..0000000
+--- a/tests/unit/test_services.py
++++ /dev/null
+@@ -1,5 +0,0 @@
+-from src.services.example_service import ExampleService
+-
+-
+-def test_health_status_is_ok() -> None:
+-    assert ExampleService().health_status() == "ok"
+diff --git a/update.sh b/update.sh
+deleted file mode 100644
+index 572607e..0000000
+--- a/update.sh
++++ /dev/null
+@@ -1,18 +0,0 @@
+-#!/usr/bin/env sh
+-set -eu
+-
+-SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+-TARGET_DIR=${1:-.}
+-
+-PYTHON_BIN=${PYTHON:-}
+-if [ -z "$PYTHON_BIN" ]; then
+-  if command -v python3 >/dev/null 2>&1; then
+-    PYTHON_BIN=python3
+-  else
+-    PYTHON_BIN=python
+-  fi
+-fi
+-
+-"$PYTHON_BIN" "$SCRIPT_DIR/scripts/agentkit_installer.py" update \
+-  --source "$SCRIPT_DIR" \
+-  --target "$TARGET_DIR"
+diff --git a/update/learn_plugmem_19062026.md b/update/learn_plugmem_19062026.md
+deleted file mode 100644
+index 75ae117..0000000
+--- a/update/learn_plugmem_19062026.md
++++ /dev/null
+@@ -1,251 +0,0 @@
+-What we should learn from PlugMem
+-1. Separate memory into 3 types
+-
+-PlugMem uses:
+-
+-PlugMem memory type	Meaning	Apply to your template as
+-Semantic memory	Facts, concepts, preferences	Project facts, stack facts, conventions
+-Procedural memory	Workflows and how-to steps	“How we fix X in this repo” playbooks
+-Episodic memory	Past interaction/task sessions	Raw task logs under .agent/tasks/
+-
+-PlugMem’s README explicitly lists semantic, procedural, and episodic memory and describes graph structure, LLM-based extraction, retrieval, reasoning, and memory evolution.
+-
+-Your template should adopt this taxonomy.
+-
+-Recommended structure:
+-
+-.agent/
+-├── tasks/                         # episodic memory: raw task traces
+-├── memory/
+-│   ├── semantic/
+-│   │   ├── project-facts.md
+-│   │   ├── conventions.md
+-│   │   └── decisions.md
+-│   ├── procedural/
+-│   │   ├── debugging-playbooks.md
+-│   │   ├── testing-playbooks.md
+-│   │   └── refactor-playbooks.md
+-│   ├── episodic/
+-│   │   └── index.md
+-│   └── memory-graph.json          # optional lightweight graph
+-2. Extract reusable lessons from task logs
+-
+-Right now, .agent/tasks/ is mostly an audit trail. That is useful, but it is still episodic memory. PlugMem’s important insight is: raw episodes are too verbose; useful memory is abstracted knowledge.
+-
+-The paper argues that raw memory retrieval often fails because useful decision-making information is sparse inside verbose episodes, while agents usually need compact factual or procedural knowledge.
+-
+-So after each meaningful task, your template should produce:
+-
+-# Memory Extraction
+-
+-## Semantic facts learned
+-- The API routes are registered in `src/api/routes.py`.
+-- Environment variables are loaded through `src/config.py`.
+-
+-## Procedural lessons learned
+-- When changing request validation, update both schema tests and route tests.
+-- Run `make test-unit` before full lint because unit tests fail faster.
+-
+-## Files related
+-- `src/api/routes.py`
+-- `tests/api/test_routes.py`
+-
+-## Confidence
+-High / Medium / Low
+-
+-## Should promote to long-term memory?
+-Yes / No
+-
+-This is more valuable than saving the whole chat or command output.
+-
+-3. Use memory as a “decision aid,” not as source of truth
+-
+-PlugMem improves performance by retrieving relevant memory and then reasoning over it; the paper reports that retrieval is essential, but retrieval alone is insufficient because memory structure controls what can be found and reused.
+-
+-For your template, memory should guide the agent like this:
+-
+-Task starts
+-→ read AGENTS.md / CLAUDE.md
+-→ route through docs/agent/INDEX.md
+-→ retrieve relevant memory cards
+-→ use Semble / rg / Serena to verify current code
+-→ patch
+-→ test
+-→ extract new memory if useful
+-
+-Important rule: memory can suggest where to look, but current source code is the authority.
+-
+-Is PlugMem suitable for your project now?
+-Suitable as an idea: yes
+-
+-Very suitable.
+-
+-Your template is becoming an agent-native operating system for repositories. Long-term memory is the next logical layer after:
+-
+-Semble = find relevant code
+-RTK = compress noisy command output
+-Understand Anything = graph/source understanding
+-.agent/tasks = task audit
+-PlugMem-style memory = learn from previous tasks
+-
+-This aligns with production AI system design: the product is not just the model; it includes context building, retrieval, tool use, validation, UX, feedback, analytics, monitoring, and evaluation.
+-
+-Suitable as a direct dependency: not yet
+-
+-I would not add PlugMem itself as a default dependency now.
+-
+-Reasons:
+-
+-Concern	Why it matters
+-Too research-heavy	PlugMem is benchmark/research-oriented, not a small template utility.
+-Setup complexity	Quick start references OpenAI keys, Azure endpoint, Qwen server, and embedding server setup.
+-Heavy inference assumptions	Local Qwen + NV-Embed via vLLM is not lightweight for every repo template user.
+-Memory quality risk	Bad extracted memory can mislead future agents.
+-Privacy/security risk	Task logs may contain secrets, customer data, stack traces, or credentials.
+-Staleness risk	Memory can become wrong after refactors.
+-Not needed for MVP	Your template first needs clean context routing and measurable retrieval before complex memory graphs.
+-
+-The right product decision is: implement a lightweight PlugMem-inspired memory layer first.
+-
+-Best implementation for your template
+-
+-Add a minimal memory pipeline:
+-
+-1. Task completed
+-2. Agent writes `.agent/tasks/<task-id>/summary.md`
+-3. Script extracts candidate memory
+-4. Human or rule-based gate decides promotion
+-5. Promoted memory goes into `.agent/memory/semantic` or `.agent/memory/procedural`
+-6. Future agents retrieve memory before code search
+-7. Memory is validated against current files before use
+-
+-Recommended new files:
+-
+-.agent/
+-├── memory/
+-│   ├── README.md
+-│   ├── semantic/project-facts.md
+-│   ├── semantic/conventions.md
+-│   ├── procedural/debugging-playbooks.md
+-│   ├── procedural/testing-playbooks.md
+-│   ├── procedural/refactor-playbooks.md
+-│   └── index.json
+-
+-docs/agent/
+-├── MEMORY_POLICY.md
+-├── MEMORY_RETRIEVAL.md
+-└── MEMORY_PROMOTION_RULES.md
+-
+-scripts/
+-├── extract_task_memory.py
+-├── validate_memory_links.py
+-└── audit_memory_staleness.py
+-
+-eval/
+-└── memory/
+-    ├── queries.json
+-    └── expected_memory.json
+-Add this to AGENTS.md
+-## Long-Term Memory Policy
+-
+-Use long-term memory as guidance, not truth.
+-
+-Before starting non-trivial tasks:
+-
+-1. Read `docs/agent/INDEX.md`.
+-2. Check `.agent/memory/index.json` for relevant semantic/procedural memory.
+-3. Use memory to choose likely files, workflows, and risks.
+-4. Verify all memory against current source files before editing.
+-5. Do not rely on memory if it conflicts with code, tests, or docs.
+-6. After completing a task, extract reusable lessons only if they are likely to help future tasks.
+-
+-Memory types:
+-- Semantic: stable project facts and conventions.
+-- Procedural: reusable workflows, debugging steps, testing rules.
+-- Episodic: raw task logs under `.agent/tasks/`.
+-
+-Never promote secrets, credentials, private customer data, or one-off noisy details into long-term memory.
+-Memory card format
+-
+-Use simple Markdown first, not a graph database.
+-
+-# Memory: Request Validation Workflow
+-
+-Type: procedural
+-Scope: api
+-Confidence: medium
+-Last verified: 2026-06-19
+-Source task: .agent/tasks/2026-06-19-request-validation/
+-
+-## When to use
+-
+-Use this when changing request validation or API schemas.
+-
+-## Procedure
+-
+-1. Find route handler.
+-2. Find request schema.
+-3. Update validation logic.
+-4. Run route-level tests.
+-5. Run schema-level tests.
+-
+-## Verification commands
+-
+-```bash
+-make test-unit
+-make lint
+-Related files
+-src/api/
+-tests/api/
+-Staleness triggers
+-
+-Re-check this memory if:
+-
+-API framework changes
+-schema library changes
+-test layout changes
+-
+-## How it fits with Semble and RTK
+-
+-```text
+-Semble:
+-Find current relevant code snippets.
+-
+-RTK:
+-Compress command/test/log output.
+-
+-PlugMem-inspired memory:
+-Recall lessons from past successful tasks.
+-
+-CODEMAP/module cards:
+-Explain intended architecture.
+-
+-Eval:
+-Prove retrieval and memory actually help.
+-
+-The complete flow:
+-
+-User task
+-→ AGENTS.md
+-→ docs/agent/INDEX.md
+-→ retrieve relevant memory cards
+-→ Semble / rg / Serena verify current code
+-→ edit
+-→ RTK-compressed tests/lint/git output
+-→ raw fallback if needed
+-→ task audit
+-→ memory extraction
+-→ memory promotion gate
+-Biggest risk
+-
+-The biggest risk is polluting memory with low-quality lessons.
+-
+-Bad memory example:
+-
+-Always edit `src/api/routes.py` when tests fail.
+-
+-Good memory example:
+-
+-For request validation failures, first check schema definitions, then route binding, then tests. Do not assume the route handler is wrong.
+-
+-This is why promotion must be gated.
+\ No newline at end of file
+diff --git a/update/learn_rtk_14062026.md b/update/learn_rtk_14062026.md
+deleted file mode 100644
+index 92a4d5a..0000000
+--- a/update/learn_rtk_14062026.md
++++ /dev/null
+@@ -1,161 +0,0 @@
+-What RTK teaches us
+-1. Terminal output is a first-class context problem
+-
+-Your current template controls what files the agent reads. RTK controls what command output the agent sees.
+-
+-That matters because an agent session usually wastes tokens in two places:
+-
+-Waste source	Current template handles?	RTK handles?
+-Reading too many files	Yes	No
+-Reading huge test output	Not really	Yes
+-Reading noisy git status / git diff	Partly	Yes
+-Reading noisy find, grep, ls, tree	Partly	Yes
+-Reading large logs	Not really	Yes
+-Re-running commands and polluting context	Not really	Yes
+-
+-RTK’s architecture is basically: parse command → route → execute → filter → print → track savings. Its architecture docs emphasize exit-code preservation, fail-safe fallback to original output, and transparent raw-output access with verbosity flags.
+-
+-That is exactly the kind of deterministic tool layer an AI template should have. A good AI product is not only the model; it includes context building, retrieval, tool use, validation, analytics, and monitoring.
+-
+-What we should apply into your template
+-A. Add docs/agent/COMMAND_OUTPUT_POLICY.md
+-
+-This should define when agents use compressed output vs raw output.
+-
+-Recommended content:
+-
+-# Command Output Policy
+-
+-Use compressed command output by default for noisy commands.
+-
+-Prefer RTK for:
+-- git status
+-- git diff
+-- git log
+-- grep / find / ls / tree
+-- pytest / vitest / cargo test / go test
+-- lint / typecheck
+-- docker / kubectl / logs
+-
+-Use raw output when:
+-- debugging parser/filter behavior
+-- a test failure is unclear
+-- exact stdout/stderr matters
+-- reviewing security-sensitive output
+-- verifying generated artifacts
+-- the compressed result looks suspicious
+-
+-Fallback:
+-- If RTK is unavailable, run the original command.
+-- If compressed output is insufficient, rerun with raw output.
+-
+-RTK docs explicitly describe graceful degradation: hooks should not block execution if RTK is missing or filtering fails, and raw command output can still run unchanged.
+-
+-B. Update AGENTS.md
+-
+-Your current AGENTS.md already says agents should avoid scanning the whole repo, prefer rg, targeted reads, and module cards, and summarize changed files, commands, and risks. Add this block:
+-
+-## Command Output Rules
+-
+-For noisy terminal commands, prefer compressed output.
+-
+-Use RTK when available:
+-- `rtk git status`
+-- `rtk git diff`
+-- `rtk grep`
+-- `rtk find`
+-- `rtk pytest`
+-- `rtk cargo test`
+-- `rtk npm test`
+-- `rtk tsc`
+-- `rtk eslint`
+-
+-If compressed output is incomplete or suspicious:
+-1. rerun the specific command in raw mode;
+-2. inspect only the relevant failing section;
+-3. mention the rerun in the final command summary.
+-
+-Do not hide failures. Test failures, stack traces, exit codes, and actionable errors must remain visible.
+-C. Add .mcp/rtk.md or docs/agent/RTK.md
+-
+-RTK supports multiple agent integration tiers: full hooks for tools like Claude Code/Cursor/Gemini, plugin integrations for some agents, and prompt-level/rules-file integrations for tools like Codex CLI. That means your template should not assume one integration path.
+-
+-Suggested file:
+-
+-# RTK Integration
+-
+-RTK is optional but recommended for token-efficient command execution.
+-
+-## Purpose
+-
+-RTK compresses noisy terminal output before the AI agent sees it.
+-
+-## Recommended usage
+-
+-- Local coding agents: enable RTK hook when supported.
+-- Codex-style agents: add AGENTS.md instruction fallback.
+-- CI: do not require RTK for correctness.
+-- Debugging: allow raw output fallback.
+-
+-## Verify
+-
+-```bash
+-rtk --version
+-rtk gain
+-Disable for one command
+-RTK_DISABLED=1 <command>
+-
+-RTK’s docs list `RTK_DISABLED=1` as a one-command override. :contentReference[oaicite:7]{index=7}
+-
+-### D. Add Makefile wrappers
+-
+-Your template already has `make test-unit`, `make lint`, `make typecheck`, and agent-audit commands. :contentReference[oaicite:8]{index=8} Add RTK-aware wrappers without making RTK mandatory:
+-
+-```makefile
+-RTK := $(shell command -v rtk 2>/dev/null)
+-
+-define maybe_rtk
+-$(if $(RTK),rtk $(1),$(1))
+-endef
+-
+-.PHONY: rtk-gain git-status git-diff test-unit-compact lint-compact typecheck-compact
+-
+-rtk-gain:
+-	@if command -v rtk >/dev/null 2>&1; then rtk gain; else echo "rtk not installed"; fi
+-
+-git-status:
+-	$(call maybe_rtk,git status)
+-
+-git-diff:
+-	$(call maybe_rtk,git diff)
+-
+-test-unit-compact:
+-	$(call maybe_rtk,pytest)
+-
+-lint-compact:
+-	$(call maybe_rtk,ruff check .)
+-
+-typecheck-compact:
+-	$(call maybe_rtk,mypy .)
+-
+-The key design choice: RTK improves agent UX, but should not become a hard build dependency.
+-
+-E. Add command-output audit to task logs
+-
+-Your .agent/tasks/ idea becomes stronger if each task can record:
+-
+-## Commands Run
+-
+-| Command | RTK Used | Raw Rerun? | Reason |
+-|---|---:|---:|---|
+-| pytest tests/api | yes | no | targeted regression |
+-| git diff | yes | yes | inspected exact patch |
+-| ruff check . | yes | no | lint validation |
+-
+-## Token / Context Notes
+-
+-- Large command outputs compressed where possible.
+-- Raw output used only for failure verification.
+-- Remaining risk: ...
+-
+-This gives you a measurable “agent context quality” layer, not just documentation.
+\ No newline at end of file

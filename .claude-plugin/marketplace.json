@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "personal-polyspace-toolkit",
+  "owner": {
+    "name": "Personal Polyspace Toolkit contributors"
+  },
+  "plugins": [
+    {
+      "name": "personal-polyspace-toolkit",
+      "version": "0.1.0-alpha.1",
+      "description": "Unofficial C-only Polyspace analysis and remediation skills",
+      "source": "./",
+      "category": "development",
+      "strict": false,
+      "skills": "./skills/"
+    }
+  ]
+}

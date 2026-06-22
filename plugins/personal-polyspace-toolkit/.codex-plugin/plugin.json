@@ -1,0 +1,20 @@
+{
+  "name": "personal-polyspace-toolkit",
+  "version": "0.1.0-alpha.1",
+  "description": "Unofficial C-only Polyspace analysis and remediation skills.",
+  "author": {
+    "name": "Personal Polyspace Toolkit contributors"
+  },
+  "license": "MathWorks restricted BSD-3-Clause derivative",
+  "keywords": ["polyspace", "static-analysis", "misra-c", "cert-c", "c"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Personal Polyspace Toolkit",
+    "shortDescription": "C-only Polyspace analysis and remediation skills.",
+    "longDescription": "Configure and use Polyspace as You Code for guarded C analysis, remediation, justifications, and PSTUnit workflows.",
+    "developerName": "Personal Polyspace Toolkit contributors",
+    "category": "Development",
+    "defaultPrompt": "Use the appropriate Personal Polyspace Toolkit skill for this C analysis task.",
+    "capabilities": ["skills"]
+  }
+}

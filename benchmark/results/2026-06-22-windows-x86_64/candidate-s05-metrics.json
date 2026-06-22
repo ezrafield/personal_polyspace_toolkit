@@ -1,0 +1,19 @@
+﻿{
+    "scenario":  "S05",
+    "exitCode":  2,
+    "userContentPreserved":  true,
+    "skillDirectoriesAfterFailure":  [
+                                         "c-compliance-loop",
+                                         "configure-build-options",
+                                         "configure-checkers",
+                                         "find-checker-documentation",
+                                         "find-option-documentation",
+                                         "fix-findings",
+                                         "generate-c-pstunit-tests",
+                                         "justify-findings",
+                                         "query-justification-catalog",
+                                         "run-analysis"
+                                     ],
+    "partialMutation":  true,
+    "expectedRefusal":  true
+}

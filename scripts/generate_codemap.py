@@ -2,22 +2,21 @@ import ast
 from dataclasses import dataclass
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 CODEMAP = ROOT / "docs" / "agent" / "CODEMAP.md"
 
 PURPOSES = {
-    "api": "HTTP routes, request validation, response shaping, and transport boundaries.",
-    "core": "Configuration, application setup, and cross-cutting primitives.",
-    "models": "Domain models and persistence-facing data structures.",
-    "services": "Business workflows and application logic.",
-    "utils": "Small shared helpers with no business ownership.",
+    "personal_polyspace_toolkit": (
+        "Deterministic Polyspace discovery, setup, client integration, configuration, and state."
+    ),
 }
 
 TEST_HINTS = {
-    "api": ["tests/integration/test_api.py"],
-    "models": ["tests/unit/test_models.py"],
-    "services": ["tests/unit/test_services.py"],
+    "personal_polyspace_toolkit": [
+        "tests/unit/test_discovery.py",
+        "tests/unit/test_project_config.py",
+        "tests/integration/test_cli.py",
+    ],
 }
 
 
@@ -89,7 +88,9 @@ def add_local_dependency(dependencies: set[str], module: str) -> None:
         dependencies.add(module.replace(".", "/"))
 
 
-def add_relative_dependency(dependencies: set[str], relative_path: str, level: int, module: str) -> None:
+def add_relative_dependency(
+    dependencies: set[str], relative_path: str, level: int, module: str
+) -> None:
     package_parts = relative_path.removesuffix(".py").split("/")[:-1]
     base_parts = package_parts[: max(len(package_parts) - level + 1, 0)]
     target_parts = base_parts + ([part for part in module.split(".") if part] if module else [])
@@ -114,22 +115,33 @@ def find_tests(module_name: str, files: list[Path]) -> list[str]:
 def risk_notes(module_name: str, summaries: list[FileSummary]) -> list[str]:
     notes = []
     if any(summary.exports for summary in summaries):
-        notes.append("Public exports may be imported by other modules; confirm references before renaming.")
-    if module_name in {"api", "models"}:
+        notes.append(
+            "Public exports may be imported by other modules; confirm references before renaming."
+        )
+    if module_name == "personal_polyspace_toolkit":
         notes.append("Public API or schema changes should be reflected in specs and tests.")
     if any(summary.dependencies for summary in summaries):
-        notes.append("Dependency edges are import hints, not a full call graph; verify behavior in source.")
-    return notes or ["Low obvious coupling in generated map; verify with source search before edits."]
+        notes.append(
+            "Dependency edges are import hints, not a full call graph; verify behavior in source."
+        )
+    return notes or [
+        "Low obvious coupling in generated map; verify with source search before edits."
+    ]
 
 
 def main() -> None:
-    source_dirs = [path for path in (ROOT / "src").iterdir() if path.is_dir()]
+    source_dirs = [
+        path
+        for path in (ROOT / "src").iterdir()
+        if path.is_dir() and not path.name.endswith(".egg-info") and any(path.rglob("*.py"))
+    ]
     lines = [
         "# Code Map",
         "",
         "Generated from the current `src/` directory by `scripts/generate_codemap.py`.",
         "",
-        "Use this for quick orientation, then confirm with Semble, `rg`, module cards, and source reads.",
+        "Use this for quick orientation, then confirm with Semble, `rg`, module cards, "
+        "and source reads.",
         "",
     ]
 
@@ -137,7 +149,9 @@ def main() -> None:
         paths = sorted(directory.rglob("*.py"))
         summaries = [parse_python_file(path) for path in paths]
         name = directory.name
-        purpose = PURPOSES.get(name, "Project module. Replace this line with project-specific ownership notes.")
+        purpose = PURPOSES.get(
+            name, "Project module. Replace this line with project-specific ownership notes."
+        )
         lines.extend([f"## {directory.relative_to(ROOT).as_posix()}/", f"Purpose: {purpose}", ""])
 
         lines.append("Files:")
@@ -153,7 +167,9 @@ def main() -> None:
             lines.extend(f"- `{symbol}`" for symbol in exports)
 
         classes = sorted({class_name for summary in summaries for class_name in summary.classes})
-        functions = sorted({function_name for summary in summaries for function_name in summary.functions})
+        functions = sorted(
+            {function_name for summary in summaries for function_name in summary.functions}
+        )
         if classes or functions:
             lines.extend(["", "Important classes/functions:"])
             lines.extend(f"- class `{class_name}`" for class_name in classes)
@@ -163,12 +179,19 @@ def main() -> None:
         if public_apis:
             lines.extend(["", "Public APIs:"])
             for summary in public_apis:
-                lines.append(f"- `{summary.path}` -> {', '.join(f'`{item}`' for item in summary.exports)}")
+                lines.append(
+                    f"- `{summary.path}` -> {', '.join(f'`{item}`' for item in summary.exports)}"
+                )
 
-        dependencies = sorted({dependency for summary in summaries for dependency in summary.dependencies})
+        dependencies = sorted(
+            {dependency for summary in summaries for dependency in summary.dependencies}
+        )
         if dependencies:
             lines.extend(["", "Dependency edges:"])
-            lines.extend(f"- `{directory.relative_to(ROOT).as_posix()}` -> `{dependency}`" for dependency in dependencies)
+            lines.extend(
+                f"- `{directory.relative_to(ROOT).as_posix()}` -> `{dependency}`"
+                for dependency in dependencies
+            )
 
         tests = find_tests(name, paths)
         if tests:

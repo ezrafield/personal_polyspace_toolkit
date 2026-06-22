@@ -1,18 +1,17 @@
 {
-  "api-route-behavior": [
-    "docs/agent/module-cards/api.md",
-    "src/api/routes.py",
-    "tests/integration/test_api.py"
+  "verified-mcp-install": [
+    "src/personal_polyspace_toolkit/installer.py",
+    "src/personal_polyspace_toolkit/releases.py",
+    "docs/agent/module-cards/installer.md"
   ],
-  "service-business-logic": [
-    "docs/agent/module-cards/services.md",
-    "src/services/example_service.py",
-    "tests/unit/test_services.py"
+  "c-compliance-workflow": [
+    "skills/c-compliance-loop/SKILL.md",
+    "skills/fix-findings/SKILL.md",
+    "skills/justify-findings/SKILL.md"
   ],
-  "agent-context-policy": [
-    "AGENTS.md",
-    "docs/agent/INDEX.md",
-    "docs/agent/CODE_SEARCH.md",
-    "docs/agent/CONTEXT_ROUTER.md"
+  "qwen-local-setup": [
+    "QWEN.md",
+    "docs/setup/qwen-local.md",
+    "examples/qwen-settings.local.example.json"
   ]
 }

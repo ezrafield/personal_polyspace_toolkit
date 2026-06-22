@@ -1,32 +1,26 @@
-# Memory: Project Conventions
+# Memory: Conventions
 
 Type: semantic
 Scope: project
 Confidence: high
-Last verified: 2026-06-19
+Last verified: 2026-06-22
 Source task: .agent/tasks/README.md
 
 ## When to use
-
-Use this memory before implementing non-trivial template or code changes.
+Use before changing setup, configuration, or Polyspace workflow behavior.
 
 ## Content
-
-- Prefer targeted reads, `rg`, Semble when available, module cards, and deterministic scripts over broad repository scans.
-- Make the smallest safe change and update tests or docs when behavior changes.
-- Run targeted tests before broad checks.
-- Use compressed command output for noisy commands when RTK is available, and rerun raw output only when compressed output is unclear.
-- Keep long-term memory concise, reusable, and free of secrets or private data.
+- Treat unknown client entries and skill directories as user-owned.
+- Keep telemetry opt-in and state secret-free.
+- Require explicit profiles, C translation units, and human approval for justifications and generated
+  executable runs.
+- Use targeted tests before the three-OS integration suite.
+- Current source, schemas, tests, and installed-release documentation override memory.
 
 ## Related files
-
 - `AGENTS.md`
-- `docs/agent/CODE_SEARCH.md`
-- `docs/agent/COMMAND_OUTPUT_POLICY.md`
-- `docs/agent/MEMORY_POLICY.md`
+- `docs/agent/PITFALLS.md`
+- `tests/`
 
 ## Staleness triggers
-
-- Context retrieval policy changes.
-- Command output policy changes.
-- New required tools replace the existing default workflow.
+Safety policy, supported clients, or test strategy changes.

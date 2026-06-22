@@ -1,0 +1,6 @@
+﻿{
+    "scenario":  "S12",
+    "validExitCode":  0,
+    "invalidExitCode":  2,
+    "passed":  true
+}

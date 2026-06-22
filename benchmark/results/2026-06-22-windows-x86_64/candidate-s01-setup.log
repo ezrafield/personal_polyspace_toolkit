@@ -1,0 +1,124 @@
+{
+  "clients": {
+    "codex": {
+      "mcpConfig": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.codex\\config.toml",
+      "skills": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills"
+    }
+  },
+  "mcpServer": {
+    "asset": "polyspace-mcp-server-win64.exe",
+    "download": "https://github.com/mathworks/polyspace-agentic-toolkit/releases/download/v1.1.1/polyspace-mcp-server-win64.exe",
+    "installPath": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\AppData\\Local\\polyspace\\polyspace-mcp-server.exe",
+    "sha256": "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+    "version": "v1.1.1"
+  },
+  "platform": {
+    "architecture": "x86_64",
+    "os": "windows"
+  },
+  "polyspace": null,
+  "replaceExisting": false,
+  "statePath": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\AppData\\Local\\personal-polyspace-toolkit\\state.json",
+  "telemetryEnabled": false
+}
+{
+  "binary": {
+    "backup": null,
+    "digest": "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+    "owned": true,
+    "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\AppData\\Local\\polyspace\\polyspace-mcp-server.exe",
+    "version": "v1.1.1"
+  },
+  "clients": {
+    "codex": {
+      "changed": true,
+      "installed": {
+        "args": [
+          "--disable-telemetry=true"
+        ],
+        "command": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\AppData\\Local\\polyspace\\polyspace-mcp-server.exe",
+        "default_tools_approval_mode": "prompt",
+        "env_vars": [
+          "WINDIR"
+        ],
+        "tool_timeout_sec": 600
+      },
+      "owned": true,
+      "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.codex\\config.toml",
+      "previous": null
+    }
+  },
+  "polyspace": null,
+  "schemaVersion": 1,
+  "skills": {
+    "codex": [
+      {
+        "backup": null,
+        "installedHash": "2adb8a187fd75df56e48cd2c69741cf6647420a2c02b5ade663c2111bbbe5047",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\c-compliance-loop"
+      },
+      {
+        "backup": null,
+        "installedHash": "06517230a1dde565603c81ff616ca18b30092dc81ad706afc1e619441506d5e7",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\configure-build-options"
+      },
+      {
+        "backup": null,
+        "installedHash": "7890ba38f41fcbe1289c53f1b796faa290ab6928bb5c4e6a2bb68701a4688380",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\configure-checkers"
+      },
+      {
+        "backup": null,
+        "installedHash": "14a05123f43a37790b6a39dfbb9517a2945c66a17d71e369c4898e2d25e07ec8",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\find-checker-documentation"
+      },
+      {
+        "backup": null,
+        "installedHash": "e073a613f258c9b3b5f9b0eb3a3e50fc96f55e413a675d3d119a24d12a1dd74f",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\find-option-documentation"
+      },
+      {
+        "backup": null,
+        "installedHash": "fc5b51db9aadf947183a5e62f41ae212677ae14945edb2b90a0368e48094d904",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\fix-findings"
+      },
+      {
+        "backup": null,
+        "installedHash": "7028e17926d846955262c70fbe9d604380015d9a2ce6c5bf146a6e6aef7a54d4",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\generate-c-pstunit-tests"
+      },
+      {
+        "backup": null,
+        "installedHash": "30603cfe1138996a03811e31abfa4369121fb8e707d5282273ea99f658739d63",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\justify-findings"
+      },
+      {
+        "backup": null,
+        "installedHash": "f275036fc077bbb1cf17757d6dbd074a006c62eebae7c71934de8213e816ad97",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\query-justification-catalog"
+      },
+      {
+        "backup": null,
+        "installedHash": "fa081641e9ec919be5cd7f7eff11dfaeb2699d446e3754e631ab71f392b0ca46",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\run-analysis"
+      },
+      {
+        "backup": null,
+        "installedHash": "2a4242cae681a49d297ee9ebf9ff0870df40c8eb6a87bebd538ab5cb8d08894c",
+        "owned": true,
+        "path": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills\\toolkit-setup"
+      }
+    ]
+  },
+  "telemetryEnabled": false
+}

@@ -1,0 +1,10 @@
+﻿{
+    "scenario":  "S03",
+    "setupExitCode":  0,
+    "verifyExitCode":  2,
+    "beforeTreeSha256":  "53b40008e8ffeb5bf92b4d9753e426688cef00cc3114b44cad4071e25cd80db5",
+    "afterTreeSha256":  "53b40008e8ffeb5bf92b4d9753e426688cef00cc3114b44cad4071e25cd80db5",
+    "semanticallyUnchanged":  true,
+    "binarySha256":  "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+    "wallTimeSeconds":  0.386
+}

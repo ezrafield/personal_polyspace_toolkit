@@ -1,0 +1,10 @@
+﻿{
+    "scope":  "codex-no-qwen",
+    "scenario":  "S01",
+    "exitCode":  1,
+    "skillsInstalled":  0,
+    "codexMcpRegistered":  false,
+    "mcpBinaryInstalled":  false,
+    "fullSetupPassed":  false,
+    "wallTimeSeconds":  0.65
+}

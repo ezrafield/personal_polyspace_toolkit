@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 MAX_LINES = 200
 PATTERNS = [
@@ -22,7 +21,9 @@ def main() -> None:
                 continue
             line_count = len(path.read_text(encoding="utf-8").splitlines())
             if line_count > MAX_LINES:
-                print(f"{path.relative_to(ROOT).as_posix()}: {line_count} lines exceeds {MAX_LINES}.")
+                print(
+                    f"{path.relative_to(ROOT).as_posix()}: {line_count} lines exceeds {MAX_LINES}."
+                )
                 failed = True
             else:
                 print(f"{path.relative_to(ROOT).as_posix()}: {line_count} lines.")

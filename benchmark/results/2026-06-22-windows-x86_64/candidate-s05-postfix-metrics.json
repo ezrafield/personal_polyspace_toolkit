@@ -1,0 +1,12 @@
+﻿{
+    "scenario":  "S05",
+    "candidateState":  "post-fix",
+    "exitCode":  2,
+    "userContentPreserved":  true,
+    "skillDirectoriesAfterFailure":  [
+                                         "run-analysis"
+                                     ],
+    "partialMutation":  false,
+    "expectedRefusal":  true,
+    "passed":  true
+}

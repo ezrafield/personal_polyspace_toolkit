@@ -3,29 +3,23 @@
 Type: semantic
 Scope: project
 Confidence: high
-Last verified: 2026-06-19
+Last verified: 2026-06-22
 Source task: .agent/tasks/README.md
 
 ## When to use
-
-Use this memory when orienting on the template's purpose and baseline workflow.
+Use for initial orientation before verifying facts against current source and tests.
 
 ## Content
-
-- This repository is an agent-native project template for Codex, Claude Code, and similar coding agents.
-- Agents should start with `AGENTS.md` or `CLAUDE.md`, route through `docs/agent/INDEX.md`, and load only relevant module cards or docs.
-- `.agent/tasks/` is episodic memory: task-local notes and audit trails.
-- `.agent/memory/` is long-term semantic and procedural memory that must be verified before use.
+- The repository is an unofficial C-only derivative for Polyspace as You Code.
+- Product code is a Python 3.11 package; product workflows live in canonical `skills/` directories.
+- Automated clients are Codex and Claude; Qwen Code configuration is manual.
+- Polyspace R2024b+ is supported and MCP server releases are pinned with SHA-256 digests.
+- Project checker profiles are explicit in `.polyspace-toolkit.json`.
 
 ## Related files
-
-- `AGENTS.md`
-- `CLAUDE.md`
-- `docs/agent/INDEX.md`
-- `.agent/tasks/README.md`
+- `README.md`
+- `docs/agent/ARCHITECTURE.md`
+- `.polyspace-toolkit.schema.json`
 
 ## Staleness triggers
-
-- Root agent entrypoints change.
-- The context routing workflow changes.
-- The task-log or memory folder layout changes.
+Client support, language scope, package layout, config schema, or release policy changes.

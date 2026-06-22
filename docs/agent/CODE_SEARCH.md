@@ -57,8 +57,8 @@ rg --files | rg "module-name|test-name"
 | "Understand repo modules quickly" | `docs/agent/CODEMAP.md` |
 | "Analyze dependency impact" | Understand Anything / graph |
 | "Send whole repo to external model" | Repomix |
-| "Large enterprise monorepo search" | Sourcegraph/Cody |
-| "General template default" | Semble + `rg` + CODEMAP |
+| "Large repository behavior search" | Semble, then graph tools if needed |
+| "General project default" | Semble + `rg` + CODEMAP |
 | "Advanced coding setup" | Semble + Serena + `rg` + CODEMAP |
 
 ## Before Editing

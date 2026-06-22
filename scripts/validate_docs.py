@@ -1,10 +1,14 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED_FILES = [
     "AGENTS.md",
     "CLAUDE.md",
+    "QWEN.md",
+    "README.md",
+    "LICENSE.md",
+    "NOTICE.md",
+    ".polyspace-toolkit.schema.json",
     "docs/agent/INDEX.md",
     "docs/agent/CODEMAP.md",
     "docs/agent/AGENTS_AND_SKILLS.md",

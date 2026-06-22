@@ -1,0 +1,2 @@
+benchmark/results/**/*.log -diff
+benchmark/results/**/*.patch -diff

@@ -1,7 +1,11 @@
 # Pitfalls
 
-- Do not turn `AGENTS.md` or `CLAUDE.md` into a full project manual.
-- Do not scan unrelated directories before checking `docs/agent/INDEX.md`.
-- Do not manually edit generated code maps without updating the generator.
-- Do not hide behavior changes in refactors.
-- Do not commit local traces, cache files, secrets, or debug logs.
+- A valid MCP binary does not prove Polyspace or its license is available.
+- Header findings require build context and a containing C translation unit.
+- Project-level Qwen model-provider arrays can replace user-level arrays.
+- Codex TOML must be edited structurally; formatting-preserving `tomlkit` is intentional.
+- Claude configuration must go through its CLI; do not guess internal storage files.
+- Existing same-named client entries or skill folders are user-owned unless state proves ownership.
+- A catalog match is wording approval, not permission to annotate source.
+- Do not weaken profiles, options, or baselines to manufacture a clean result.
+- Do not update release digests without verifying official GitHub asset metadata.

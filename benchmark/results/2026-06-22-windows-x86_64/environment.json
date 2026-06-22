@@ -1,0 +1,20 @@
+﻿{
+    "benchmarkSchemaVersion":  1,
+    "startedAtUtc":  "2026-06-22T15:28:51.7339136Z",
+    "originalCommit":  "cc15b840e80bf5187963d13ed86c4c5bb86381ad",
+    "candidateHead":  "85f45bbbc3383e071e3c31d730f3f25ffc7143ab",
+    "candidateSnapshotSha256":  "9b22c9df7965aa60800b6691fd4a58d99c1c146f1473eeb80d7f5a75d207ba9a",
+    "candidateDirty":  true,
+    "os":  "Microsoft Windows 11 Home 10.0.26200",
+    "architecture":  "AMD64",
+    "python":  "Python 3.14.5",
+    "polyspace":  null,
+    "mcpServer":  "v1.1.1",
+    "clients":  {
+                    "codex":  "0.142.0-alpha.6",
+                    "claude":  null,
+                    "qwen":  null
+                },
+    "notes":  "User and temporary paths redacted from published summary",
+    "candidatePostFixSnapshotSha256":  "92ab6e5bc824fe1de7a54bd96e799094d0a42d612873bd58ecfa197b98c86d20"
+}

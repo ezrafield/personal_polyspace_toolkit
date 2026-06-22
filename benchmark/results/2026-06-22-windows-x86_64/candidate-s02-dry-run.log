@@ -1,0 +1,23 @@
+{
+  "clients": {
+    "codex": {
+      "mcpConfig": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.codex\\config.toml",
+      "skills": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\.agents\\skills"
+    }
+  },
+  "mcpServer": {
+    "asset": "polyspace-mcp-server-win64.exe",
+    "download": "https://github.com/mathworks/polyspace-agentic-toolkit/releases/download/v1.1.1/polyspace-mcp-server-win64.exe",
+    "installPath": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\AppData\\Local\\polyspace\\polyspace-mcp-server.exe",
+    "sha256": "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+    "version": "v1.1.1"
+  },
+  "platform": {
+    "architecture": "x86_64",
+    "os": "windows"
+  },
+  "polyspace": null,
+  "replaceExisting": false,
+  "statePath": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-clean-a19f62\\AppData\\Local\\personal-polyspace-toolkit\\state.json",
+  "telemetryEnabled": false
+}

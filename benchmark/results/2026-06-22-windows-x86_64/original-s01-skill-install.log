@@ -1,0 +1,14 @@
+powershell.exe : Join-Path : A positional parameter cannot be found that accepts argument 'skills'.
+At line:2 char:298
++ ... StartNew(); powershell.exe -NoProfile -ExecutionPolicy Bypass -File ' ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Join-Path : A p...ument 'skills'.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+At <USERPROFILE>\AppData\Local\Temp\polyspace-agentic-toolkit-f196ef27e7ed47ffaf74bf2aa5593c6f\scripts\install-global-
+skills.ps1:17 char:14
++ $SkillsDir = Join-Path $HOME ".agents" "skills"
++              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Join-Path], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.JoinPathCommand
+ 

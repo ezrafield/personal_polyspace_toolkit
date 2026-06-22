@@ -1,11 +1,16 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_FILES = [
     "AGENTS.md",
     "CLAUDE.md",
+    "QWEN.md",
+    "README.md",
+    "LICENSE.md",
+    "NOTICE.md",
+    "UPSTREAM.md",
+    ".polyspace-toolkit.schema.json",
     "docs/agent/INDEX.md",
     "docs/agent/CODEMAP.md",
     "docs/agent/CODE_SEARCH.md",
@@ -57,6 +62,20 @@ REQUIRED_SKILLS = [
     "code-search",
 ]
 
+PRODUCT_SKILLS = [
+    "toolkit-setup",
+    "c-compliance-loop",
+    "run-analysis",
+    "fix-findings",
+    "justify-findings",
+    "configure-build-options",
+    "configure-checkers",
+    "find-checker-documentation",
+    "find-option-documentation",
+    "query-justification-catalog",
+    "generate-c-pstunit-tests",
+]
+
 
 def main() -> None:
     missing = [path for path in REQUIRED_FILES if not (ROOT / path).exists()]
@@ -66,12 +85,17 @@ def main() -> None:
         if not path.exists():
             missing.append(path.relative_to(ROOT).as_posix())
 
+    for skill in PRODUCT_SKILLS:
+        path = ROOT / "skills" / skill / "SKILL.md"
+        if not path.exists():
+            missing.append(path.relative_to(ROOT).as_posix())
+
     if missing:
         for path in missing:
             print(f"Missing: {path}")
         raise SystemExit(1)
 
-    print("Agent docs, memory scaffold, skills, and MCP notes look complete.")
+    print("Agent docs, memory scaffold, product skills, and MCP notes look complete.")
 
 
 if __name__ == "__main__":
