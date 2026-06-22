@@ -1,0 +1,21 @@
+﻿{
+    "benchmarkSchemaVersion":  1,
+    "startedAtUtc":  "2026-06-22T23:14:54.3743701Z",
+    "scope":  "codex-no-qwen",
+    "qwen":  "not-applicable-by-request",
+    "originalCommit":  "cc15b840e80bf5187963d13ed86c4c5bb86381ad",
+    "candidateHead":  "85f45bbbc3383e071e3c31d730f3f25ffc7143ab",
+    "candidateSnapshotSha256":  "094f35f1e5f7a431a36689e074584dd732d875e04562012d13af526694cd6799",
+    "candidateDirty":  true,
+    "os":  "Microsoft Windows 11 Home 10.0.26200",
+    "powershell":  "5.1.26100.8655",
+    "architecture":  "AMD64",
+    "python":  "Python 3.14.5",
+    "polyspace":  null,
+    "mcpServer":  "v1.1.1",
+    "clients":  {
+                    "codex":  "0.142.0-alpha.6",
+                    "claude":  null,
+                    "qwen":  "excluded"
+                }
+}

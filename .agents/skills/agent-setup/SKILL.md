@@ -1,31 +1,17 @@
 # Agent Setup
 
 ## Purpose
-Bootstrap this agent kit inside a real project without replacing project-specific context.
-
-## Trigger
-Use after installing the kit in a project, when project stack context is missing, or when `docs/agent/CODEMAP.md` and module cards need to be initialized.
+Diagnose and configure the Personal Polyspace Toolkit through its deterministic CLI.
 
 ## Workflow
-1. Run `python scripts/agent_setup.py`.
-2. Review detected stack and commands in `docs/agent/COMMANDS.md`.
-3. Fill TODOs in generated `docs/agent/CODEMAP.md` and module cards with real architecture notes.
-4. Create or update project-specific `AGENTS.md` and `CLAUDE.md` only when needed.
-5. Run validation:
-   - `python scripts/validate_agent_docs.py`
-   - `python scripts/check_context_staleness.py`
-   - `python scripts/audit_module_cards.py`
-   - `python scripts/detect_large_agent_files.py`
-
-## Output
-- Detected stack
-- Detected test, lint, typecheck, and dev commands
-- Generated or updated agent docs
-- Validation results
-- Remaining TODOs
+1. Run `python -m personal_polyspace_toolkit.cli doctor --json`.
+2. Read `skills/toolkit-setup/SKILL.md`.
+3. Preview the exact clients and paths with `setup --dry-run`.
+4. Obtain confirmation, perform setup, restart the client, and run `verify`.
+5. For Qwen Code, follow `docs/setup/qwen-local.md` without modifying settings automatically.
 
 ## Constraints
-- Preserve existing project instructions.
-- Do not overwrite user-owned `AGENTS.md` or `CLAUDE.md` content.
-- Keep generated context concise.
-- Prefer deterministic scripts over broad manual repository scans.
+- Never bypass digest verification or ownership conflicts.
+- Never enable telemetry implicitly.
+- Do not remove operating-system download protections.
+- Report missing Polyspace separately from MCP binary or client configuration state.

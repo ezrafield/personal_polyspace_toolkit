@@ -1,22 +1,26 @@
 # Architecture
 
-This template uses a layered structure:
+The product has three layers:
 
-- `src/api/`: input and output boundary.
-- `src/services/`: business workflows and application logic.
-- `src/models/`: domain data structures.
-- `src/core/`: configuration and runtime setup.
-- `src/utils/`: small reusable helpers.
+1. **Deterministic Python core**: discovers installations, validates versions and project config,
+   downloads verified MCP assets, manages ownership state, and configures supported clients.
+2. **Canonical skills**: progressive Polyspace domain workflows under `skills/`; these call the
+   existing MCP tools or documented direct binary fallbacks.
+3. **Client surfaces**: Codex and Claude metadata plus manual Qwen Code documentation.
 
 ## Boundaries
-- API modules may call services.
-- Services may use models and utilities.
-- Models should not depend on API modules.
-- Utilities should not know about product workflows.
 
-## Data Flow
-1. A caller reaches an API boundary.
-2. The API validates input and delegates to a service.
-3. The service performs business logic.
-4. Models represent returned or persisted data.
-5. The API formats the response.
+- `cli.py` parses user intent and formats results; it delegates behavior.
+- `installer.py` orchestrates stateful operations through discovery, release, state, and client APIs.
+- `clients.py` owns client-specific configuration and must preserve unrelated user settings.
+- `releases.py` is the only network download boundary.
+- `project_config.py` validates project data without mutating it.
+- Skills do not implement installers and Python code does not encode finding-remediation prompts.
+
+## Safety Invariants
+
+- Setup is plan-first and confirmation-gated unless `--yes` is explicit.
+- Release versions and digests come from the tested manifest.
+- Unknown existing configuration is user-owned.
+- State never stores secrets.
+- C checker profiles are explicit and C source filtering is enforced independently of agent behavior.

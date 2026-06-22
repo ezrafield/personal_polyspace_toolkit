@@ -1,0 +1,8 @@
+{
+  "name": "github.com/matlab/matlab-mcp-core-server",
+  "version": "0.5.1",
+  "homepage": "http://github.com/matlab/matlab-mcp-core-server/",
+  "license": {
+    "file": "LICENSE.md"
+  }
+}

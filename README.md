@@ -1,156 +1,130 @@
-# Agent-Native Project Template
+# Personal Polyspace Toolkit
 
-This repository is a practical template for projects that collaborate well with
-coding agents such as Codex, Claude Code, and similar tools.
+An unofficial, independently maintained, C-only agent toolkit for
+Polyspace&reg; as You Code&trade;. It provides deterministic setup, reusable agent skills,
+and guarded workflows for analysis, remediation, justifications, checker configuration, and
+PSTUnit tests.
 
-The core idea is progressive context loading: keep auto-loaded instructions
-short, route agents through a small index, and load richer docs only when the
-task needs them. The template now also includes lightweight long-term memory so
-future agents can reuse vetted lessons without reading old task logs.
+This derivative is not an official MathWorks product. It is licensed solely for use with MathWorks
+products and services; see [LICENSE.md](LICENSE.md) and [NOTICE.md](NOTICE.md).
 
-The memory layer is inspired by PlugMem's semantic, procedural, and episodic
-taxonomy, but stays dependency-free: Markdown cards, a JSON index, and small
-deterministic Python scripts. It does not require embeddings, a graph database,
-an API key, or a model server.
+## Why This Exists
 
-## How Agents Use It
+The upstream toolkit contains valuable Polyspace domain guidance, but its setup is performed by an
+agent interpreting Markdown. This project turns setup into tested Python code, pins and verifies the
+MCP server release, tracks ownership for safe uninstall, narrows every workflow to C translation
+units, and keeps checker selection explicit.
 
-For non-trivial work, agents should:
+## Supported Clients
 
-1. Read `AGENTS.md` or `CLAUDE.md`.
-2. Route through `docs/agent/INDEX.md`.
-3. Check `.agent/memory/index.json` for relevant semantic or procedural memory.
-4. Verify memory against current code, tests, and docs.
-5. Read the relevant module card or `docs/agent/CODEMAP.md`.
-6. Use Semble, `rg`, Serena, or Understand Anything only as the task requires.
-7. Make the smallest safe change and run targeted checks before broad checks.
-8. Capture task state and reusable lessons when useful.
-
-Memory is a decision aid, not source of truth. Current repository files win when
-they conflict with memory.
-
-## Structure
-
-- `AGENTS.md` and `CLAUDE.md`: short agent entrypoints.
-- `docs/agent/`: on-demand routing docs, module cards, policies, and tool notes.
-- `.agent/memory/`: semantic and procedural long-term memory.
-- `.agent/tasks/`: episodic task logs and audit trails.
-- `.agent/plans/`: lightweight plan lifecycle folders and template.
-- `.agents/skills/`: reusable Codex-style skill templates.
-- `.claude/agents/`: Claude Code subagent templates.
-- `.claude/hooks/`: optional lightweight hook examples.
-- `.mcp/`: MCP setup notes and candidate server documentation.
-- `.understand-anything/`: Understand Anything setup notes.
-- `scripts/`: deterministic helpers for setup, audits, context generation, and memory.
-- `eval/`: retrieval and regression evaluation placeholders.
-- `src/` and `tests/`: sample project modules and tests.
-
-## Tool Roles
-
-| Tool | Solves | Best place in template |
+| Client | MCP setup | Skills |
 | --- | --- | --- |
-| Module cards | Human-maintained ownership, interfaces, tests, and pitfalls | Stable context anchor |
-| Memory | Durable lessons from previous tasks | Decision aid before search |
-| Semble | Natural-language code and docs retrieval | Context discovery |
-| `rg` | Exact string, symbol, and path confirmation | Verification |
-| Serena | References, declarations, diagnostics, and safe refactors | Advanced coding setup |
-| RTK | Compressed noisy terminal output | Command execution |
-| Understand Anything | Graph and dependency reasoning | Architecture understanding |
+| OpenAI Codex | Automated, user scope | Automated and plugin metadata |
+| Claude Code | Automated, user scope | Automated and marketplace metadata |
+| Qwen Code | Manual | Manual; no extension is shipped |
 
-## Getting Started
+Qwen Code can use a local OpenAI-compatible model endpoint. The base URL and model ID remain
+placeholders until you provide them; see [docs/setup/qwen-local.md](docs/setup/qwen-local.md).
 
-```bash
-make install
+## Requirements
+
+- Python 3.11 or later
+- Polyspace as You Code R2024b or later
+- At least one supported coding client
+- A licensed, per-user MathWorks installation
+
+## Development Install
+
+Clone the repository to a permanent location. Automated skill and Claude marketplace setup resolves
+assets from that checkout; the alpha release is not distributed as a standalone wheel.
+
+```sh
+python -m pip install -e ".[dev]"
+polyspace-toolkit doctor --json
+```
+
+Preview setup before changing user configuration:
+
+```sh
+polyspace-toolkit setup --client codex --dry-run
+polyspace-toolkit setup --client codex --yes
+polyspace-toolkit verify --client codex
+```
+
+Add `--client claude` to configure both automated clients. Telemetry is disabled unless
+`--enable-telemetry` is explicitly passed. Existing conflicting registrations are never replaced
+without `--replace-existing`.
+
+## Project Configuration
+
+Every analyzed project should commit `.polyspace-toolkit.json`:
+
+```json
+{
+  "schemaVersion": 1,
+  "language": "c",
+  "profiles": ["misra-c-2012", "polyspace-defects"],
+  "checkersFile": ".polyspace/checkers.xml",
+  "buildOptionsFile": ".polyspace/build-options.txt",
+  "include": ["src/**/*.c"],
+  "exclude": ["vendor/**"]
+}
+```
+
+No checker profile is assumed. Validate the file with:
+
+```sh
+polyspace-toolkit config validate .polyspace-toolkit.json
+```
+
+## Happy Path
+
+Ask a supported agent:
+
+> Analyze the changed C translation units with the configured Polyspace profiles. Explain each new
+> finding, apply real fixes first, run targeted tests, and re-analyze until the changed scope is clean.
+
+The `c-compliance-loop` skill resolves project configuration, calls the five compatible Polyspace
+MCP tools, prefers behavior-preserving fixes, and requires explicit approval before any source
+justification or generated test executable runs.
+
+The optional Codex plugin under `plugins/personal-polyspace-toolkit` is generated from the canonical
+catalog. Run `make sync-plugin` after editing a product skill.
+
+## Verification
+
+See [BENCHMARK.md](BENCHMARK.md) for the reproducible A/B protocol against the fixed upstream
+baseline and for the distinction between verified repository evidence and pending runtime results.
+
+```sh
 make test-unit
+make test-integration
 make lint
-```
-
-This is a template, so most project commands are placeholders until you wire
-them to your actual stack.
-
-## Installing Into Another Project
-
-From a checkout of this template:
-
-```bash
-./install.sh /path/to/project
-```
-
-The installer reads `agentkit-manifest.json`, backs up existing agent config
-under `.agentkit/backups/`, merges `AGENTS.md` and `CLAUDE.md`, copies harness
-files, copies starter `.agent/` files only when missing, and records installed
-paths in `.agentkit-installed-files`.
-
-Use `./update.sh /path/to/project` to refresh the harness later.
-
-After install, run:
-
-```bash
-python scripts/agent_setup.py
-```
-
-The setup script detects the stack and common commands, refreshes
-`docs/agent/CODEMAP.md`, creates missing module cards, ensures task and memory
-scaffolding exists, and runs validation.
-
-## Agent Memory Workflow
-
-Use `.agent/tasks/` for raw episodic notes. Promote only compact, reusable,
-non-sensitive lessons into `.agent/memory/`.
-
-| Memory type | Purpose | Location |
-| --- | --- | --- |
-| Semantic | Stable facts, conventions, and decisions | `.agent/memory/semantic/` |
-| Procedural | Reusable workflows and playbooks | `.agent/memory/procedural/` |
-| Episodic | Raw task context and audit history | `.agent/tasks/` |
-
-```bash
-make extract-task-memory TASK=.agent/tasks/<task>.md
-make audit-memory
-```
-
-The extraction script creates a candidate under `.agent/memory/candidates/`.
-Review it manually, remove unsafe or low-value details, move durable facts into
-`semantic/` or workflows into `procedural/`, update `.agent/memory/index.json`,
-then run the audit again.
-
-`make audit-memory` validates index metadata, card structure, source-task and
-related-file links, verification dates, and a 180-day staleness threshold.
-Candidates are drafts and are excluded from installation; only reviewed,
-indexed memory is intended for reuse.
-
-Never promote secrets, credentials, customer data, sensitive stack traces, or
-unverified one-off conclusions. Memory narrows the search; current code, tests,
-specifications, and agent docs remain authoritative.
-
-## Audits And Verification
-
-```bash
+make typecheck
 make validate-agent-docs
-make check-context-staleness
-make audit-module-cards
-make audit-task-logs
-make audit-memory
-make detect-large-agent-files
-make detect-large-context-docs
 ```
 
-Use audits as warnings during setup and stricter gates before sharing the kit
-with a team.
+Real Polyspace smoke tests are opt-in because CI does not have a licensed installation:
 
-## Source Understanding
-
-Use Understand Anything to generate a knowledge graph for humans and agents:
-
-```bash
-make understand
-make understand-search QUERY="api route"
+```sh
+export POLYSPACE_ROOT=/absolute/path/to/polyspace-release
+export POLYSPACE_SMOKE_CHECKERS_FILE=/absolute/path/to/checkers.xml
+make test-polyspace-smoke
 ```
 
-Generated graph files are ignored by default; setup notes and ignore rules are
-committed.
+The first smoke test probes the installed analysis executable. Supplying the checker file additionally
+runs a standalone C analysis. Setting these variables is explicit approval to execute licensed local
+Polyspace commands.
 
-## Credits
+## Security
 
-See [`CREDITS.md`](CREDITS.md) for the open-source projects that influenced this
-template and the optional tools it is designed to work with.
+- The tested MCP server release is pinned and verified against its published SHA-256 digest.
+- Installation and configuration writes are atomic where supported.
+- Existing client entries and skill directories are treated as user-owned unless setup records them.
+- Operating-system download protections are not removed automatically.
+- State contains paths, versions, hashes, and backups only; it never stores model or API secrets.
+
+## Upstream
+
+The initial domain workflows derive from MathWorks' Polyspace Agentic Toolkit at commit
+`cc15b840e80bf5187963d13ed86c4c5bb86381ad`. See [UPSTREAM.md](UPSTREAM.md) for the sync policy.

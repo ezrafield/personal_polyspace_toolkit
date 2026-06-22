@@ -1,9 +1,43 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "agent-native-template"
-version = "0.1.0"
-description = "Sample project structure for agent-native coding workflows"
+name = "personal-polyspace-toolkit"
+version = "0.1.0a1"
+description = "Unofficial C-only agent toolkit for Polyspace as You Code"
+readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+license = { file = "LICENSE.md" }
+dependencies = ["tomlkit>=0.13,<1"]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.15,<2",
+  "pytest>=8.3,<9",
+  "ruff>=0.11,<1",
+]
+
+[project.scripts]
+polyspace-toolkit = "personal_polyspace_toolkit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["polyspace: requires a licensed local Polyspace installation"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["personal_polyspace_toolkit"]
+mypy_path = "src"

@@ -1,0 +1,20 @@
+{
+  "name": "personal-polyspace-toolkit",
+  "interface": {
+    "displayName": "Personal Polyspace Toolkit"
+  },
+  "plugins": [
+    {
+      "name": "personal-polyspace-toolkit",
+      "source": {
+        "source": "local",
+        "path": "./plugins/personal-polyspace-toolkit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
+    }
+  ]
+}

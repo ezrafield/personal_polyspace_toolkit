@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 GENERATED_DOCS = [
     "docs/agent/CODEMAP.md",
@@ -16,7 +15,9 @@ def newest_source_mtime() -> float:
     for directory_name in SOURCE_DIRS:
         directory = ROOT / directory_name
         if directory.exists():
-            mtimes.extend(path.stat().st_mtime for path in directory.rglob("*") if path.is_file())
+            mtimes.extend(
+                path.stat().st_mtime for path in directory.rglob("*.py") if path.is_file()
+            )
     return max(mtimes, default=0)
 
 

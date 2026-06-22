@@ -1,24 +1,13 @@
 # Workflows
 
-## Add A Feature
-1. Read `docs/agent/INDEX.md`.
-2. Read the relevant module card.
-3. Inspect one similar implementation.
-4. Add the smallest complete implementation.
-5. Add or update focused tests.
-6. Run targeted checks.
-7. Update docs when behavior changes.
+## Setup Change
+Read the installer and client module cards, add unit tests for pure behavior, then exercise the full
+operation with a temporary home and fake executable. Test rollback and collisions, not only success.
 
-## Fix A Bug
-1. Reproduce the bug with a failing test or command.
-2. Read the module card for the affected area.
-3. Patch the narrowest responsible code.
-4. Add a regression test.
-5. Run targeted tests.
+## Skill Change
+Read only the owning skill and references. Preserve exact tool contracts, explicit profiles, C-only
+filtering, and approval gates. Run skill-policy validation.
 
-## Refactor
-1. Identify the behavior that must remain unchanged.
-2. Read architecture and relevant module cards.
-3. Prefer small mechanical steps.
-4. Keep tests passing between steps when possible.
-5. Avoid changing public contracts unless explicitly requested.
+## Release Update
+Confirm official asset names and digests, add them to the tested manifest, run the three-OS fake
+integration matrix, and complete a licensed smoke run before changing the default.

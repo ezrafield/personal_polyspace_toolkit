@@ -1,24 +1,15 @@
 # Commands
 
-Detected project commands.
+| Task | Command |
+| --- | --- |
+| Install development environment | `python -m pip install -e ".[dev]"` |
+| Inspect prerequisites | `polyspace-toolkit doctor --json` |
+| Preview setup | `polyspace-toolkit setup --client codex --dry-run` |
+| Validate project config | `polyspace-toolkit config validate .polyspace-toolkit.json` |
+| Unit tests | `python -m pytest tests/unit -q` |
+| Integration tests | `python -m pytest tests/integration -q` |
+| Lint | `python -m ruff check src tests scripts` |
+| Typecheck | `python -m mypy` |
+| Agent docs | `python scripts/validate_agent_docs.py` |
 
-- dev: `make dev`
-- lint: `make lint`
-- test: `make test`
-- test-integration: `make test-integration`
-- test-unit: `make test-unit`
-- test-unit-compact: `make test-unit-compact`
-- typecheck: `make typecheck`
-- typecheck-compact: `make typecheck-compact`
-
-Optional compact-output helpers:
-- rtk-gain: `make rtk-gain`
-- git-status: `make git-status`
-- git-diff: `make git-diff`
-- lint-compact: `make lint-compact`
-
-Memory helpers:
-- extract-task-memory: `make extract-task-memory TASK=.agent/tasks/<task>.md`
-- validate-memory-links: `make validate-memory-links`
-- audit-memory-staleness: `make audit-memory-staleness`
-- audit-memory: `make audit-memory`
+No normal development command requires a licensed Polyspace installation. The smoke target does.

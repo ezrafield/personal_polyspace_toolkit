@@ -1,0 +1,32 @@
+python.exe : error: Codex already has a different polyspace MCP entry in 
+<USERPROFILE>\AppData\Local\Temp\ppt-benchmark-20260622-candidate-conflict-b40e71\.codex\config.toml; use 
+--replace-existing
+At line:2 char:1136
++ ... ion) 'src'; & $python -m personal_polyspace_toolkit.cli setup --clien ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (error: Codex al...eplace-existing:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+{
+  "clients": {
+    "codex": {
+      "mcpConfig": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-conflict-b40e71\\.codex\\config.toml",
+      "skills": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-conflict-b40e71\\.agents\\skills"
+    }
+  },
+  "mcpServer": {
+    "asset": "polyspace-mcp-server-win64.exe",
+    "download": "https://github.com/mathworks/polyspace-agentic-toolkit/releases/download/v1.1.1/polyspace-mcp-server-win64.exe",
+    "installPath": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-conflict-b40e71\\AppData\\Local\\polyspace\\polyspace-mcp-server.exe",
+    "sha256": "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+    "version": "v1.1.1"
+  },
+  "platform": {
+    "architecture": "x86_64",
+    "os": "windows"
+  },
+  "polyspace": null,
+  "replaceExisting": false,
+  "statePath": "<USERPROFILE>\\AppData\\Local\\Temp\\ppt-benchmark-20260622-candidate-conflict-b40e71\\AppData\\Local\\personal-polyspace-toolkit\\state.json",
+  "telemetryEnabled": false
+}

@@ -1,17 +1,17 @@
 [
   {
-    "id": "api-route-behavior",
-    "query": "Where are HTTP routes and request validation handled?",
+    "id": "verified-mcp-install",
+    "query": "Where is the verified Polyspace MCP server installed and rolled back?",
     "content": "code"
   },
   {
-    "id": "service-business-logic",
-    "query": "Where is the example business workflow implemented?",
-    "content": "code"
+    "id": "c-compliance-workflow",
+    "query": "How does an agent analyze and remediate C findings without auto-justifying?",
+    "content": "all"
   },
   {
-    "id": "agent-context-policy",
-    "query": "What instructions control progressive context loading and code search?",
+    "id": "qwen-local-setup",
+    "query": "How is local Qwen configured without an extension or automatic settings changes?",
     "content": "all"
   }
 ]

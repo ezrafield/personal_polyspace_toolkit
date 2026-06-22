@@ -1,0 +1,29 @@
+{
+  "benchmarkSchemaVersion": 1,
+  "date": "2026-06-23",
+  "scope": "codex-no-qwen",
+  "platform": "windows-x86_64",
+  "originalRevision": "cc15b840e80bf5187963d13ed86c4c5bb86381ad",
+  "candidateBaseRevision": "85f45bbbc3383e071e3c31d730f3f25ffc7143ab",
+  "candidateSnapshotSha256": "094f35f1e5f7a431a36689e074584dd732d875e04562012d13af526694cd6799",
+  "qwen": "not-applicable-by-request",
+  "tier1": {
+    "candidate": {"pass": 12, "fail": 0, "notImplemented": 0, "total": 12},
+    "original": {"pass": 0, "fail": 4, "notImplemented": 8, "total": 12}
+  },
+  "codexRegistration": {
+    "candidate": "pass",
+    "original": "not-reached-installer-failed"
+  },
+  "candidateChecks": {
+    "pytestPassed": 41,
+    "focusedNonQwenPassed": 34,
+    "ruff": "pass",
+    "mypy": "pass",
+    "productValidation": "pass",
+    "docsValidation": "pass"
+  },
+  "tier2": "blocked-missing-licensed-polyspace",
+  "tier3": "blocked-missing-licensed-polyspace",
+  "weightedTotal": null
+}

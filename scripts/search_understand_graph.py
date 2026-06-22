@@ -3,7 +3,6 @@ import os
 import sys
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 GRAPH = ROOT / ".understand-anything" / "knowledge-graph.json"
 
@@ -53,9 +52,7 @@ def main() -> None:
 
     match_ids = {node.get("id") for node in matches}
     connected = [
-        edge
-        for edge in edges
-        if edge.get("source") in match_ids or edge.get("target") in match_ids
+        edge for edge in edges if edge.get("source") in match_ids or edge.get("target") in match_ids
     ]
     layer_hits = [
         layer

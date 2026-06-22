@@ -1,7 +1,6 @@
 import subprocess
 import sys
 
-
 DEFAULT_COMMAND = ["python", "-m", "pytest", "tests/unit", "-q"]
 
 

@@ -1,0 +1,32 @@
+{
+  "benchmarkSchemaVersion": 1,
+  "date": "2026-06-22",
+  "platform": "windows-x86_64",
+  "originalRevision": "cc15b840e80bf5187963d13ed86c4c5bb86381ad",
+  "candidateBaseRevision": "85f45bbbc3383e071e3c31d730f3f25ffc7143ab",
+  "candidateSnapshotSha256": "92ab6e5bc824fe1de7a54bd96e799094d0a42d612873bd58ecfa197b98c86d20",
+  "tier1": {
+    "candidate": {
+      "pass": 12,
+      "fail": 0,
+      "notImplemented": 0,
+      "total": 12
+    },
+    "original": {
+      "pass": 0,
+      "fail": 4,
+      "notImplemented": 8,
+      "total": 12
+    }
+  },
+  "candidateChecks": {
+    "pytestPassed": 41,
+    "ruff": "pass",
+    "mypy": "pass",
+    "productValidation": "pass",
+    "docsValidation": "pass"
+  },
+  "tier2": "blocked-missing-polyspace-and-matched-model-runs",
+  "tier3": "blocked-missing-licensed-polyspace",
+  "weightedTotal": null
+}

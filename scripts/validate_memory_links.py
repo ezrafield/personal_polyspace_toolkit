@@ -4,7 +4,6 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / ".agent" / "memory" / "index.json"
 VALID_TYPES = {"semantic", "procedural"}
@@ -52,7 +51,9 @@ def parse_metadata(text: str) -> dict[str, str]:
 
 
 def headings(text: str) -> set[str]:
-    return {match.group(1).strip() for match in re.finditer(r"^##\s+(.+)$", text, flags=re.MULTILINE)}
+    return {
+        match.group(1).strip() for match in re.finditer(r"^##\s+(.+)$", text, flags=re.MULTILINE)
+    }
 
 
 def related_files(text: str) -> list[str]:
@@ -144,7 +145,9 @@ def main() -> None:
             problems.append(f"{entry['id']}: invalid type {entry['type']}")
         if entry["confidence"] not in VALID_CONFIDENCE:
             problems.append(f"{entry['id']}: invalid confidence {entry['confidence']}")
-        if not isinstance(entry["keywords"], list) or not all(isinstance(item, str) for item in entry["keywords"]):
+        if not isinstance(entry["keywords"], list) or not all(
+            isinstance(item, str) for item in entry["keywords"]
+        ):
             problems.append(f"{entry['id']}: keywords must be a list of strings")
         validate_date(entry["last_verified"], f"{entry['id']} last_verified", problems)
         if not as_path(entry["source_task"]).exists():

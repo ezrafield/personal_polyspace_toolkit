@@ -1,0 +1,37 @@
+﻿{
+    "scope":  "codex-no-qwen",
+    "S02":  {
+                "exitCode":  0,
+                "beforeEntries":  0,
+                "afterEntries":  0,
+                "passed":  true
+            },
+    "S01":  {
+                "exitCode":  0,
+                "binarySha256":  "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+                "expectedSha256":  "affe106247b5a1830b02379afa07738a203523bfd51bf3d3404ae3b8af1b257e",
+                "wallTimeSeconds":  8.995,
+                "passed":  true
+            },
+    "codexRegistration":  {
+                              "exitCode":  0,
+                              "passed":  true
+                          },
+    "S03":  {
+                "exitCode":  0,
+                "beforeTreeSha256":  "f6a8956d045bfb71351b0e5277e72cbbfbefa61d09073fd3831dfb1fd7700808",
+                "afterTreeSha256":  "f6a8956d045bfb71351b0e5277e72cbbfbefa61d09073fd3831dfb1fd7700808",
+                "passed":  true
+            },
+    "verify":  {
+                   "exitCode":  2,
+                   "expectedNotReadyWithoutPolyspace":  true
+               },
+    "S08":  {
+                "exitCode":  0,
+                "binaryExists":  false,
+                "skillCount":  0,
+                "registrationExists":  false,
+                "passed":  true
+            }
+}

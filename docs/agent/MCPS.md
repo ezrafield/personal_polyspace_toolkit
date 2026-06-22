@@ -1,33 +1,18 @@
-# MCPs
+# Polyspace MCP
 
-Model Context Protocol servers should be added only when they provide useful external context or reliable actions that scripts cannot provide locally.
+The toolkit consumes the official per-user Polyspace MCP server binary. It does not implement or
+redistribute the server.
 
-## General MCP Categories
+Compatible tool names:
 
-| MCP Category | Use |
-| --- | --- |
-| Semble | Natural-language project search before broad file reads. |
-| Serena | Optional language-server semantics for references, declarations, diagnostics, and refactors. |
-| Filesystem | Structured file reads, writes, and project resources. |
-| GitHub | Issues, pull requests, review comments, CI state, and repository metadata. |
-| Browser | Local app inspection, screenshots, and interactive UI verification. |
-| Database | Schema inspection and safe read-only query workflows. |
-| Documentation | Current official docs for unstable APIs or SDKs. |
-| Design | Figma, FigJam, or design-system workflows. |
-| Secrets | Controlled credential provisioning without exposing plaintext. |
+1. `run_polyspace_as_you_code`
+2. `configure_build_options_for_polyspace`
+3. `configure_checkers_for_polyspace`
+4. `get_polyspace_documentation`
+5. `query_justification_catalog`
 
-## MCP Selection Rules
+Tool names are a compatibility contract. Validate argument details against the tested server release
+and installed Polyspace documentation before changing a skill.
 
-- Use local scripts first for deterministic repo checks.
-- Use Semble as the default low-cost code retrieval profile when available.
-- Use Serena only when symbol-level accuracy or refactoring support is needed.
-- Use MCPs when external state matters.
-- Keep write-capable MCPs scoped and documented.
-- Prefer read-only modes for research and review agents.
-- Document required MCPs in `docs/agent/COMMANDS.md` or a project-specific setup guide.
-
-## Project Template
-
-Use `.mcp/README.md` to document candidate MCPs for a project. Use `.mcp/servers.example.json` as a non-secret placeholder. Add real MCP configuration only when the team knows which runtime will consume it.
-
-RTK is documented under `.mcp/rtk.md` because it is an agent-runtime integration point, but it is not required to be an MCP server. Keep it optional and fail open to raw commands.
+The server is registered at user scope for Codex and Claude. Qwen registration is manual and keeps
+`trust` false. Telemetry is disabled by default for every generated server command.

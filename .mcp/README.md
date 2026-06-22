@@ -1,28 +1,10 @@
-# MCP Setup
+# MCP Notes
 
-This directory documents candidate Model Context Protocol servers for the project.
+The only product-required MCP server is the official per-user Polyspace server installed by
+`polyspace-toolkit setup`. Its five compatible tools are documented in `docs/agent/MCPS.md`.
 
-Do not commit secrets here.
+Do not commit real client configuration or secrets here. Codex and Claude registrations are managed
+at user scope. Qwen Code uses the manual non-secret example under `examples/`.
 
-## Candidate MCPs
-
-| Name | Purpose | Scope |
-| --- | --- | --- |
-| Semble | Natural-language code and repo search | Default retrieval profile |
-| Serena | Language-server backed symbols, references, diagnostics, and refactors | Optional advanced coding profile |
-| filesystem | Structured local project access | Read/write by project root |
-| github | Issues, PRs, CI, review threads | Repository metadata and selected actions |
-| browser | Local UI verification | Browser automation |
-| docs | Current official documentation | Read-only |
-| database | Schema and safe queries | Prefer read-only |
-| RTK | Optional compressed terminal output for agent sessions | Agent runtime integration, not CI correctness |
-
-## Configuration Notes
-
-- Keep project-specific MCP config separate from user-local secrets.
-- Prefer read-only permissions until write access is required.
-- Record required setup steps in `docs/agent/COMMANDS.md`.
-- Use `servers.example.json` as a placeholder, not as a working secret-bearing config.
-- Keep Semble as the default project search profile.
-- Keep Serena optional; enable it only for projects that benefit from language-server semantics.
-- Keep RTK optional; fall back to raw commands whenever it is unavailable or compressed output is unclear.
+Semble, Serena, RTK, documentation, and repository connectors are optional development aids. They do
+not participate in product correctness and must fail open to local scripts and exact `rg` searches.

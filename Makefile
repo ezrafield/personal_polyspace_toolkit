@@ -1,110 +1,57 @@
-RTK := $(shell command -v rtk 2>/dev/null)
+PYTHON ?= python
 
-define maybe_rtk
-$(if $(RTK),rtk $(1),$(1))
-endef
-
-.PHONY: install dev test test-unit test-integration lint typecheck docs-map agent-setup validate-docs validate-agent-docs detect-large-context-docs detect-large-agent-files check-context-staleness audit-module-cards audit-task-logs validate-memory-links audit-memory-staleness audit-memory check-architecture-boundaries update-module-cards targeted-tests task-trace extract-task-memory rtk-gain git-status git-diff test-unit-compact lint-compact typecheck-compact understand understand-dashboard understand-search validate-understand-graph retrieval-eval
+.PHONY: install dev test test-unit test-integration test-polyspace-smoke lint typecheck validate-product sync-plugin \
+	docs-map validate-agent-docs check-context-staleness audit-module-cards audit-memory \
+	git-status git-diff
 
 install:
-	@echo "Install project dependencies here."
+	$(PYTHON) -m pip install -e ".[dev]"
 
 dev:
-	@echo "Start the development server here."
+	$(PYTHON) -m personal_polyspace_toolkit.cli doctor --json
 
 test: test-unit test-integration
 
 test-unit:
-	@echo "Run unit tests here."
+	$(PYTHON) -m pytest tests/unit -q
 
 test-integration:
-	@echo "Run integration tests here."
+	$(PYTHON) -m pytest tests/integration -q
+
+test-polyspace-smoke:
+	$(PYTHON) -m pytest tests/smoke -q -m polyspace
 
 lint:
-	@echo "Run lint checks here."
+	$(PYTHON) -m ruff check src tests scripts
 
 typecheck:
-	@echo "Run type checks here."
+	$(PYTHON) -m mypy
+
+validate-product:
+	$(PYTHON) scripts/validate_product_surfaces.py
+	$(PYTHON) scripts/sync_codex_plugin.py --check
+
+sync-plugin:
+	$(PYTHON) scripts/sync_codex_plugin.py
 
 docs-map:
-	python scripts/generate_codemap.py
-
-agent-setup:
-	python scripts/agent_setup.py
-
-validate-docs:
-	python scripts/validate_docs.py
+	$(PYTHON) scripts/generate_codemap.py
 
 validate-agent-docs:
-	python scripts/validate_agent_docs.py
-
-detect-large-context-docs:
-	python scripts/detect_large_context_docs.py
-
-detect-large-agent-files:
-	python scripts/detect_large_agent_files.py
+	$(PYTHON) scripts/validate_agent_docs.py
 
 check-context-staleness:
-	python scripts/check_context_staleness.py
+	$(PYTHON) scripts/check_context_staleness.py
 
 audit-module-cards:
-	python scripts/audit_module_cards.py
+	$(PYTHON) scripts/audit_module_cards.py
 
-audit-task-logs:
-	python scripts/audit_task_logs.py
-
-validate-memory-links:
-	python scripts/validate_memory_links.py
-
-audit-memory-staleness:
-	python scripts/audit_memory_staleness.py
-
-audit-memory: validate-memory-links audit-memory-staleness
-
-check-architecture-boundaries:
-	python scripts/check_architecture_boundaries.py
-
-update-module-cards:
-	python scripts/update_module_cards.py
-
-targeted-tests:
-	python scripts/run_targeted_tests.py
-
-task-trace:
-	python scripts/collect_task_trace.py
-
-extract-task-memory:
-	python scripts/extract_task_memory.py $(TASK)
-
-rtk-gain:
-	@if command -v rtk >/dev/null 2>&1; then rtk gain; else echo "rtk not installed"; fi
+audit-memory:
+	$(PYTHON) scripts/validate_memory_links.py
+	$(PYTHON) scripts/audit_memory_staleness.py
 
 git-status:
-	$(call maybe_rtk,git status)
+	git status --short --branch
 
 git-diff:
-	$(call maybe_rtk,git diff)
-
-test-unit-compact:
-	$(call maybe_rtk,make test-unit)
-
-lint-compact:
-	$(call maybe_rtk,make lint)
-
-typecheck-compact:
-	$(call maybe_rtk,make typecheck)
-
-understand:
-	python scripts/understand_placeholder.py
-
-understand-dashboard:
-	@echo "Open the Understand Anything dashboard with the installed runtime command, for example /understand-dashboard."
-
-understand-search:
-	python scripts/search_understand_graph.py "$(QUERY)"
-
-validate-understand-graph:
-	python scripts/validate_understand_graph.py
-
-retrieval-eval:
-	python eval/retrieval/run_retrieval_eval.py
+	git diff --stat
