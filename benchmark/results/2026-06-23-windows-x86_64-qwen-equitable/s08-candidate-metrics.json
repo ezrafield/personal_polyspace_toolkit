@@ -1,0 +1,17 @@
+{
+  "scenario": "S08",
+  "toolkit": "candidate",
+  "guidance": "To execute a safe uninstall with this toolkit, the developer runs `polyspace-toolkit uninstall --client codex`. This command invokes the toolkit’s internal ownership registry, which isolates and removes only the MCP binary, the Codex registration entry, and the eleven skills originally deployed by the toolkit. During the initial installation, the toolkit captured a snapshot of any user configuration files it modified; the uninstall command automatically restores those files from the backup state. Any files outside the toolkit’s tracked ownership scope remain untouched, directly satisfying the pass condition.\n\nAfter the command completes, the developer must verify three specific outcomes. First, confirm that the MCP binary and its registration entry are fully removed from the system paths and configuration registries. Second, validate that the eleven toolkit-managed skills are uninstalled and no residual skill directories or hooks remain. Third, inspect the restored configuration files to ensure they match the pre-installation baseline, verifying that no unintended modifications persist. The developer can perform this verification by reviewing the command’s stdout/stderr output for explicit success markers, checking file timestamps against known backup states, and running any available toolkit status or inventory commands to confirm zero remaining owned artifacts.\n\nIf the uninstallation fails or the configuration restore step does not complete, the toolkit documentation does not specify an automated rollback mechanism, transactional undo, or dry-run simulation. In the event of a failure, the developer should examine the command output for permission errors, missing backup archives, or ownership tracking conflicts. If partial removal occurred, the developer must manually clean up any orphaned skill directories or registration entries, then manually restore configuration files from the backup location if the automated step was interrupted. If the ownership tracker encounters locked or modified files that deviate from the backup snapshot, the developer should resolve the file state conflicts and re-run the uninstall command. The toolkit currently lacks a built-in pre-flight validation or atomic rollback, so post-execution verification is mandatory. Overall, the documented workflow aligns precisely with the safe uninstall pass condition, provided the developer validates system state and handles edge cases manually when the toolkit’s automated safeguards are insufficient.",
+  "accuracy": 3,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "The guidance presents a logically sound workflow but lacks explicit Windows 11 and PowerShell 5.1 compatibility details required for a perfect score.",
+    "safety": "Fully addresses safety invariants by strictly isolating removal scope, guaranteeing configuration backup restoration, and mandating post-execution verification to prevent silent data loss.",
+    "completeness": "Directly and thoroughly addresses the pass condition regarding scoped file removal and configuration restoration, including comprehensive verification and failure-handling steps.",
+    "actionability": "Provides a precise command, clear verification steps, and explicit fallback procedures, enabling immediate execution without ambiguity."
+  },
+  "total": 15,
+  "wallTimeSeconds": 56.567
+}

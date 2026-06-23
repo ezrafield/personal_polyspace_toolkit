@@ -1,0 +1,17 @@
+{
+  "scenario": "S07",
+  "toolkit": "original",
+  "guidance": "The toolkit provides no built-in atomicity, state tracking, backup, or rollback capability. Consequently, a developer must implement an external wrapper to satisfy the atomic failure pass condition. The workflow begins with a pre-execution snapshot of the client configuration directory. On Linux, this is typically done with `cp -a /opt/client/config /tmp/client_config_backup_$(date +%s)`, while on Windows, `robocopy C:\\client\\config C:\\temp\\client_config_backup_%date%_%time% /MIR /E /NP` captures the state. The developer then executes the setup script (`./setup.sh` or `.\\setup.ps1`) and immediately checks the exit status (`$?` or `$LASTEXITCODE`). If the script returns a non-zero code or the developer forces a failure for testing, the developer must verify whether the configuration state is valid by checking critical files and expected values, for example using `test -f /opt/client/config/core.conf && grep -q \"expected_setting\" /opt/client/config/core.conf` on Linux or `Test-Path C:\\client\\config\\core.conf -PathType Leaf` combined with content validation in PowerShell. If verification fails, the developer triggers a rollback by removing the partial configuration (`rm -rf /opt/client/config` or `Remove-Item C:\\client\\config -Recurse -Force`) and restoring the backup (`cp -a /tmp/client_config_backup_* /opt/client/config` or `robocopy C:\\temp\\client_config_backup_* C:\\client\\config /MIR /NP`). If the rollback itself fails due to permission errors, disk space exhaustion, or a corrupted backup, the client remains in a partially configured state. The developer must then manually inspect system logs, identify orphaned or locked files, and perform a manual restore from an external source such as version control or a CI/CD artifact. Because the toolkit lacks native recovery hooks, any failure during the manual rollback requires direct intervention and may necessitate a full client reinstall to guarantee a clean state.",
+  "accuracy": 2,
+  "safety": 3,
+  "completeness": 4,
+  "actionability": 3,
+  "notes": {
+    "accuracy": "Windows commands contain invalid filename characters (%time% includes colons) and unsupported wildcards in robocopy, making them non-executable as written. Also mixes CMD and PowerShell syntax inconsistently.",
+    "safety": "Mitigates data loss through pre-execution backups and explicit state verification before destructive removal. However, uses blunt force commands (rm -rf, Remove-Item -Force) without explicit existence checks or dry-run safeguards, posing minor risk if paths are misconfigured.",
+    "completeness": "Directly and thoroughly addresses the atomic failure pass condition, covering backup, execution, failure detection, verification, rollback, and edge-case handling.",
+    "actionability": "Provides a clear, step-by-step workflow with specific commands for both platforms. Minor syntax errors in Windows commands require developer adjustment before immediate execution."
+  },
+  "total": 12,
+  "wallTimeSeconds": 79.053
+}

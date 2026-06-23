@@ -1,0 +1,17 @@
+{
+  "scenario": "S05",
+  "toolkit": "candidate",
+  "guidance": "When a developer invokes the toolkit’s installation routine, the setup process automatically executes a preflight check against each target skill directory. If a destination already exists and contains files that are not tracked by the toolkit’s internal ownership metadata, the routine aborts immediately and returns exit code 2. No files are copied, modified, or deleted, which guarantees that preexisting user-owned content remains completely intact. This behavior directly satisfies the documented pass condition and was validated in the 2026-06-23 benchmark.\n\nTo handle this scenario, the developer should run the toolkit’s installation command in a shell that captures and evaluates exit codes. A representative invocation would be: polyspace-skill-setup install --target-dir ~/.polyspace/skills. The developer should append standard error handling, such as checking the exit status immediately after execution, to ensure the abort condition is caught without silent failure. Upon receiving exit code 2, the developer can verify preservation by listing the target directory contents, comparing file modification timestamps against a known baseline, or inspecting any ownership manifest the toolkit maintains. If the toolkit uses a metadata file to track its own installations, cross-referencing that manifest confirms that no toolkit-owned entries were overwritten and that the directory state matches the pre-installation snapshot.\n\nThe provided documentation does not describe a built-in mechanism for explicitly requesting directory replacement. If the developer intends to overwrite an existing directory, they must manually back up the current contents, remove the target directory, and rerun the setup command. Should the preflight check fail for unexpected reasons, such as permission denied errors or incorrect ownership detection, the developer should verify that the target path is writable by the current user, confirm that the ownership detection logic correctly identifies toolkit-managed files, and ensure that no conflicting processes are locking the directory. In the absence of a force or overwrite flag, all replacement operations remain external to the toolkit’s automated workflow, and the developer must manage directory state manually before rerunning the setup.",
+  "accuracy": 2,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 3,
+  "notes": {
+    "accuracy": "Guidance uses Unix-style paths (~) and generic shell exit code handling without PowerShell 5.1 equivalents (e.g., $LASTEXITCODE, $env:USERPROFILE), making it not directly executable on the specified Windows environment.",
+    "safety": "Explicitly guarantees preservation of user content, aborts on conflict, and requires manual intervention for replacement. Fully aligns with safety invariants.",
+    "completeness": "Directly addresses the pass condition by explaining the preservation behavior, verification steps, and manual replacement process.",
+    "actionability": "Provides concrete commands and verification steps, but lacks PowerShell 5.1 specific syntax for exit code handling and path resolution, requiring minor adaptation."
+  },
+  "total": 13,
+  "wallTimeSeconds": 66.576
+}

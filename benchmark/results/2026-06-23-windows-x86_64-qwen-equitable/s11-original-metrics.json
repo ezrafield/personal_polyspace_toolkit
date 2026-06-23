@@ -1,0 +1,17 @@
+{
+  "scenario": "S11",
+  "toolkit": "original",
+  "guidance": "The toolkit documentation explicitly identifies this scenario as a confirmed failure because the default Windows setup script executes Unblock-File on downloaded assets without user interaction, which implicitly strips the Zone.Identifier alternate data stream and clears the download-protection attribute. To satisfy the pass condition that the quarantine or download-protection state must never be removed implicitly, a developer must manually intervene in the setup workflow. The developer should open setup.ps1 and remove or comment out every instance of Unblock-File, then replace any automated unblocking logic with an explicit consent prompt that only executes Unblock-File after the user acknowledges the security implications. To verify the zone identifier persists, the developer can run Get-Item -Path <asset_path> -Stream Zone.Identifier in PowerShell and confirm the stream returns the expected Zone=3 value. Alternatively, they can query the Origin extended property via (Get-Item <asset_path>).ExtendedProperties['Origin'] to ensure it still reads as Internet. If the setup completes and the stream is absent, the developer must revert the script changes, validate that no other post-download hooks are invoking Unblock-File, and rerun the setup in a clean test environment. If the developer disables implicit unblocking entirely, Windows SmartScreen or Defender may block execution or flag the asset as untrusted, requiring the developer to implement code signing, configure explicit Group Policy exceptions, or provide a documented manual override procedure. The toolkit provides no automated safeguard or configuration flag to enforce this behavior; handling this scenario requires direct modification of the setup script and explicit user-consent logic to prevent implicit attribute removal.",
+  "accuracy": 4,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Correctly describes Windows ADS behavior, PowerShell verification commands, and SmartScreen/Defender interactions. All steps are valid for Windows 11 + PS 5.1.",
+    "safety": "Aligns with the pass condition by enforcing explicit user consent and preserving download-protection attributes. Warns of potential AV blocks and provides safe mitigation paths.",
+    "completeness": "Directly addresses the pass condition by explaining the failure mode, remediation steps, verification methods, and fallback procedures.",
+    "actionability": "Provides exact file modifications, PowerShell commands for verification, and clear troubleshooting steps. Developer can execute immediately without further research."
+  },
+  "total": 16,
+  "wallTimeSeconds": 67.605
+}

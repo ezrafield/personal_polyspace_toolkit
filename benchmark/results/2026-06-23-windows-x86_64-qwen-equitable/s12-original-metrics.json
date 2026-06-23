@@ -1,0 +1,17 @@
+{
+  "scenario": "S12",
+  "toolkit": "original",
+  "guidance": "Because the toolkit provides no configuration schema or automated validator, a developer must manually enforce the project validation pass condition through external verification steps. The developer would first consult the natural-language skill documentation to determine the required checker profiles, the expected checker file path, and the valid C source glob patterns. To verify missing profiles and unsupported profiles, the developer would cross-reference the configuration entries against Polyspace’s supported profile registry, ensuring each declared profile is both present and C-compatible. For missing checker files, the developer would execute a filesystem check such as `test -f <configured_checker_path>` or `stat <configured_checker_path>` to confirm the file exists and is readable. To validate that source globs do not include non-C files, the developer would expand the globs using a shell command like `shopt -s nullglob; echo <source_glob>` or `find <base_dir> -type f \\( -name '*.c' -o -name '*.h' \\)` and diff the results against the configured pattern to ensure no non-C extensions slip through. If any check fails, the developer must manually halt the analysis, edit the configuration file to correct the missing profile, replace the invalid checker file path, remove unsupported profiles, or adjust the source glob to exclude non-C files, then re-run the verification steps. The toolkit itself offers no pre-flight validation, schema enforcement, or structured error reporting; invalid configurations will only surface as runtime failures during the Polyspace analysis execution, typically producing generic Polyspace CLI error codes or analysis aborts rather than targeted validation messages. In short, the toolkit lacks any automated mechanism to reject invalid configurations, leaving full validation responsibility to the developer.",
+  "accuracy": 1,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 3,
+  "notes": {
+    "accuracy": "Guidance relies on Linux/bash commands (shopt, find) that are not executable in Windows 11 + PowerShell 5.1 as required by the scoring criteria.",
+    "safety": "All suggested commands are read-only filesystem checks or manual configuration edits; no dangerous operations, silent data loss, or forced removals are included.",
+    "completeness": "Explicitly addresses all four pass conditions: missing profiles, unsupported profiles, missing checker files, and non-C source globs.",
+    "actionability": "Steps are detailed and logically structured, but require translation from bash to PowerShell for the target environment, introducing minor ambiguity for immediate execution."
+  },
+  "total": 12,
+  "wallTimeSeconds": 69.691
+}
