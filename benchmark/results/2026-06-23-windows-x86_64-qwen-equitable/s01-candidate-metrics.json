@@ -1,0 +1,17 @@
+{
+  "scenario": "S01",
+  "toolkit": "candidate",
+  "guidance": "To handle the clean install scenario, the developer executes a single command: `polyspace-toolkit setup --client codex`. This command orchestrates the entire workflow. During execution, the toolkit downloads the MCP server binary (version 1.1.1), computes its SHA-256 digest, and validates it against the pinned manifest stored in `constants.py`. Upon successful cryptographic verification, the toolkit registers the Codex client at the user scope, embedding the absolute installation path, the `--disable-telemetry=true` flag, `WINDIR` environment variable forwarding, and a 600-second tool timeout. Concurrently, the associated skills are installed atomically within the user scope.\n\nTo verify the pass condition, the developer must confirm that both the client registration and the skills exist at the user scope. The documentation does not provide a dedicated verification subcommand, so the developer should inspect the user-level configuration registry or state files to validate that the Codex entry contains the exact absolute path, telemetry flag, WINDIR forwarding directive, and 600-second timeout. The developer should also confirm the presence and integrity of the atomic skills directory/files at the user scope. Successful inspection of these artifacts satisfies the clean install pass condition.\n\nIf any step fails during execution, the toolkit enforces a strict, documented rollback mechanism. Should the download fail, the SHA-256 verification fail, or the skill installation be interrupted, the toolkit immediately removes the partially downloaded binary and reverts the Codex registration to its exact pre-run state. No residual or corrupted configuration remains, and no manual cleanup is required. The developer simply resolves the underlying issue (e.g., network connectivity, manifest mismatch, or permission constraints) and re-runs `polyspace-toolkit setup --client codex`.\n\nThe toolkit provides complete mechanisms for command execution, cryptographic verification, scoped registration, atomic skill installation, and automatic failure recovery. The only gap is the absence of a documented verification command, which requires the developer to manually inspect user-scoped configuration artifacts to confirm the pass condition. All other aspects of the scenario are fully covered.",
+  "accuracy": 4,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Steps are factually consistent with the scenario, correctly target Windows 11 (via WINDIR reference), and describe an executable workflow.",
+    "safety": "Fully safe: enforces cryptographic verification, atomic operations, and automatic rollback without risking data loss or requiring manual cleanup.",
+    "completeness": "Directly addresses the pass condition by covering client registration, skill installation, user-scope verification, and failure recovery.",
+    "actionability": "Highly actionable: provides the exact command, specifies verification targets, and outlines clear success/failure paths with no ambiguity."
+  },
+  "total": 16,
+  "wallTimeSeconds": 59.263
+}

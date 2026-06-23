@@ -1,0 +1,17 @@
+{
+  "scenario": "S09",
+  "toolkit": "original",
+  "guidance": "Because the toolkit provides no executable version gate, a developer must manually enforce the R2024b requirement before invoking any Polyspace commands. The developer would first query the installed Polyspace release using a standard diagnostic command such as `polyspace -version` or by inspecting the `POLYSPACE_VERSION` environment variable. The command output typically returns a string like `R2024a` or `R2024b`. The developer must then parse this string to extract the release year and letter suffix, applying a strict validation rule: the year must be greater than or equal to 2024, and if the year equals 2024, the letter suffix must be alphabetically greater than or equal to 'b'. Any output that does not conform to the expected `R<YYYY><letter>` pattern, such as `R2024`, `2024b`, `R2024.1`, or an empty response, must be treated as malformed and rejected.\n\nIf the manual verification passes, the developer proceeds to run the intended Polyspace analysis or reporting commands. If the check fails because the version is R2024a or the version string is malformed, the developer must halt execution, as the toolkit will not automatically abort, downgrade functionality, or provide a fallback path. The developer would then need to install or activate a compliant Polyspace release, update the `POLYSPACE_ROOT` and `PATH` environment variables to point to the correct installation, and re-run the version verification. Because the toolkit lacks a pre-flight validation script, a version mismatch or malformed output will only surface at runtime as potential analysis failures, unsupported command-line flags, or license validation errors, requiring manual troubleshooting. The toolkit provides no automated version gate, no version-aware command routing, and no programmatic error handling for this scenario.",
+  "accuracy": 3,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 3,
+  "notes": {
+    "accuracy": "Version format and validation logic are factually correct, but polyspace -version is not a standard command and the guidance lacks PowerShell 5.1 syntax for direct execution.",
+    "safety": "Fully safe. Explicitly mandates halting on failure, avoids destructive operations, and provides clear, non-invasive steps for environment variable updates.",
+    "completeness": "Directly addresses all pass conditions: rejects R2024a, rejects malformed strings, and accepts R2024b+. Covers fallback and troubleshooting.",
+    "actionability": "Clearly outlines the workflow and validation rules, but lacks concrete PowerShell 5.1 code or exact regex patterns, requiring the developer to draft the implementation."
+  },
+  "total": 14,
+  "wallTimeSeconds": 82.621
+}

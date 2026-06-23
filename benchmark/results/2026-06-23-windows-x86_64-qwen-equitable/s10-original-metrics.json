@@ -1,0 +1,17 @@
+{
+  "scenario": "S10",
+  "toolkit": "original",
+  "guidance": "The toolkit provides no automated mechanism to satisfy the telemetry default pass condition. Because the Codex MCP registration omits the --disable-telemetry=true flag during installation, telemetry remains enabled by default. A developer must manually intervene after setup to meet the requirement. First, the developer locates the MCP configuration file used by their client, which is typically a JSON or YAML manifest containing the command and args fields for the Codex server. Within the args array, they append --disable-telemetry=true to the existing command-line arguments. After saving the file, the developer restarts the MCP client or reloads the server configuration to apply the change. Verification involves inspecting the active configuration to confirm the flag is present, checking the MCP client logs for successful server initialization without telemetry warnings, and optionally running a diagnostic command or process inspection to ensure the flag is passed to the running Codex process. If the configuration file is malformed or the flag is unrecognized, the MCP server will fail to start or fall back to default behavior, logging an error such as an invalid argument or configuration parse failure. In that case, the developer must revert the modification, validate the syntax against the Codex CLI documentation, and ensure the flag is placed correctly within the arguments array. Because the toolkit lacks a built-in configuration template or post-installation hook to enforce this setting, the developer bears full responsibility for applying and maintaining the flag, and any future toolkit updates that regenerate the MCP registration will overwrite the manual change unless the developer pins the configuration or uses a wrapper script to inject the flag dynamically.",
+  "accuracy": 3,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Steps are logically sound and technically plausible for MCP configuration, but lack explicit Windows 11 paths or PowerShell 5.1 commands required to meet the strict 4-point criteria.",
+    "safety": "Guidance involves standard configuration file editing and client restarts with clear error handling. No risky operations, data loss vectors, or OS protection bypasses are present.",
+    "completeness": "Fully addresses the pass condition by detailing how to disable telemetry, verify the change, handle configuration errors, and manage persistence across future toolkit updates.",
+    "actionability": "Provides clear, sequential steps for locating, editing, saving, restarting, and verifying the configuration, leaving minimal ambiguity for immediate developer execution."
+  },
+  "total": 15,
+  "wallTimeSeconds": 60.976
+}
