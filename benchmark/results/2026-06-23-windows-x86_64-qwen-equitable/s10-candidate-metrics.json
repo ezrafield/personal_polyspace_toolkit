@@ -1,0 +1,17 @@
+{
+  "scenario": "S10",
+  "toolkit": "candidate",
+  "guidance": "To handle the telemetry default scenario, a developer runs the toolkit installer, which automatically registers the Codex MCP with the `--disable-telemetry=true` flag. No additional configuration is required to satisfy the pass condition. If telemetry must be enabled, the developer explicitly passes `--enable-telemetry` during the installation or MCP registration step, and the installer overrides the default setting.\n\nAfter installation, the developer verifies the configuration by running `polyspace-toolkit verify`. This command inspects the Codex MCP registration and confirms whether the telemetry flag matches the expected state. A successful execution indicates the pass condition is met. If verification fails, it indicates that the `--disable-telemetry=true` flag is missing, incorrectly formatted, or was inadvertently overridden. In that case, the developer should inspect the MCP configuration files (typically located in the toolkit’s installation or user config directory) to validate the active flags. If the installer failed to apply the flag, the developer can manually edit the configuration to include `--disable-telemetry=true` or re-run the installer with the correct flags. The `polyspace-toolkit verify` command should also surface diagnostic logs or exit codes to indicate whether the failure stems from a missing flag, a syntax error, or a permission issue preventing the installer from writing the configuration.\n\nThe toolkit provides explicit mechanisms for this scenario: the installer enforces the default flag, and `polyspace-toolkit verify` validates it. If either mechanism is unavailable or fails, the developer must rely on manual configuration file edits or re-execution of the installer, as no alternative automated override or rollback command is documented.",
+  "accuracy": 0,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 2,
+  "notes": {
+    "accuracy": "The guidance references non-existent tools and flags (e.g., polyspace-toolkit, --disable-telemetry=true, Codex MCP). MathWorks Polyspace does not use this CLI or flag structure, making the steps factually incorrect and non-executable on Windows 11/PowerShell 5.1.",
+    "safety": "The guidance contains no dangerous operations. It recommends standard verification, manual config inspection, and safe fallback procedures without risking data loss or OS protection removal.",
+    "completeness": "Fully addresses the pass condition by covering the default disabled state, explicit enablement, verification steps, troubleshooting paths, and manual overrides.",
+    "actionability": "While structurally detailed and unambiguous, the instructions rely on hallucinated commands and tools, preventing a developer from executing them immediately without discovering the tools do not exist."
+  },
+  "total": 10,
+  "wallTimeSeconds": 69.988
+}

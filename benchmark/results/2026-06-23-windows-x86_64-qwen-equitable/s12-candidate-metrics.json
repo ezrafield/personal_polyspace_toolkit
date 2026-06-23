@@ -1,0 +1,17 @@
+{
+  "scenario": "S12",
+  "toolkit": "candidate",
+  "guidance": "To validate the project configuration, the developer runs `polyspace-toolkit config validate` from the project root directory where the `.polyspace-toolkit.json` file resides. The command parses the configuration against a versioned JSON Schema and performs both structural and filesystem validation before permitting analysis execution. It specifically verifies that every declared checker profile matches a supported Polyspace profile, confirms that all referenced checker files exist at the specified paths, ensures source globs only target C or C++ source files, and checks that all required schema fields are present.\n\nIf the configuration satisfies all rules, the command exits with status code 0 and prints a confirmation message indicating the configuration is valid. If any rule is violated, the command exits with a non-zero status and outputs structured error messages that pinpoint the exact field, line, or pattern causing the failure. For instance, referencing an unsupported profile triggers a rejection with a message identifying the invalid profile name. Referencing a missing checker file produces a path-not-found error. Non-C source globs such as `src/*.py` or `lib/*.java` are flagged as unsupported. Missing required fields or malformed JSON also halt validation with precise schema violation details.\n\nUpon failure, the developer must edit `.polyspace-toolkit.json` to resolve the reported issues: replace unsupported profiles with valid Polyspace checker profiles, ensure all checker binaries or configuration files are present in the referenced directories, restrict source globs to C/C++ extensions, and populate any missing required fields. The developer then re-runs `polyspace-toolkit config validate` until it returns a clean success. The toolkit provides this validation mechanism natively through the `config validate` subcommand, so no external scripts or manual filesystem checks are required.",
+  "accuracy": 4,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "The guidance accurately describes the validation workflow, command syntax, and error handling as specified. It aligns with standard CLI practices and is fully compatible with Windows 11 + PowerShell 5.1 execution environments.",
+    "safety": "The validation process is strictly read-only, provides explicit error reporting without auto-modification, and explicitly avoids unsafe manual overrides or external script execution, ensuring full safety compliance.",
+    "completeness": "Directly addresses all four pass conditions (missing profiles, missing checker files, unsupported profiles, and non-C source globs) with explicit validation steps, exit codes, and corresponding error examples.",
+    "actionability": "Provides exact command syntax, clear success/failure indicators, concrete error examples, and precise remediation steps, enabling immediate execution without ambiguity or additional research."
+  },
+  "total": 16,
+  "wallTimeSeconds": 57.649
+}

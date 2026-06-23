@@ -1,0 +1,17 @@
+{
+  "scenario": "S06",
+  "toolkit": "original",
+  "guidance": "The toolkit documentation explicitly states that it provides no digest gate or post-download integrity check. Consequently, there is no built-in mechanism to automatically reject a tampered or truncated MCP asset before installation. A developer cannot rely on the toolkit to enforce the pass condition and must implement manual verification steps.\n\nTo handle this scenario, the developer would first download the asset to a temporary location using a standard HTTP client. For example: `curl -L -o /tmp/mcp-asset.tar.gz https://github.com/<org>/<repo>/releases/download/v<version>/mcp-asset.tar.gz`. After the download completes, the developer must compute the SHA-256 digest of the downloaded file using a cryptographic hash utility. On Linux or macOS, this is done with: `sha256sum /tmp/mcp-asset.tar.gz` or `shasum -a 256 /tmp/mcp-asset.tar.gz`. The output yields a 64-character hexadecimal string representing the file's integrity checksum.\n\nThe developer then verifies this computed hash against the authoritative SHA-256 digest published by the asset maintainers, which is typically listed on the GitHub release page or provided in a detached `SHA256SUMS` file. A precise verification step would compare the two values and abort the installation if they diverge. In a shell script, this logic would appear as: `EXPECTED_HASH=\"<official_sha256>\" && ACTUAL_HASH=$(sha256sum /tmp/mcp-asset.tar.gz | awk '{print $1}') && [ \"$EXPECTED_HASH\" != \"$ACTUAL_HASH\" ] && { echo \"ERROR: SHA-256 digest mismatch. Asset may be tampered or truncated.\"; exit 1; }`.\n\nIf the asset is truncated during transfer, the computed hash will differ from the expected value, triggering the mismatch condition and causing the script to exit with a non-zero status before any installation or execution occurs. The developer would then need to re-attempt the download, verify network stability, and confirm that the expected hash matches the current release artifact. If the asset is tampered with, the same hash mismatch will prevent installation, and the developer must investigate the source, request a fresh artifact, or report the discrepancy to the maintainers.\n\nUntil the toolkit is updated to include a native digest verification flag or post-download integrity check, developers must manually enforce this pass condition using external shell commands and explicit hash comparison logic. The toolkit itself offers no automated safeguard for this scenario.",
+  "accuracy": 1,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Guidance relies on POSIX/bash commands and syntax that are not natively executable on Windows 11 + PowerShell 5.1. The cryptographic verification logic is sound, but environment compatibility fails the 4-point criterion.",
+    "safety": "Fully safe. Explicitly verifies SHA-256 digests before installation and aborts execution on mismatch, directly enforcing the tamper/truncation rejection invariant.",
+    "completeness": "Comprehensively addresses the pass condition. Covers download, hash computation, verification against official digests, and explicit pre-installation rejection for both tampered and truncated assets.",
+    "actionability": "Highly actionable with concrete commands and clear script logic. Developer can implement immediately, though PowerShell equivalents (e.g., Get-FileHash, Invoke-WebRequest) are required for the specified Windows environment."
+  },
+  "total": 13,
+  "wallTimeSeconds": 61.709
+}

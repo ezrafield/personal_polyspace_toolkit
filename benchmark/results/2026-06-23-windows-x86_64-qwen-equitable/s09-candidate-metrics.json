@@ -1,0 +1,17 @@
+{
+  "scenario": "S09",
+  "toolkit": "candidate",
+  "guidance": "To handle the version gate scenario, a developer runs `polyspace-toolkit doctor` or `polyspace-toolkit setup` from the command line. These commands trigger a typed Python module that extracts the Polyspace release string from the environment or installation metadata and parses it using strict version comparison logic. If the parsed version is R2024a or if the release string cannot be parsed due to malformed formatting, the toolkit immediately aborts the workflow and returns a non-zero exit code alongside a clear error message identifying the unsupported or invalid version. The developer must then either upgrade to Polyspace R2024b or later, or correct the environment variable, configuration file, or installation metadata that supplies the release string. If the detected version is R2024b or newer, the check passes, the toolkit proceeds with the doctor or setup routine, and the developer receives a success confirmation. To verify the gate, the developer can intentionally point the toolkit at a simulated R2024a or malformed release string and confirm the expected rejection message, then switch to a valid R2024b+ installation to confirm silent or explicit acceptance. If the gate fails unexpectedly on a known R2024b+ installation, the developer should inspect the Polyspace installation path, validate the release string format, and review the toolkit’s diagnostic output for parsing or type-checking failures. The underlying unit tests cover both acceptance and rejection paths, and the benchmark confirms the implementation satisfies the pass condition.",
+  "accuracy": 4,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Accurately reflects the scenario's pass condition and workflow. Commands and logic are standard and consistent, though OS/Shell specifics are not explicitly mentioned, the steps are fully compatible with the stated environment.",
+    "safety": "Entirely non-destructive. Involves only version parsing, error reporting, and verification. No risk of data loss, config corruption, or unsafe operations.",
+    "completeness": "Fully addresses all pass conditions: explicitly covers rejection of R2024a and malformed versions, acceptance of R2024b+, and includes verification and troubleshooting steps.",
+    "actionability": "Provides clear, sequential instructions for execution, expected outputs, verification procedures, and troubleshooting. Developer can follow immediately without ambiguity."
+  },
+  "total": 16,
+  "wallTimeSeconds": 48.324
+}

@@ -1,0 +1,17 @@
+{
+  "scenario": "S05",
+  "toolkit": "original",
+  "guidance": "The toolkit provides no built-in mechanism to handle an existing skill directory while satisfying the pass condition. The documented setup.sh script unconditionally executes rm -rf on the target path before creating the skill symlink, with no collision preflight or explicit replacement prompt. On Linux and macOS, this results in silent deletion of user-owned content. On Windows, the script exits early, so the destructive step is bypassed, but the underlying design remains unsafe for POSIX environments. Because the toolkit lacks any conditional logic, user prompts, or force flags, a developer must manually intervene to preserve data.\n\nTo handle this scenario, a developer would first verify the state of the destination directory using test -d or ls -la. If the directory contains user-owned files, they would create a full backup using cp -a to preserve permissions, ownership, and metadata. Next, they would modify setup.sh to replace the unconditional removal with a conditional block that checks for existing content, requires an explicit override flag, or implements a safe skip behavior. After patching the script, they would execute it and verify the symlink was created correctly using readlink -f and ls -la. They would then compare the restored backup against the live directory to confirm that no unintended modifications occurred and that the symlink points to the intended target.\n\nIf something goes wrong, such as the script deleting content before intervention or the symlink resolving incorrectly, the developer would restore the backup using cp -a and manually recreate the symlink with ln -sfn. They would also audit the modified setup.sh for race conditions or incomplete cleanup logic. Since the toolkit offers no collision preflight, explicit replacement workflow, or data preservation safeguards, the developer bears full responsibility for backup, script modification, and verification. The pass condition can only be met through manual intervention, not through the toolkit itself.",
+  "accuracy": 2,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Steps rely on POSIX shell commands (cp -a, readlink -f, ln -sfn) and are not natively executable in Windows 11 + PowerShell 5.1, failing the top-score criterion.",
+    "safety": "Guidance explicitly enforces data preservation via pre-backup, conditional override logic, and post-execution verification, fully satisfying safety invariants.",
+    "completeness": "Directly addresses the pass condition by detailing how to preserve user content and implement explicit replacement workflows.",
+    "actionability": "Provides clear, sequential steps for verification, backup, script modification, execution, and recovery with no ambiguity."
+  },
+  "total": 14,
+  "wallTimeSeconds": 59.186
+}

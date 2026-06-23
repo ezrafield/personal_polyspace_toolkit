@@ -1,0 +1,17 @@
+{
+  "scenario": "S02",
+  "toolkit": "original",
+  "guidance": "The toolkit provides no dry-run command or flag, and its setup script applies file mutations immediately upon execution. Because the toolkit lacks any preview or simulation mechanism, a developer cannot satisfy the dry-run pass condition using the toolkit alone. To approximate a dry run, the developer must isolate the execution context or leverage version control to capture intended changes before they are committed. The standard workflow begins by initializing a clean Git repository, placing the toolkit’s setup script in a temporary directory, and recording the baseline state with `git status` and `git diff`. The developer then executes the setup script in that isolated environment. After execution, they run `git diff --cached` or `git diff HEAD` to enumerate every file that was modified, added, or deleted. Verification involves comparing the diff output against the expected mutation list, checking the script’s exit code for a zero status, and confirming that no unintended files were altered. For static analysis readiness, the developer would also compute file hashes before and after execution to ensure deterministic state changes. If the script fails mid-execution, the working directory will contain partial mutations. Because the toolkit does not implement atomic transactions or dry-run semantics, the developer must manually restore the baseline using `git checkout .` or by discarding the temporary environment entirely. In automated or CI pipelines, this scenario requires wrapping the setup script in a validation layer that captures pre- and post-execution file trees and runs `diff -r` to report changes without committing them. Since the toolkit itself cannot report intended mutations without applying them, the dry-run pass condition remains unmet without external tooling or environment isolation.",
+  "accuracy": 2,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Guidance relies on Unix-style commands (e.g., diff -r, git checkout .) that are not natively executable in PowerShell 5.1 without Git Bash or WSL. While the logic is sound, it lacks PowerShell-specific equivalents or explicit Windows 11 compatibility notes, preventing a perfect score on platform executability.",
+    "safety": "Explicitly recommends environment isolation, temporary directories, and safe rollback mechanisms. Warns against partial mutations and emphasizes verification before committing changes, fully aligning with safety invariants.",
+    "completeness": "Directly addresses the dry-run pass condition by explaining why the toolkit cannot natively satisfy it and provides a comprehensive workaround that covers reporting intended mutations and preventing actual file changes in the primary workspace.",
+    "actionability": "Provides a clear, sequential workflow with specific commands and verification steps. A developer can immediately implement the isolation and diffing strategy without needing additional research."
+  },
+  "total": 14,
+  "wallTimeSeconds": 61.875
+}
