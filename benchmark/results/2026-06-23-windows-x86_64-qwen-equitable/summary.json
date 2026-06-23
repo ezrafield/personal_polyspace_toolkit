@@ -1,0 +1,67 @@
+{
+  "benchmarkSchemaVersion": 1,
+  "runId": "2026-06-23-windows-x86_64-qwen-equitable",
+  "date": "2026-06-23",
+  "scope": "equitable-qwen-assisted",
+  "platform": "windows-x86_64",
+  "deterministic": {
+    "source": "2026-06-23-windows-x86_64-no-qwen",
+    "candidate": {
+      "pass": 12,
+      "fail": 0,
+      "notImplemented": 0,
+      "total": 12
+    },
+    "original": {
+      "pass": 0,
+      "fail": 4,
+      "notImplemented": 8,
+      "total": 12
+    }
+  },
+  "llmGuidanceQuality": {
+    "evaluator": "Qwen",
+    "model": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+    "temperature": 0.2,
+    "maxPerScenario": 16,
+    "original": {
+      "perScenario": {
+        "S01": 14,
+        "S02": 14,
+        "S03": 12,
+        "S04": 13,
+        "S05": 14,
+        "S06": 13,
+        "S07": 12,
+        "S08": 10,
+        "S09": 14,
+        "S10": 15,
+        "S11": 16,
+        "S12": 12
+      },
+      "total": 159,
+      "max": 192
+    },
+    "candidate": {
+      "perScenario": {
+        "S01": 16,
+        "S02": 16,
+        "S03": 13,
+        "S04": 15,
+        "S05": 13,
+        "S06": 13,
+        "S07": 10,
+        "S08": 15,
+        "S09": 16,
+        "S10": 10,
+        "S11": 16,
+        "S12": 16
+      },
+      "total": 169,
+      "max": 192
+    }
+  },
+  "tier2": "blocked-missing-licensed-polyspace",
+  "tier3": "blocked-missing-licensed-polyspace",
+  "weightedTotal": null
+}

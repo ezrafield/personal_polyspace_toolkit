@@ -1,0 +1,17 @@
+{
+  "scenario": "S11",
+  "toolkit": "candidate",
+  "guidance": "To handle the OS protection scenario, a developer relies on the toolkit’s automated static analysis rather than manual enforcement. The primary command is the product-surface audit script, executed as `python validate_product_surfaces.py` against the project’s skill and script directories. This script scans all code files for explicit or implicit patterns that strip OS-level download protection, specifically targeting PowerShell commands like `Unblock-File` and `Remove-Item -Stream` (which clears the Zone.Identifier alternate data stream), as well as equivalent APIs in other languages. The developer verifies compliance by confirming that the script exits with a zero status code and that the CI pipeline’s product-surface gate reports a pass. Successful verification confirms that no code path will implicitly remove quarantine or download-protection states, satisfying the pass condition.\n\nIf the audit detects a prohibited pattern, the script exits with a non-zero status, prints the exact file path, line number, and matched pattern, and the CI pipeline immediately fails, blocking the merge or deployment. The developer must then refactor the code to eliminate the quarantine-removal command. If the application logic requires processing downloaded artifacts, the developer should replace the removal call with secure handling that preserves the Zone.Identifier stream or implements an explicit, audited user consent flow. After refactoring, the developer reruns the local validation command and pushes the corrected code to trigger a fresh CI run.\n\nThe toolkit provides a fully automated, build-time enforcement mechanism for this scenario. There is no runtime enforcement or manual checklist required; compliance is guaranteed through static pattern detection and CI gating. Should the pattern matcher fail to catch a newly introduced or obfuscated quarantine-removal command, the developer would need to update the regex definitions within `validate_product_surfaces.py` and re-run the audit. As documented, the current implementation covers the standard OS protection removal commands and has been validated in the 2026-06-23 benchmark, ensuring that the pass condition is met without implicit state removal.",
+  "accuracy": 4,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Correctly identifies PowerShell commands (Unblock-File, Remove-Item -Stream) that remove download protection and accurately describes a valid static analysis workflow for Windows 11 + PowerShell 5.1.",
+    "safety": "Actively prevents implicit removal of OS security states, enforces CI blocking on violations, and mandates secure alternatives like preserving Zone.Identifier or explicit consent.",
+    "completeness": "Fully addresses the pass condition by detecting and blocking implicit/explicit removal patterns, ensuring security states are preserved, and covering verification and remediation.",
+    "actionability": "Provides exact command syntax, expected exit codes, CI gate behavior, precise failure output format, and a clear step-by-step remediation and re-validation workflow."
+  },
+  "total": 16,
+  "wallTimeSeconds": 62.177
+}

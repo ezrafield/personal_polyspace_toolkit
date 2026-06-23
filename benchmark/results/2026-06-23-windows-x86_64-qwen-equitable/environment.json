@@ -1,0 +1,16 @@
+{
+  "benchmarkSchemaVersion": 1,
+  "runId": "2026-06-23-windows-x86_64-qwen-equitable",
+  "startedAtUtc": "2026-06-23T02:31:41.514000+00:00",
+  "finishedAtUtc": "2026-06-23T02:58:14.751764+00:00",
+  "candidateHead": "714effe1aee819032ee212b6d6bf047208153b54",
+  "originalCommit": "cc15b840e80bf5187963d13ed86c4c5bb86381ad",
+  "os": "Windows 11 10.0.26200",
+  "architecture": "AMD64",
+  "python": "Python 3.14.5",
+  "qwenEndpoint": "http://10.134.198.10:8336/v1",
+  "qwenModel": "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf",
+  "qwenTemperature": 0.2,
+  "scope": "equitable-qwen-assisted",
+  "priorDeterministicRun": "2026-06-23-windows-x86_64-no-qwen"
+}

@@ -1,0 +1,17 @@
+{
+  "scenario": "S02",
+  "toolkit": "candidate",
+  "guidance": "The developer initiates the dry run by executing `polyspace-toolkit setup --client codex --dry-run` in a controlled terminal session. The command produces a machine-readable report that enumerates every intended mutation, explicitly listing the target binary path, the registration entry configuration, and the skill directories that would be created or modified. To verify the pass condition, the developer must first parse the structured output to confirm the mutation list matches their deployment expectations. They then validate the zero-change guarantee by checking the process exit code (expecting 0), inspecting the machine-readable payload for a mutation count of zero, and optionally running a filesystem snapshot comparison or version-control status check to confirm no files were created, modified, or deleted. If the command fails, it exits with a non-zero status and writes structured error diagnostics to stderr, which typically indicate missing prerequisites, invalid client identifiers, conflicting registration entries, or permission denials. The developer must resolve these diagnostics before attempting a live setup. The toolkit provides a complete, built-in mechanism for this scenario via the `--dry-run` flag and deterministic machine-readable output, ensuring full pre-flight visibility with zero filesystem side effects.",
+  "accuracy": 4,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Steps are technically sound and functionally compatible with Windows 11/PowerShell 5.1, though explicit PS5.1 parsing syntax is not detailed.",
+    "safety": "Fully adheres to zero-change invariants with explicit verification of exit codes, mutation counts, and filesystem state.",
+    "completeness": "Directly addresses both pass conditions by detailing mutation enumeration and providing multiple methods to verify zero file modifications.",
+    "actionability": "Provides exact command, expected output structure, verification steps, and error resolution paths, enabling immediate execution without ambiguity."
+  },
+  "total": 16,
+  "wallTimeSeconds": 57.78
+}

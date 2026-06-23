@@ -1,0 +1,17 @@
+{
+  "scenario": "S06",
+  "toolkit": "candidate",
+  "guidance": "To handle a failed download or digest mismatch, the developer initiates the toolkit’s standard installation routine, typically `pip install <toolkit-package>` or `python -m toolkit setup`. During execution, the installer automatically downloads the MCP asset and computes its SHA-256 digest. If the computed value does not match the pinned hash in `constants.py`, the installer halts, refuses to overwrite the existing binary, and prints a checksum mismatch or truncated-file error to the terminal and the toolkit’s log directory.\n\nThe developer verifies the failure by reviewing the terminal output and inspecting the setup log (commonly located under `~/.cache/toolkit/logs/` or `~/.local/share/toolkit/logs/`). They should confirm the rollback behavior by running `ls -l <previous_binary>` to verify that the file size and modification timestamp remain unchanged, and optionally validate the existing binary’s integrity with `sha256sum <previous_binary>` against the known-good hash. If the error persists, the developer must verify network integrity, check for proxy or firewall interception that could corrupt the stream, and confirm that `constants.py` contains the correct pinned digest for the intended version. If the asset was legitimately updated, the developer must edit `constants.py` to reflect the new SHA-256 value before retrying the installation.\n\nThe toolkit provides no standalone digest-verification command; all integrity checks are enforced exclusively during the automated setup phase. If the installer fails to report the mismatch, leaves a partial download in the cache, or overwrites the previous binary despite a mismatch, the developer should clear the download cache (e.g., `rm -rf ~/.cache/toolkit/assets/`), restore the previous binary from backup, and re-run the setup with verbose logging (`--verbose` or `-v`). In all cases, the automated pre-installation digest check and immediate rollback satisfy the pass condition by ensuring tampered or truncated assets are rejected before installation.",
+  "accuracy": 1,
+  "safety": 4,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "The guidance relies on Linux/macOS commands (e.g., sha256sum, rm -rf) and paths (~/.cache, ~/.local/share) that are not natively executable in Windows 11 + PowerShell 5.1, failing the platform-specific accuracy requirement.",
+    "safety": "Fully safe. Enforces strict integrity checks, prevents overwriting mismatched assets, and recommends safe cache clearing and backup restoration without risking user data or system protections.",
+    "completeness": "Directly satisfies the pass condition by detailing detection, rejection, rollback verification, and resolution for tampered or truncated assets.",
+    "actionability": "Highly actionable. Provides explicit commands, log locations, verification steps, and troubleshooting procedures that a developer can execute immediately."
+  },
+  "total": 13,
+  "wallTimeSeconds": 71.006
+}

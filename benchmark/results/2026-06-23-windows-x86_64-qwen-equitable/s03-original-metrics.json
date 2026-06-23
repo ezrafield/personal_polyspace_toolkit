@@ -1,0 +1,17 @@
+{
+  "scenario": "S03",
+  "toolkit": "original",
+  "guidance": "The toolkit provides no built-in mechanism for idempotent setup, and its documentation explicitly acknowledges this limitation. On Windows, setup.ps1 aborts before applying any configuration, meaning a developer cannot even execute a meaningful second run to test idempotency without first diagnosing and resolving the early failure. On Linux and macOS, the script will unconditionally re-create symlinks and append to shell profiles on every invocation, guaranteeing that a second identical run will mutate the filesystem and environment state.\n\nTo handle this scenario, a developer must manually enforce and verify idempotency. They would first run the setup script once (e.g., `./setup.sh`), then capture the baseline state by computing checksums of all modified configuration files using `sha256sum ~/.bashrc ~/.zshrc ~/.profile` and recording symlink targets with `readlink -f ~/.local/bin/polyspace*`. After running the script a second time, they would recompute the checksums and compare them against the baseline using `diff` or a simple equality check. They would also inspect shell configuration files for duplicate `PATH` exports, redundant `source` directives, or repeated alias definitions. Symlinks would be verified with `stat` or `ls -l` to confirm that link targets remain unchanged and no stale or duplicate links were created.\n\nIf the second run introduces semantic changes, the developer would need to manually clean the environment by removing duplicate entries from shell profiles, deleting stale symlinks, and resetting environment variables to their expected values. Because the toolkit lacks conditional logic such as `if [ ! -L \"$target\" ]` or hash-based skip checks, the developer would have to patch the script themselves or wrap it in a custom idempotency guard. Without these modifications, repeated executions will consistently overwrite configuration files and create redundant links, failing the pass condition. The toolkit itself offers no executable or documented mechanism to satisfy idempotent setup requirements.",
+  "accuracy": 1,
+  "safety": 3,
+  "completeness": 4,
+  "actionability": 4,
+  "notes": {
+    "accuracy": "Guidance relies exclusively on Linux/macOS shell commands (sha256sum, readlink -f, ~/.bashrc, bash conditionals) which are not executable on Windows 11 + PowerShell 5.1, directly contradicting the platform constraint for a high accuracy score.",
+    "safety": "Manual manipulation of shell profiles and symlinks carries a moderate risk of environment breakage if commands are misapplied, though no silent data loss or forced removal of user data is suggested.",
+    "completeness": "Thoroughly addresses the idempotency pass condition by detailing baseline capture, verification, duplicate detection, cleanup procedures, and root-cause analysis.",
+    "actionability": "Provides a clear, step-by-step workflow with specific commands and verification methods, leaving minimal ambiguity for a developer to follow."
+  },
+  "total": 12,
+  "wallTimeSeconds": 68.866
+}
